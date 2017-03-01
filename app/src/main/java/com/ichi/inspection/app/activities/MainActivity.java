@@ -1,7 +1,9 @@
-package com.ichi.inspection.app;
+package com.ichi.inspection.app.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.ichi.inspection.app.R;
 
 public class MainActivity extends AppCompatActivity {
 

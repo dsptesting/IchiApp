@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:id="@+id/coordinatorLayout"
+                                                 xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context="com.ichi.inspection.app.activities.StartActivity">
+
+    <RelativeLayout
+        android:id="@+id/activity_splash"
+        android:layout_width="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivAppLogo"
+            android:layout_width="@dimen/values_w210"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/values_h140"
+            android:src="@mipmap/ic_launcher"/>
+
+        <com.ichi.inspection.app.utils.CustomButton
+            android:id="@+id/btnLogin"
+            style="@style/txt_reg_16_white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/values_w75"
+            android:layout_marginRight="@dimen/values_w75"
+            android:layout_marginBottom="@dimen/values_w75"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/shape_trans_white"
+            android:text="@string/signin"
+            android:textAllCaps="false"/>
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
