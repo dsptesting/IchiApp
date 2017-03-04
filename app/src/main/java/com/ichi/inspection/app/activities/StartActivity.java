@@ -18,10 +18,12 @@ import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.fragments.SplashFragment;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.task.LoginAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
@@ -51,6 +53,7 @@ public class StartActivity extends BaseActivity implements OnApiCallbackListener
         }*/
 
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         navigateToScreen(Constants.SPLASH, null, false);
 
         //SplashActivityPermissionsDispatcher.showContactsWithCheck(this);
