@@ -33,7 +33,7 @@ public class SplashFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         mContext = getActivity();
         initData();
-
+        //
         return view;
     }
 
