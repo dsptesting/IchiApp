@@ -2,4 +2,8 @@
     <string name="app_name">IchiApp</string>
     <string name="reg">Roboto-Regular.ttf</string><string name="str_something_went_wrong">Something went wrong</string>
     <string name="signin">Login</string>
+    <string name="submit">Submit</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgetpassword">Forget password?</string>
 </resources>

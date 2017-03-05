@@ -15,6 +15,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.fragments.ForgetPasswordFragment;
+import com.ichi.inspection.app.fragments.LoginFragment;
 import com.ichi.inspection.app.fragments.SplashFragment;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.models.BaseResponse;
@@ -99,7 +101,7 @@ public class StartActivity extends BaseActivity implements OnApiCallbackListener
         if (getSupportFragmentManager().getBackStackEntryCount() == 0){
             Log.v(TAG,"onBackPressed : " + getSupportFragmentManager().getBackStackEntryCount() );
             Fragment fragment=getSupportFragmentManager().findFragmentById(R.id.fl_home_container);
-            if(fragment instanceof SplashFragment){
+            if(fragment instanceof LoginFragment){
                 finish();  // To prevent back from the activity
             }else{
                 navigateToScreen(0, null, true);
@@ -123,9 +125,12 @@ public class StartActivity extends BaseActivity implements OnApiCallbackListener
             case Constants.SPLASH:
                 fragment = new SplashFragment();
                 break;
-            /*case Constants.SIGN_UP:
-                fragment = new SignUpFragment();
-                break;*/
+            case Constants.LOG_IN:
+                fragment = new LoginFragment();
+                break;
+            case Constants.FORGET_PASSWORD:
+                fragment=new ForgetPasswordFragment();
+                break;
         }
 
         if(fragment == null){

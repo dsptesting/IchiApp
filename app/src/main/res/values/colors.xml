@@ -8,4 +8,9 @@
 
     <color name="transWhite">#55ffffff</color>
     <color name="transWhiteDark">#66ffffff</color>
+
+    <color name="blue">#033D7C</color>
+    <color name="transBlue">#cc033D7C</color>
+    <color name="transBlueDark">#033D7C</color>
+    <color name="orange">#ED5000</color>
 </resources>

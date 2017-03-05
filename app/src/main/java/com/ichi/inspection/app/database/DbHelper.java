@@ -38,6 +38,7 @@ public class DbHelper extends SQLiteAssetHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }
+    /*
 
     public static synchronized DbHelper getInstance(Context context) {
         prefs = PreferencesHelper.getInstance(context);
@@ -64,9 +65,9 @@ public class DbHelper extends SQLiteAssetHelper{
     public static final String TABLE_LOCATIONS = "locations";
 
 
-    /**
+    *//**
      * Event table Column Names
-     */
+     *//*
 
     public static final String KEY_EVENTS_EVENT_ID = "event_id";
     public static final String KEY_EVENTS_DRIVER_ID = "driver_id";
@@ -82,9 +83,9 @@ public class DbHelper extends SQLiteAssetHelper{
     public static final String KEY_EVENTS_EVENT_START_TIME = "event_start_time";
     public static final String KEY_EVENTS_EVENT_END_TIME = "event_end_time";
 
-    /**
+    *//**
      * Vehicle Table Column Names
-     */
+     *//*
     public static final String KEY_VEHICLES_ID = "vehicle_id";
     public static final String KEY_VEHICLES_REGISTRATION = "registration";
     public static final String KEY_VEHICLES_DESCRIPTION = "description";
@@ -95,9 +96,9 @@ public class DbHelper extends SQLiteAssetHelper{
     public static final String KEY_VEHICLES_LAST_MODIFIED = "last_modified";
 
 
-    /*
+    *//*
 	* Contact Table Column Names
-	*/
+	*//*
     public static final String KEY_DEVICE_NAME = "device_name";
     public static final String KEY_DEVICE_DESCRIPTION = "device_description";
     public static final String KEY_MOBILE_DEVICE_ID = "mobile_device_id";
@@ -109,9 +110,9 @@ public class DbHelper extends SQLiteAssetHelper{
     public static final String KEY_RECENT_MESSAGE_READ = "recent_message_read";
     public static final String KEY_RECENT_MESSAGE_COLOUR = "recent_message_colour";
 
-    /*
+    *//*
 	* Message Table Column Names
-	*/
+	*//*
     public static final String KEY_MESSAGE_ID = "message_id";
     public static final String KEY_ORIGINAL_MESSAGE_ID = "original_message_id";
     public static final String KEY_MESSAGE_STATE_ID = "message_state_id";
@@ -126,16 +127,16 @@ public class DbHelper extends SQLiteAssetHelper{
     public static final String KEY_LEFT = "left";
 
 
-    /**
+    *//**
      * Event type Table Column Names
-     */
+     *//*
     public static final String KEY_EVENT_TYPE_ID = "event_type_id";
     public static final String KEY_EVENT_TYPE = "event_type";
 
 
-    /**
+    *//**
      *Defect table column names
-     */
+     *//*
     public static final String KEY_DEFECTS_ID = "defect_id";
     public static final String KEY_DEFECTS_DESCRIPTION = "defect_description";
     public static final String KEY_DEFECTS_CATEGORY_ID = "category_id";
@@ -143,18 +144,18 @@ public class DbHelper extends SQLiteAssetHelper{
     public static final String KEY_DEFECTS_LAST_MODIFIED = "last_modified";
 
 
-    /**
+    *//**
      * CYCLE RULES table column names
-     */
+     *//*
     public static final String KEY_CYCLE_RULES_ID = "cycle_rules_id";
     public static final String KEY_CYCLE_RULES_DESCRIPTION = "description";
     public static final String KEY_CYCLE_RULES_HOURS = "hours";
     public static final String KEY_CYCLE_RULES_DAYS = "days";
     public static final String KEY_CYCLE_RULES_LAST_MODIFIED = "last_modified";
 
-    /**
+    *//**
      * Locations table column names
-     */
+     *//*
 
     public static final String KEY_LOCATIONS_ID = "location_id";
     public static final String KEY_LOCATIONS_DESCRIPTION = "description";
@@ -166,11 +167,11 @@ public class DbHelper extends SQLiteAssetHelper{
 
 
 
-    /**
+    *//**
      ****************************************
      * Contact Methods
      ****************************************
-     */
+     *//*
 
     // Insert Contact
     public long insertContact(Contact contact) {
@@ -387,11 +388,11 @@ public class DbHelper extends SQLiteAssetHelper{
 
 
 
-    /**
+    *//**
      ****************************************
      * Message Methods
      ****************************************
-     */
+     *//*
 
     // Insert Message
     public long insertMessage(Message message, String myDeviceId) {
@@ -439,11 +440,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return 0;
     }
 
-    /*
+    *//*
 	****************************************
 	* Message Methods
 	****************************************
-	*/
+	*//*
 
     public void insertAllMessage(List<Message> messages, String myDeviceId){
         for(Message message : messages){
@@ -650,11 +651,11 @@ public class DbHelper extends SQLiteAssetHelper{
     }
 
 
-    /**
+    *//**
      ****************************************
      * Cycle Rules Methods
      ****************************************
-     */
+     *//*
 
     // Fetch All Cycle Rules
     public List<CycleRules> getAllCycleRules() {
@@ -687,19 +688,19 @@ public class DbHelper extends SQLiteAssetHelper{
     }
 
 
-    /**
+    *//**
      * *****************************
      * Vehicle list data
      * *****************************
-     */
+     *//*
 
-    /**
+    *//**
      * Inserts new Vehicle element into the db
      *
      * @param vehicle Object
      *
      * @return row id or -1 on error
-     */
+     *//*
     public long insertVehicle(Vehicle vehicle) {
         ContentValues values = new ContentValues();
         SQLiteDatabase mDatabase=this.getReadableDatabase();
@@ -717,11 +718,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return mDatabase.replace(TABLE_VEHICLES, null, values);
     }
 
-    /**
+    *//**
      ****************************************
      * Events Methods
      ****************************************
-     */
+     *//*
     // Fetch Event by Id
     public Events getEventById(long eventId) {
 
@@ -777,11 +778,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return 0;
     }
 
-    /**
+    *//**
      * get event by event id and update details
      *
      * @param events
-     */
+     *//*
     public void updateEvent(Events events) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -793,11 +794,11 @@ public class DbHelper extends SQLiteAssetHelper{
     }
 
 
-    /**
+    *//**
      * get list of all events from events table
      *
      * @return Events List
-     */
+     *//*
     public List<Events> getAllEvents() {
         List<Events> events = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_EVENTS;
@@ -817,11 +818,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return events;
     }
 
-    /**
+    *//**
      * This function is used to get event list for the day
      * @param seq
      * @return
-     */
+     *//*
     public List<Events> getEventsForDay(long seq){
         List<Events> events = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_EVENTS+ " WHERE " + KEY_EVENTS_SEQ + " = '"+seq+"'";
@@ -842,11 +843,11 @@ public class DbHelper extends SQLiteAssetHelper{
     }
 
 
-    /**
+    *//**
      * get distinct sequence number from events
      *
      * @return Events List
-     */
+     *//*
     public List<Long> getEventsDistinctBySequenceNumber() {
         List<Long> seqNos = new ArrayList<>();
         String selectQuery = "SELECT DISTINCT("+KEY_EVENTS_SEQ+") FROM " + TABLE_EVENTS +" ORDER BY " + KEY_EVENTS_SEQ +" DESC ";
@@ -873,11 +874,11 @@ public class DbHelper extends SQLiteAssetHelper{
     }
 
 
-    /**
+    *//**
      * get last selected event status id events table
      *
      * @return
-     */
+     *//*
     public int getLastSelectedEventStatusId() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -899,11 +900,11 @@ public class DbHelper extends SQLiteAssetHelper{
     }
 
 
-    /**
+    *//**
      * update specific event and update event status and set end event time to previous running event
      *
      * @param eventStartTime
-     */
+     *//*
     public void updateEventStatusById(long eventStartTime) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -926,11 +927,11 @@ public class DbHelper extends SQLiteAssetHelper{
         db.update(TABLE_EVENTS, values, KEY_EVENTS_EVENT_ID + " = ? ", new String[]{String.valueOf(lastEvents.getEventId())});
     }
 
-    /**
+    *//**
      * get event object from cursor
      * @param c
      * @return
-     */
+     *//*
     private Events getEventsFromCursor(Cursor c){
         Events events = new Events();
         events.setEventId(Long.parseLong(c.getString(c.getColumnIndex(KEY_EVENTS_EVENT_ID))));
@@ -950,11 +951,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return events;
     }
 
-    /**
+    *//**
      * get content values from event object
      * @param events
      * @return
-     */
+     *//*
     private ContentValues getContentValuesFromEvents(Events events){
         ContentValues values = new ContentValues();
         values.put(KEY_EVENTS_SEQ, events.getSeq());
@@ -973,11 +974,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return values;
     }
 
-    /**
+    *//**
      ****************************************
      * Event Type Methods
      ****************************************
-     */
+     *//*
 
     // Fetch Event Name by Id
     public String getEventNameById(int event_id) {
@@ -1006,11 +1007,11 @@ public class DbHelper extends SQLiteAssetHelper{
 
 
 
-    /**
+    *//**
      * Get all Location items in the db
      *
      * @return a list of Location items
-     */
+     *//*
     public Locations getClosestLocation(double mLat,double mLon) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_LOCATIONS+" ORDER BY ABS("+KEY_LOCATIONS_LAT_LON+" - ABS("+mLat+"+ ("+mLon+"))) ASC LIMIT 1;",null);
@@ -1020,12 +1021,12 @@ public class DbHelper extends SQLiteAssetHelper{
         return mLocation;
     }
 
-    /**
+    *//**
      * Extract Location from a db cursor
      *
      * @param cursor
      * @return Location item in the current cursor
-     */
+     *//*
     protected Locations cursorToLocation(Cursor cursor) {
         Locations mLocation = new Locations();
 
@@ -1042,11 +1043,11 @@ public class DbHelper extends SQLiteAssetHelper{
 
 
 
-    /**
+    *//**
      * Get all Vehicle items in the db
      *
      * @return a list of Vehicle items
-     */
+     *//*
     public List<Vehicle> getVehicles() {
         List<Vehicle> mVehicles = new ArrayList<Vehicle>();
         String selectQuery = "SELECT * FROM " + TABLE_VEHICLES;
@@ -1064,12 +1065,12 @@ public class DbHelper extends SQLiteAssetHelper{
         return mVehicles;
     }
 
-    /**
+    *//**
      * Extract Vehicle from a db cursor
      *
      * @param cursor
      * @return Vehicle item in the current cursor
-     */
+     *//*
     protected Vehicle cursorToVehicle(Cursor cursor) {
         Vehicle mVehicle = new Vehicle();
 
@@ -1084,11 +1085,11 @@ public class DbHelper extends SQLiteAssetHelper{
         return mVehicle;
     }
 
-    /**
+    *//**
      * get log day event list according to sequence number in descending order
      *
      * @return logDayEvents
-     */
+     *//*
     public List<LogDayEvent> getLogDayEventsList(){
         List<LogDayEvent> logDayEvents = new ArrayList<>();
 
@@ -1112,12 +1113,12 @@ public class DbHelper extends SQLiteAssetHelper{
         return logDayEvents;
     }
 
-    /**
+    *//**
      *
      * @param id primary key
      * @return
-     */
-    /*public Vehicle getVehicle(long id) {
+     *//*
+    *//*public Vehicle getVehicle(long id) {
 
         SQLiteDatabase mDatabase=mAbstractDbAdapter.getReadableDatabase();
         Cursor cursor = mDatabase.query(TABLE, allColumns, KEY_ID + "=?", new String[] {
@@ -1161,5 +1162,8 @@ public class DbHelper extends SQLiteAssetHelper{
         return mDatabase.update(TABLE, values, KEY_ID + "=?", new String[] {
                 String.valueOf(Vehicle.getVehicleId())
         });
-    }*/
+    }*//*
+
+
+    */
 }

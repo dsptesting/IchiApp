@@ -9,7 +9,7 @@ public class Constants {
     //fragments
     public static final int SPLASH = 0;
     public static final int LOG_IN = 1;
-    public static final int SIGN_UP = 2;
+    public static final int FORGET_PASSWORD = 2;
     public static final int HOME = 3;
 
     public static final boolean debugging = true;

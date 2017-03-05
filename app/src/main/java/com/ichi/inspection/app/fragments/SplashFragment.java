@@ -2,6 +2,7 @@ package com.ichi.inspection.app.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.LayoutInflater;
@@ -16,13 +17,10 @@ import com.ichi.inspection.app.utils.CustomButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashFragment extends BaseFragment implements View.OnClickListener{
+public class SplashFragment extends BaseFragment {
 
     private static final String TAG = SplashFragment.class.getSimpleName();
     private Context mContext;
-
-    @BindView(R.id.btnLogin)
-    CustomButton btnLogin;
 
     @Nullable @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -40,16 +38,14 @@ public class SplashFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void initData() {
+        Runnable  runnable=new Runnable() {
+            @Override
+            public void run() {
+                ((StartActivity)getActivity()).navigateToScreen(Constants.LOG_IN, null, false);
 
-        btnLogin.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnLogin:
-                ((StartActivity)getActivity()).navigateToScreen(Constants.LOG_IN, null, true);
-                break;
-        }
+            }
+        };
+        Handler handler=new Handler();
+        handler.postDelayed(runnable,2000);
     }
 }
