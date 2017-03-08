@@ -54,7 +54,7 @@ public class StartActivity extends BaseActivity implements OnApiCallbackListener
             return;
         }*/
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_start);
         ButterKnife.bind(this);
         navigateToScreen(Constants.SPLASH, null, false);
 

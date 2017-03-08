@@ -10,7 +10,10 @@ public class Constants {
     public static final int SPLASH = 0;
     public static final int LOG_IN = 1;
     public static final int FORGET_PASSWORD = 2;
-    public static final int HOME = 3;
+    public static final int INSPECTIONLIST = 3;
+    public static final int INSPECTION_NAVIGATION = 4;
+    public static final int INSPECTION_ORDER = 5;
+    public static final int INSPECTION_DETAIL = 6;
 
     public static final boolean debugging = true;
     public static final String USER = "USER";
