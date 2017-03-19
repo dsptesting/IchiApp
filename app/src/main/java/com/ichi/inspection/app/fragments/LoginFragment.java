@@ -35,7 +35,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     CustomEditText etPassword;
 
     @BindView(R.id.btnLogin)
-    CustomButton btnLogin;
+    CustomTextView btnLogin;
 
     @BindView(R.id.txtForgetPassword)
     CustomTextView txtForgetPassword;
