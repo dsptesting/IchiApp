@@ -47,8 +47,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
+                    android:background="@android:color/transparent"
                     android:inputType="textEmailAddress"
-                    android:paddingBottom="@dimen/values_16"/>
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"/>
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimary"/>
+                
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
