@@ -11,7 +11,8 @@
         android:id="@+id/rlLogin"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@mipmap/logobg">
        <ImageView
              android:layout_width="match_parent"
              android:layout_height="0dp"
@@ -78,8 +79,7 @@
                 android:id="@+id/txtForgetPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="@dimen/values_w75"
+                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/values_h15"
                 android:layout_marginBottom="@dimen/values_h15"
                 android:text="@string/forgetpassword"
