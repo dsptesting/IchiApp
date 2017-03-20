@@ -1,14 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/values_16"
+    android:layout_marginRight="@dimen/values_16"
+    android:layout_marginLeft="@dimen/values_16">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/values_12">
 
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/txtBuyerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/buyer_name"
+            style="@style/txt_reg_16_gray"/>
 
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvBuyerName"
+            android:layout_below="@+id/txtBuyerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Eric Roger"
+            style="@style/txt_reg_18_black"/>
 
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/txtInspectionNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvBuyerName"
+            android:layout_marginTop="@dimen/values_12"
+            android:text="@string/inspection_no"
+            style="@style/txt_reg_16_gray"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvInspectionNo"
+            android:layout_below="@+id/txtInspectionNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="07527"
+            style="@style/txt_reg_18_black"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/txtCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@+id/txtInspectionNo"
+            android:text="@string/city"
+            style="@style/txt_reg_16_gray"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvCity"
+            android:layout_below="@+id/txtCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Vadodara"
+            style="@style/txt_reg_18_black"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvInspectionNo"
+            android:layout_marginTop="@dimen/values_12"
+            android:text="@string/date"
+            style="@style/txt_reg_16_gray"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvDate"
+            android:layout_below="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="16/03/2017"
+            style="@style/txt_reg_18_black"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@+id/txtDate"
+            android:text="@string/time"
+            style="@style/txt_reg_16_gray"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvTime"
+            android:layout_below="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="08:30"
+            style="@style/txt_reg_18_black"/>
 
     </RelativeLayout>
 

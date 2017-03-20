@@ -6,4 +6,11 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forgetpassword">Forget password?</string>
+    
+    
+    <string name="buyer_name">Buyer Name</string>
+    <string name="inspection_no">Inspection No</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="city">City</string>
 </resources>
