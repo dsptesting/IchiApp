@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context="com.ichi.inspection.app.activities.StartActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo_bg"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:id="@+id/llInspectionSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/values_w75"
+            android:layout_marginRight="@dimen/values_w75"
+            android:orientation="vertical">
+
+            <com.ichi.inspection.app.utils.CustomTextView
+                android:id="@+id/txtForgetPassword"
+                style="@style/txt_reg_18_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="false"
+                android:text="@string/what_you_want"/>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/values_h38">
+
+                <com.ichi.inspection.app.utils.CustomTextView
+                    android:id="@+id/btnInspectionDetail"
+                    style="@style/txt_reg_16_white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_trans_blue"
+                    android:gravity="center"
+                    android:padding="@dimen/values_12"
+                    android:text="@string/inspection_details"
+                    android:textAllCaps="true"/>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/values_h38">
+
+                <com.ichi.inspection.app.utils.CustomTextView
+                    android:id="@+id/btnInspectionOrder"
+                    style="@style/txt_reg_16_white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_trans_blue"
+                    android:gravity="center"
+                    android:padding="@dimen/values_12"
+                    android:text="@string/inspection_order"
+                    android:textAllCaps="true"/>
+
+            </android.support.v7.widget.CardView>
+
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
