@@ -31,8 +31,9 @@ public class Constants {
     public static final int STATUS_SYNCED = 1;
 
     // api
+    public static final String CLIENT_ID = "98545254";
     public static final String BASE_URL = "http://www.samplegoogle.com";
-    public static final String URL_LOGIN = "https://w605z5h2nk.execute-api.ap-southeast-1.amazonaws.com/v1/oauth2/token";
+    public static final String URL_LOGIN = "http://uat.ichisoftware.com:8088/token";
 
     //TODO sample... remove if unused. later
     public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd HH:mm:ss";
@@ -41,7 +42,7 @@ public class Constants {
 
 
     //Pref helper keys
-    public static final String PREF_USER_CONTACT_OBJECT = "PREF_USER_CONTACT_OBJECT";
+    public static final String PREF_TOKEN_OBJECT = "PREF_TOKEN_OBJECT";
 
     // result codes
     /*public static final int CREATE_NEW_CONTACT = 100;

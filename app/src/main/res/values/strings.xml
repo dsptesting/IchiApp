@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">IchiApp</string>
-    <string name="reg">Roboto-Regular.ttf</string><string name="str_something_went_wrong">Something went wrong</string>
+    <string name="reg">Roboto-Regular.ttf</string>
+    <string name="str_something_went_wrong">Something went wrong</string>
     <string name="signin">Login</string>
     <string name="submit">Submit</string>
     <string name="email">Email</string>
@@ -9,8 +10,8 @@
     <string name="what_you_want">What do you want to do?</string>
     <string name="inspection_details">Inspection Details</string>
     <string name="inspection_order">Inspection Order</string>
-    
-    
+
+
     <string name="buyer_name">Buyer Name</string>
     <string name="inspection_no">Inspection No</string>
     <string name="date">Date</string>
@@ -25,4 +26,13 @@
     <string name="fees">Fees</string>
     <string name="special_instruction">Special Instruction</string>
     <string name="payment">Payment</string>
+
+
+    <string name="str_email_is_not_valid">Email is not valid!</string>
+    <string name="str_pass_is_not_valid">Password is not valid!</string>
+    <string name="str_pass_length_is_not_valid">Password must be at least 5 chars long!</string>
+    <string name="str_pass_does_not_match">Password does not match!</string>
+    <string name="internet_not_avail">Internet is not available. Please try later.</string>
+    <string name="title_activity_splash">SplashActivity</string>
+
 </resources>

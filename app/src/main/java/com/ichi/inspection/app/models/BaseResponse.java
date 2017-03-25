@@ -8,14 +8,13 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Palak on 07-01-2017.
  */
-//TODO class is copied as helper class. use params which are comman in webcall response
 public class BaseResponse implements Parcelable {
 
     @SerializedName("result_code")
     public int resultCode;
 
-    @SerializedName("msg")
-    public String msg;
+    @SerializedName("error")
+    public String error;
 
     public BaseResponse() {
     }
@@ -24,13 +23,18 @@ public class BaseResponse implements Parcelable {
     public String toString() {
         return "BaseResponse{" +
                 "resultCode=" + resultCode +
-                ", msg='" + msg + '\'' +
+                ", error='" + error + '\'' +
                 '}';
+    }
+
+    public BaseResponse(int resultCode, String error) {
+        this.resultCode = resultCode;
+        this.error = error;
     }
 
     protected BaseResponse(Parcel in) {
         resultCode = in.readInt();
-        msg = in.readString();
+        error = in.readString();
     }
 
     @Override
@@ -41,7 +45,7 @@ public class BaseResponse implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(resultCode);
-        dest.writeString(msg);
+        dest.writeString(error);
     }
 
     @SuppressWarnings("unused")
@@ -65,11 +69,11 @@ public class BaseResponse implements Parcelable {
         this.resultCode = resultCode;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getError() {
+        return error;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setError(String error) {
+        this.error = error;
     }
 }

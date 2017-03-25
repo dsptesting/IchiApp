@@ -31,7 +31,7 @@ public class Utils {
     public static boolean hasCallErrorInBackground(BaseResponse baseResponse){
 
         if (baseResponse == null) return true;
-        if(baseResponse.resultCode != 1) return true;
+        if(baseResponse.getError() != null && !baseResponse.getError().isEmpty()) return true;
 
         return false;
     }
@@ -42,9 +42,8 @@ public class Utils {
             Snackbar.make(coordinatorLayout, R.string.str_something_went_wrong, Snackbar.LENGTH_SHORT).show();
             return true;
         }
-
-        if(baseResponse.resultCode != 1) {
-            Snackbar.make(coordinatorLayout,baseResponse.msg, Snackbar.LENGTH_SHORT).show();
+        if(baseResponse.getError() != null && !baseResponse.getError().isEmpty()) {
+            Snackbar.make(coordinatorLayout,baseResponse.getError(), Snackbar.LENGTH_SHORT).show();
             return true;
         }
 
