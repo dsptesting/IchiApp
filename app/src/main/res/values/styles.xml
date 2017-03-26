@@ -60,6 +60,12 @@
         <item name="android:textSize">@dimen/values_txt_18</item>
     </style>
 
+    <style name="txt_reg_18_lightblack">
+        <item name="android:textColor">@color/lightblack</item>
+        <item name="customFont">@string/reg</item>
+        <item name="android:textSize">@dimen/values_txt_18</item>
+    </style>
+
     <style name="txt_reg_18_gray">
         <item name="android:textColor">@color/gray</item>
         <item name="customFont">@string/reg</item>

@@ -27,6 +27,14 @@
     <string name="special_instruction">Special Instruction</string>
     <string name="payment">Payment</string>
 
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="phone">Phone</string>
+    <string name="agentname">Agent Name</string>
+    <string name="agencyname">Agency Name</string>
+    <string name="cellphone">Cell Phone</string>
+    <string name="workemail">Work Email</string>
+
 
     <string name="str_email_is_not_valid">Email is not valid!</string>
     <string name="str_pass_is_not_valid">Password is not valid!</string>
