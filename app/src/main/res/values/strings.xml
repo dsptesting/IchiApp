@@ -46,6 +46,38 @@
     <string name="power">Power</string>
     <string name="bed_rooms">Bed Rooms</string>
     <string name="bath_rooms">Bath Rooms</string>
+    <string name="who_placed_order">Who Placed Order</string>
+    <string name="number_of_slot">Number of slot</string>
+    <string name="inspector">Inspector</string>
+    <string name="special_request">Spcial Request</string>
+    <string name="access">Access</string>
+    <string name="access_code">Access Code</string>
+    <string name="agent_attending">Agent Attending</string>
+    <string name="buyer_attending">Buyer Attending</string>
+    <string name="locale">Locale</string>
+    <string name="inspect_agreement">Inspect Agreement</string>
+    <string name="referred_by">Referred By</string>
+    <string name="home">Home</string>
+    <string name="townhouse">Townhouse</string>
+    <string name="condo">Condo</string>
+    <string name="pool_or_spa">Pool or Spa</string>
+    <string name="pool_and_spa">Pool and Spa</string>
+    <string name="termite">Termite</string>
+    <string name="trip_charge">Trip Charge</string>
+    <string name="age_fee">Age Fee</string>
+    <string name="guest_house">Guest House</string>
+    <string name="other">Other</string>
+    <string name="re_inspection">Re-inspection</string>
+    <string name="duplex">Duplex</string>
+    <string name="triplex">Triplex</string>
+    <string name="four_plex">4-Plex</string>
+    <string name="discount">Discount</string>
+    <string name="saved_total">Saved Total</string>
+    <string name="payments_made">Payments Made</string>
+    <string name="total">Total</string>
+    <string name="cross_street">Cross Streets</string>
+    <string name="yearbuilt">Year Built</string>
+
 
 
     <string name="str_email_is_not_valid">Email is not valid!</string>
