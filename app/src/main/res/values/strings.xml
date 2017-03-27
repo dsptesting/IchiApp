@@ -86,5 +86,7 @@
     <string name="str_pass_does_not_match">Password does not match!</string>
     <string name="internet_not_avail">Internet is not available. Please try later.</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="str_no_data">No Data Available</string>
+    <string name="inspections_title">Inspections</string>
 
 </resources>

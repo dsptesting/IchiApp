@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.fragments.ForgetPasswordFragment;
+import com.ichi.inspection.app.fragments.InspectionListFragment;
 import com.ichi.inspection.app.fragments.LoginFragment;
 import com.ichi.inspection.app.fragments.SplashFragment;
 import com.ichi.inspection.app.utils.Constants;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     /*
     *  Handles back stack for the fragment manager
     * */
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0){
             Log.v(TAG,"onBackPressed : " + getSupportFragmentManager().getBackStackEntryCount() );
             Fragment fragment=getSupportFragmentManager().findFragmentById(R.id.fl_home_container);
-            if(fragment instanceof LoginFragment){
+            if(fragment instanceof InspectionListFragment){
                 finish();  // To prevent back from the activity
             }else{
                 navigateToScreen(0, null, true);
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (position){
             case Constants.INSPECTIONLIST:
-                fragment = new SplashFragment();
+                fragment = new InspectionListFragment();
                 break;
             case Constants.INSPECTION_NAVIGATION:
 

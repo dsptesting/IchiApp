@@ -79,6 +79,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
         btnLogin.setOnClickListener(this);
         txtForgetPassword.setOnClickListener(this);
+
+        etEmail.setText("alsilva.allpro@gmail.com");
+        etPassword.setText("Admin@123");
     }
 
     @Override
@@ -139,7 +142,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 GetTokenResponse getTokenResponse = (GetTokenResponse) baseResponse;
                 if(getTokenResponse.getAccessToken() != null && !getTokenResponse.getAccessToken().trim().isEmpty()){
                     prefs.putObject(Constants.PREF_TOKEN_OBJECT,getTokenResponse);
-                   // goToHomeActivity();
+                    goToHomeActivity();
                 }
             }
         }

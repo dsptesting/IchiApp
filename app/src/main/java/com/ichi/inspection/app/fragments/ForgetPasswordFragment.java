@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ichi.inspection.app.R;
-import com.ichi.inspection.app.utils.CustomButton;
 import com.ichi.inspection.app.utils.CustomEditText;
 import com.ichi.inspection.app.utils.Utils;
 
@@ -27,8 +27,8 @@ public class ForgetPasswordFragment extends BaseFragment implements View.OnClick
     @BindView(R.id.etEmail)
     CustomEditText etEmail;
 
-    @BindView(R.id.btnSubmit)
-    CustomButton btnSubmit;
+    @BindView(R.id.cvSubmit)
+    CardView cvSubmit;
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
@@ -47,13 +47,13 @@ public class ForgetPasswordFragment extends BaseFragment implements View.OnClick
     }
 
     private void initData() {
-        btnSubmit.setOnClickListener(this);
+        cvSubmit.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnSubmit:
+            case R.id.cvSubmit:
                 Utils.showSnackBar(coordinatorLayout,getResources().getString(R.string.app_name));
                 break;
         }

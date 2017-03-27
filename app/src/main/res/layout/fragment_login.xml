@@ -40,6 +40,7 @@
                 android:id="@+id/tilEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:hintAnimationEnabled="false"
                 android:layout_marginTop="@dimen/values_h38">
 
                 <com.ichi.inspection.app.utils.CustomEditText
@@ -63,6 +64,7 @@
                 android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:hintAnimationEnabled="false"
                 android:layout_marginTop="@dimen/values_h18">
 
                 <com.ichi.inspection.app.utils.CustomEditText
