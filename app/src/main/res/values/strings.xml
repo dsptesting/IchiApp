@@ -34,6 +34,18 @@
     <string name="agencyname">Agency Name</string>
     <string name="cellphone">Cell Phone</string>
     <string name="workemail">Work Email</string>
+    <string name="address">Address</string>
+    <string name="state">State</string>
+    <string name="zip">Zip</string>
+    <string name="building_type">Building Type</string>
+    <string name="square_footage">Square Footage</string>
+    <string name="occupied">Occupied</string>
+    <string name="water">Water</string>
+    <string name="gas">Gas</string>
+    <string name="other_utility">Other Utility</string>
+    <string name="power">Power</string>
+    <string name="bed_rooms">Bed Rooms</string>
+    <string name="bath_rooms">Bath Rooms</string>
 
 
     <string name="str_email_is_not_valid">Email is not valid!</string>

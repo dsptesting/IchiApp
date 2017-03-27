@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context="com.ichi.inspection.app.activities.StartActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/logo_bg"
+                android:visibility="visible" />
+
+            <com.ichi.inspection.app.utils.CustomTextView
+                android:id="@+id/txtPropertyInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/txt_reg_18_black"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_28"
+                android:clickable="true"
+                android:focusable="false"
+                android:text="@string/property_info" />
+            <!--Address-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtAddress"
+                android:layout_below="@+id/txtPropertyInfo"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/address"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <!--City-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtCity"
+                android:layout_below="@+id/txtAddress"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/city"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <!--state-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtState"
+                android:layout_below="@+id/txtCity"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/state"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <!--Zip-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtZip"
+                android:layout_below="@+id/txtState"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etZip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/zip"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <!--Building Type-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtBuildingType"
+                android:layout_below="@+id/txtZip"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etBuildingType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/building_type"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <!--Square Footage-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtSquareFootage"
+                android:layout_below="@+id/txtBuildingType"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etSquareFootage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/square_footage"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <!--Occupied-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtOccupied"
+                android:layout_below="@+id/txtSquareFootage"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etOccupied"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/occupied"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <!--Checkbox Power-->
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cbPower"
+                android:layout_below="@+id/txtOccupied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:text="@string/power"/>
+            <!--Checkbox water-->
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cbWater"
+                android:layout_below="@+id/cbPower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:text="@string/water"/>
+            <!--Checkbox Gas-->
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cbGas"
+                android:layout_below="@+id/cbWater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:text="@string/gas"/>
+            <!--Checkbox Other Utility-->
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cbOtherUtility"
+                android:layout_below="@+id/cbGas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:text="@string/other_utility"/>
+
+            <!--Bed Rooms-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtBedRooms"
+                android:layout_below="@+id/cbOtherUtility"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etBedRooms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/bed_rooms"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <!--BAth Rooms-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtBathRooms"
+                android:layout_below="@+id/txtBedRooms"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/values_16"
+                android:layout_marginTop="@dimen/values_10"
+                android:layout_height="wrap_content">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etBathRooms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:paddingTop="5dp"
+                    android:hint="@string/bath_rooms"
+                    android:text="Eric"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>
