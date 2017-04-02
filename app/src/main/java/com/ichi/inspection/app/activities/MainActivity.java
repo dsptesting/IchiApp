@@ -9,9 +9,18 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.fragments.BuyersAgentFragment;
+import com.ichi.inspection.app.fragments.ClientInfoFragment;
+import com.ichi.inspection.app.fragments.FeesFragment;
 import com.ichi.inspection.app.fragments.ForgetPasswordFragment;
 import com.ichi.inspection.app.fragments.InspectionListFragment;
+import com.ichi.inspection.app.fragments.InspectionOrderFragment;
+import com.ichi.inspection.app.fragments.InspectionSelectionFragment;
+import com.ichi.inspection.app.fragments.ListingAgentFragment;
 import com.ichi.inspection.app.fragments.LoginFragment;
+import com.ichi.inspection.app.fragments.PropertyInfoFragment;
+import com.ichi.inspection.app.fragments.SchedulerFragment;
+import com.ichi.inspection.app.fragments.SpecialInstructionFragment;
 import com.ichi.inspection.app.fragments.SplashFragment;
 import com.ichi.inspection.app.utils.Constants;
 
@@ -95,12 +104,33 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new InspectionListFragment();
                 break;
             case Constants.INSPECTION_NAVIGATION:
-
+                fragment = new InspectionSelectionFragment();
                 break;
             case Constants.INSPECTION_ORDER:
-
+                fragment = new InspectionOrderFragment();
                 break;
             case Constants.INSPECTION_DETAIL:
+                break;
+            case Constants.INSPECTION_CLIENT_INFO:
+                fragment = new ClientInfoFragment();
+                break;
+            case Constants.INSPECTION_BUYERS_AGENT:
+                fragment = new BuyersAgentFragment();
+                break;
+            case Constants.INSPECTION_LINKING_AGENT:
+                fragment = new ListingAgentFragment();
+                break;
+            case Constants.INSPECTION_PROPERTY_INFO:
+                fragment = new PropertyInfoFragment();
+                break;
+            case Constants.INSPECTION_SCHEDULER:
+                fragment = new SchedulerFragment();
+                break;
+            case Constants.INSPECTION_SPECIAL_INSTRUCTION:
+                fragment = new SpecialInstructionFragment();
+                break;
+            case Constants.INSPECTION_FEES:
+                fragment = new FeesFragment();
                 break;
         }
 
@@ -110,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
         if(bundle != null) fragment.setArguments(bundle);
 
         replaceFragment(R.id.fl_home_container, fragment, keepOnBackState);
+
+    }
+
+    public void logout(){
 
     }
 }

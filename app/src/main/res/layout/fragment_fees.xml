@@ -8,242 +8,291 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     tools:context="com.ichi.inspection.app.activities.StartActivity">
-    <ScrollView
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <RelativeLayout
+
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo_bg"
+            android:visibility="visible"/>
 
-            <ImageView
+        <include layout="@layout/toolbar_plain"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tbAppToolbarNormal">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/logo_bg"
-                android:visibility="visible" />
+                android:layout_height="match_parent">
 
-            <com.ichi.inspection.app.utils.CustomTextView
-                android:id="@+id/txtFees"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/txt_reg_18_black"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_28"
-                android:clickable="true"
-                android:focusable="false"
-                android:text="@string/fees" />
-
-            <!--Checkbox Home-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbHome"
-                android:layout_below="@+id/txtFees"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/home"/>
-            <!--Checkbox Townhouse-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbTownHouse"
-                android:layout_below="@+id/txtFees"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/townhouse"/>
-            <!--Checkbox Condo-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbCondo"
-                android:layout_below="@+id/cbHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/condo"/>
-            <!--Checkbox Pool Or Spa-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbPoolOrSpa"
-                android:layout_below="@+id/cbHome"
-                android:layout_alignLeft="@+id/cbTownHouse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/pool_or_spa"/>
-            <!--Checkbox Termite-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbTermite"
-                android:layout_below="@+id/cbCondo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/termite"/>
-            <!--Checkbox Pool And Spa-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbPoolAndSpa"
-                android:layout_below="@+id/cbCondo"
-                android:layout_alignLeft="@+id/cbPoolOrSpa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/pool_and_spa"/>
-            <!--Checkbox Trip Charge-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbTripCharge"
-                android:layout_below="@+id/cbPoolAndSpa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/trip_charge"/>
-            <!--Checkbox Age Fee-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbAgeFee"
-                android:layout_below="@+id/cbPoolAndSpa"
-                android:layout_alignLeft="@+id/cbPoolOrSpa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/age_fee"/>
-            <!--Checkbox Guest House-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbGuestHouse"
-                android:layout_below="@+id/cbTripCharge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/guest_house"/>
-            <!--Checkbox Other-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbOther"
-                android:layout_below="@+id/cbTripCharge"
-                android:layout_alignLeft="@+id/cbAgeFee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/other"/>
-            <!--Checkbox Re-inspection-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbReInspection"
-                android:layout_below="@+id/cbGuestHouse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/re_inspection"/>
-            <!--Checkbox duplex-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbDuplex"
-                android:layout_below="@+id/cbOther"
-                android:layout_alignLeft="@+id/cbAgeFee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/duplex"/>
-            <!--Checkbox Triplex-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbTriplex"
-                android:layout_below="@+id/cbDuplex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/triplex"/>
-            <!--Checkbox Other-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cb4Plex"
-                android:layout_below="@+id/cbDuplex"
-                android:layout_alignLeft="@+id/cbAgeFee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/four_plex"/>
-            <!--Checkbox Triplex-->
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbDiscount"
-                android:layout_below="@+id/cbTriplex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/values_16"
-                android:layout_marginTop="@dimen/values_10"
-                android:text="@string/discount"/>
-
-            <!--Total-->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/txtTotal"
-                android:layout_below="@+id/cbDiscount"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="@dimen/values_28"
-                android:layout_marginTop="@dimen/values_10"
-                android:layout_height="wrap_content">
-
-                <com.ichi.inspection.app.utils.CustomEditText
-                    android:id="@+id/etTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:paddingTop="5dp"
-                    android:hint="@string/total"
-                    android:text="Eric"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="@dimen/values_txt_14"/>
-
-            </android.support.design.widget.TextInputLayout>
-            <!--Saved Total-->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/txtSavedTotal"
-                android:layout_toRightOf="@+id/txtTotal"
-                android:layout_below="@+id/cbDiscount"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="@dimen/values_50"
-                android:layout_marginTop="@dimen/values_10"
-                android:layout_height="wrap_content">
-
-                <com.ichi.inspection.app.utils.CustomEditText
-                    android:id="@+id/etSavedTotal"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:paddingTop="5dp"
-                    android:hint="@string/total"
-                    android:text="Eric"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="@dimen/values_txt_14"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/values_16"
+                    android:layout_marginRight="@dimen/values_16">
 
-            </android.support.design.widget.TextInputLayout>
+                    <LinearLayout
+                        android:id="@+id/llHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/values_28"
+                        android:orientation="horizontal">
 
-            <!--Payment Made-->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/txtPaymentsMade"
-                android:layout_below="@+id/cbDiscount"
-                android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/txtSavedTotal"
-                android:layout_marginLeft="@dimen/values_50"
-                android:layout_marginTop="@dimen/values_10"
-                android:layout_height="wrap_content">
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbHome"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/home"/>
 
-                <com.ichi.inspection.app.utils.CustomEditText
-                    android:id="@+id/etPaymentsMade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:paddingTop="5dp"
-                    android:hint="@string/payments_made"
-                    android:text="Eric"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="@dimen/values_txt_14"/>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbTownHouse"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1"
+                            android:text="@string/townhouse"/>
 
-            </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llCondo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llHome"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbCondo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/condo"/>
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbPoolOrSpa"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/pool_or_spa"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llTermite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llCondo"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbTermite"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/termite"/>
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbPoolAndSpa"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/pool_and_spa"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llTripCharge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llTermite"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbTripCharge"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/trip_charge"/>
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbAgeFee"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/age_fee"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llGuestHouse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llTripCharge"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbGuestHouse"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/guest_house"/>
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbOther"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/other"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llReInspection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llGuestHouse"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbReInspection"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/re_inspection"/>
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbDuplex"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/duplex"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llTriplex"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llReInspection"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbTriplex"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/triplex"/>
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cb4Plex"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/four_plex"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llDiscount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llTriplex"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cbDiscount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/discount"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llPayment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llDiscount"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/txtTotal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            app:hintAnimationEnabled="false">
+
+                            <com.ichi.inspection.app.utils.CustomEditText
+                                android:id="@+id/etTotal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:enabled="false"
+                                android:hint="@string/total"
+                                android:paddingTop="5dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="@dimen/values_txt_14"/>
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/txtSavedTotal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            app:hintAnimationEnabled="false">
+
+                            <com.ichi.inspection.app.utils.CustomEditText
+                                android:id="@+id/etSavedTotal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:enabled="false"
+                                android:hint="@string/saved_total"
+                                android:paddingTop="5dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="@dimen/values_txt_14"/>
+
+                        </android.support.design.widget.TextInputLayout>
 
 
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/txtPaymentsMade"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            app:hintAnimationEnabled="false">
 
-        </RelativeLayout>
-    </ScrollView>
+                            <com.ichi.inspection.app.utils.CustomEditText
+                                android:id="@+id/etPaymentsMade"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:enabled="false"
+                                android:hint="@string/payments_made"
+                                android:paddingTop="5dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="@dimen/values_txt_14"/>
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

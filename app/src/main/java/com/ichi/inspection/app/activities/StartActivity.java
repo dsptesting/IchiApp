@@ -122,9 +122,9 @@ public class StartActivity extends BaseActivity implements OnApiCallbackListener
         Fragment fragment = null;
 
         switch (position){
-            case Constants.SPLASH:
+            /*case Constants.SPLASH:
                 fragment = new SplashFragment();
-                break;
+                break;*/
             case Constants.LOG_IN:
                 fragment = new LoginFragment();
                 break;
@@ -134,7 +134,7 @@ public class StartActivity extends BaseActivity implements OnApiCallbackListener
         }
 
         if(fragment == null){
-            fragment = new SplashFragment();
+            fragment = new LoginFragment();
         }
         if(bundle != null) fragment.setArguments(bundle);
 

@@ -14,6 +14,14 @@ public class Constants {
     public static final int INSPECTION_NAVIGATION = 4;
     public static final int INSPECTION_ORDER = 5;
     public static final int INSPECTION_DETAIL = 6;
+    public static final int INSPECTION_CLIENT_INFO = 7;
+    public static final int INSPECTION_BUYERS_AGENT = 8;
+    public static final int INSPECTION_LINKING_AGENT = 9;
+    public static final int INSPECTION_PROPERTY_INFO = 10;
+    public static final int INSPECTION_SCHEDULER = 11;
+    public static final int INSPECTION_FEES = 12;
+    public static final int INSPECTION_SPECIAL_INSTRUCTION = 13;
+    public static final int INSPECTION_PAYMENT = 14;
 
     public static final boolean debugging = true;
     public static final String USER = "USER";

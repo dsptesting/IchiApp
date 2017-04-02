@@ -13,118 +13,121 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/logo_bg"
-            android:visibility="visible" />
+        <include layout="@layout/toolbar_plain"/>
 
-        <com.ichi.inspection.app.utils.CustomTextView
-            android:id="@+id/txtBuyerAgent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/txt_reg_18_black"
-            android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_28"
-            android:clickable="true"
-            android:focusable="false"
-            android:text="@string/buyer_agent" />
-        <!--Agent Name-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/txtAgentName"
-            android:layout_below="@+id/txtBuyerAgent"
+        <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tbAppToolbarNormal"
             android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_10"
-            android:layout_height="wrap_content">
+            android:layout_marginRight="@dimen/values_16">
 
-            <com.ichi.inspection.app.utils.CustomEditText
-                android:id="@+id/etAgentName"
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="@string/agentname"
-                android:enabled="false"
-                android:paddingTop="5dp"
-                android:text="Eric"
-                android:textColor="@color/black"
-                android:textColorHint="@color/gray"
-                android:textSize="@dimen/values_txt_14"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <!--Agency Name-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/txtAgencyName"
-            android:layout_below="@+id/txtAgentName"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_10"
-            android:layout_height="wrap_content">
-
-            <com.ichi.inspection.app.utils.CustomEditText
-                android:id="@+id/etAgencyName"
+                android:layout_centerInParent="true"
+                android:src="@drawable/logo_bg"
+                android:visibility="visible"/>
+<!--
+            <com.ichi.inspection.app.utils.CustomTextView
+                android:id="@+id/txtBuyerAgent"
+                style="@style/txt_reg_18_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/values_28"
+                android:clickable="true"
+                android:focusable="false"
+                android:text="@string/buyer_agent"/>-->
+            <!--Agent Name-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtAgentName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="@string/agencyname"
-                android:enabled="false"
-                android:paddingTop="5dp"
-                android:text="Roger"
-                android:textColor="@color/black"
-                android:textColorHint="@color/gray"
-                android:textSize="@dimen/values_txt_14"/>
+                android:layout_marginTop="@dimen/values_28"
+                app:hintAnimationEnabled="false">
 
-        </android.support.design.widget.TextInputLayout>
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etAgentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:hint="@string/agentname"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
 
-        <!--Cell Phone-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/txtCellPhone"
-            android:layout_below="@+id/txtAgencyName"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_10"
-            android:layout_height="wrap_content">
+            </android.support.design.widget.TextInputLayout>
 
-            <com.ichi.inspection.app.utils.CustomEditText
-                android:id="@+id/etCellPhone"
+            <!--Agency Name-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtAgencyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="@string/cellphone"
-                android:enabled="false"
-                android:paddingTop="5dp"
-                android:text="222222222"
-                android:textColor="@color/black"
-                android:textColorHint="@color/gray"
-                android:textSize="@dimen/values_txt_14"/>
+                android:layout_below="@+id/txtAgentName"
+                android:layout_marginTop="@dimen/values_10"
+                app:hintAnimationEnabled="false">
 
-        </android.support.design.widget.TextInputLayout>
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etAgencyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:hint="@string/agencyname"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
 
-        <!--Work Email-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/txtWorkEmail"
-            android:layout_below="@+id/txtCellPhone"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_10"
-            android:layout_height="wrap_content">
+            </android.support.design.widget.TextInputLayout>
 
-            <com.ichi.inspection.app.utils.CustomEditText
-                android:id="@+id/etWorkEmail"
+            <!--Cell Phone-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtCellPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="@string/workemail"
-                android:enabled="false"
-                android:paddingTop="5dp"
-                android:text="Eric"
-                android:textColor="@color/black"
-                android:textColorHint="@color/gray"
-                android:textSize="@dimen/values_txt_14"/>
+                android:layout_below="@+id/txtAgencyName"
+                android:layout_marginTop="@dimen/values_10"
+                app:hintAnimationEnabled="false">
 
-        </android.support.design.widget.TextInputLayout>
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etCellPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:hint="@string/cellphone"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
 
+            </android.support.design.widget.TextInputLayout>
+
+            <!--Work Email-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtWorkEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtCellPhone"
+                android:layout_marginTop="@dimen/values_10"
+                app:hintAnimationEnabled="false">
+
+                <com.ichi.inspection.app.utils.CustomEditText
+                    android:id="@+id/etWorkEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:hint="@string/workemail"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/values_txt_14"/>
+
+            </android.support.design.widget.TextInputLayout>
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

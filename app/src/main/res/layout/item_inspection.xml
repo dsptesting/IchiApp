@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/values_16"
-    android:layout_marginRight="@dimen/values_16"
-    android:layout_marginLeft="@dimen/values_16">
+<android.support.v7.widget.CardView android:id="@+id/rlContainer"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/values_16"
+                                    android:layout_marginRight="@dimen/values_16"
+                                    android:clickable="true"
+                                    android:layout_marginTop="@dimen/values_16"
+                                    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,94 +16,94 @@
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/txtBuyerName"
+            style="@style/txt_reg_12_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="@string/buyer_name"
-            style="@style/txt_reg_12_gray"/>
+            android:text="@string/buyer_name"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/tvBuyerName"
-            android:layout_below="@+id/txtBuyerName"
+            style="@style/txt_reg_14_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Eric Roger"
-            style="@style/txt_reg_14_black"/>
+            android:layout_below="@+id/txtBuyerName"
+            android:text="Eric Roger"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/txtInspectionNo"
+            style="@style/txt_reg_12_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/tvBuyerName"
             android:layout_marginTop="@dimen/values_12"
-            android:text="@string/inspection_no"
-            style="@style/txt_reg_12_gray"/>
+            android:text="@string/inspection_no"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/tvInspectionNo"
-            android:layout_below="@+id/txtInspectionNo"
+            style="@style/txt_reg_14_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="07527"
-            style="@style/txt_reg_14_black"/>
+            android:layout_below="@+id/txtInspectionNo"
+            android:text="07527"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/txtCity"
+            style="@style/txt_reg_12_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignBaseline="@+id/txtInspectionNo"
-            android:text="@string/city"
-            style="@style/txt_reg_12_gray"/>
+            android:layout_alignParentRight="true"
+            android:text="@string/city"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/tvCity"
-            android:layout_below="@+id/txtCity"
+            style="@style/txt_reg_14_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Vadodara"
-            style="@style/txt_reg_14_black"/>
+            android:layout_below="@+id/txtCity"
+            android:text="Vadodara"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/txtDate"
+            style="@style/txt_reg_12_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/tvInspectionNo"
             android:layout_marginTop="@dimen/values_12"
-            android:text="@string/date"
-            style="@style/txt_reg_12_gray"/>
+            android:text="@string/date"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/tvDate"
-            android:layout_below="@+id/txtDate"
+            style="@style/txt_reg_14_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="16/03/2017"
-            style="@style/txt_reg_14_black"/>
+            android:layout_below="@+id/txtDate"
+            android:text="16/03/2017"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/txtTime"
+            style="@style/txt_reg_12_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignBaseline="@+id/txtDate"
-            android:text="@string/time"
-            style="@style/txt_reg_12_gray"/>
+            android:layout_alignParentRight="true"
+            android:text="@string/time"/>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/tvTime"
-            android:layout_below="@+id/txtDate"
+            style="@style/txt_reg_14_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="08:30"
-            style="@style/txt_reg_14_black"/>
+            android:layout_below="@+id/txtDate"
+            android:text="08:30"/>
 
     </RelativeLayout>
 

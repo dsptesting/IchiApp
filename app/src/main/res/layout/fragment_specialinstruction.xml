@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include layout="@layout/toolbar_plain"/>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,23 +22,15 @@
             android:src="@drawable/logo_bg"
             android:visibility="visible" />
 
-        <com.ichi.inspection.app.utils.CustomTextView
-            android:id="@+id/txtSpecialInstruction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/txt_reg_18_black"
-            android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_28"
-            android:clickable="true"
-            android:focusable="false"
-            android:text="@string/special_instruction" />
         <!--Write Here-->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/txtWriteHere"
-            android:layout_below="@+id/txtSpecialInstruction"
             android:layout_width="match_parent"
+            android:layout_below="@id/tbAppToolbarNormal"
+            android:layout_marginTop="@dimen/values_28"
             android:layout_marginLeft="@dimen/values_16"
-            android:layout_marginTop="@dimen/values_10"
+            android:layout_marginRight="@dimen/values_16"
+            app:hintAnimationEnabled="false"
             android:layout_height="wrap_content">
 
             <com.ichi.inspection.app.utils.CustomEditText
@@ -46,13 +40,12 @@
                 android:background="@android:color/transparent"
                 android:enabled="false"
                 android:paddingTop="5dp"
-                android:text="Eric"
+                android:hint="@string/write_here"
                 android:textColor="@color/black"
                 android:textColorHint="@color/gray"
                 android:textSize="@dimen/values_txt_14"/>
 
         </android.support.design.widget.TextInputLayout>
-
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

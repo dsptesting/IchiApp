@@ -17,13 +17,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.adapters.InspectionAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Mayank on 05-03-2017.
+ * Created by Palak on 05-03-2017.
  */
 
 public class InspectionListFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener {
@@ -117,7 +120,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
             }
         });
 
-        inspectionAdapter = new InspectionAdapter(getActivity(),alInspections);
+        inspectionAdapter = new InspectionAdapter(getActivity(),alInspections,this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         rvInspectionList.setLayoutManager(linearLayoutManager);
@@ -146,6 +149,9 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         switch (view.getId()){
             case android.R.id.home:
                 getActivity().onBackPressed();
+                break;
+            case R.id.rlContainer:
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, null, true);
                 break;
         }
     }
@@ -179,4 +185,5 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         //if(getInspectionListAsyncTask != null && !getInspectionListAsyncTask.isCancelled()) getInspectionListAsyncTask.cancel(true);
         super.onDestroy();
     }
+
 }

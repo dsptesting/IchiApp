@@ -88,5 +88,6 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="str_no_data">No Data Available</string>
     <string name="inspections_title">Inspections</string>
+    <string name="write_here">Write here</string>
 
 </resources>

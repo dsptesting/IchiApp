@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context="com.ichi.inspection.app.activities.StartActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo_bg"
+            android:visibility="visible"/>
+
+        <include layout="@layout/toolbar_plain"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tbAppToolbarNormal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rlClientInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/clientinfo"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlBuyersAgent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/buyer_agent"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlLinkingAgent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/listing_agent"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlPropertyInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/property_info"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlScheduler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/scheduler"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlFees"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/fees"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlSpecialInstruction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/special_instruction"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlPayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clickable="true">
+
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/values_20"
+                        android:text="@string/payment"
+                        android:textColor="#3b3b3b"
+                        android:textSize="@dimen/values_txt_14"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/values_20"
+                        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/c_47505c"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

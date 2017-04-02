@@ -1,6 +1,7 @@
 package com.ichi.inspection.app.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,13 @@ public class InspectionAdapter extends RecyclerView.Adapter<InspectionAdapter.In
     private List<String> mList;
     private Context mContext;
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_DATE);
+    private View.OnClickListener onClickListener;
     private String status = "";
 
-    public InspectionAdapter(Context context, List<String> mList) {
+    public InspectionAdapter(Context context, List<String> mList,View.OnClickListener onClickListener) {
         this.mList = mList;
         mContext = context;
+        this.onClickListener = onClickListener;
     }
 
     public void setData(List<String> mList) {
@@ -78,9 +81,13 @@ public class InspectionAdapter extends RecyclerView.Adapter<InspectionAdapter.In
         @BindView(R.id.tvTime)
         TextView tvTime;
 
+        @BindView(R.id.rlContainer)
+        CardView rlContainer;
+
         public InspectionHolder(View view) {
             super(view);
             ButterKnife.bind(this,view);
+            rlContainer.setOnClickListener(onClickListener);
         }
     }
 }
