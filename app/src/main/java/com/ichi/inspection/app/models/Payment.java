@@ -1,10 +1,13 @@
 package com.ichi.inspection.app.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class Payment{
+public class Payment implements Parcelable {
 
 	@SerializedName("AuthorizationCode")
 	@Expose
@@ -271,31 +274,100 @@ public class Payment{
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"Payment{" + 
-			"authorizationCode = '" + authorizationCode + '\'' + 
-			",tranUserID = '" + tranUserID + '\'' + 
-			",cCNameOnCard = '" + cCNameOnCard + '\'' + 
-			",paymentSequence = '" + paymentSequence + '\'' + 
-			",amount = '" + amount + '\'' + 
-			",cCNumber = '" + cCNumber + '\'' + 
-			",cCCode = '" + cCCode + '\'' + 
-			",tranNo = '" + tranNo + '\'' + 
-			",checkNumber = '" + checkNumber + '\'' + 
-			",cCExprMonth = '" + cCExprMonth + '\'' + 
-			",cCZip = '" + cCZip + '\'' + 
-			",cCCity = '" + cCCity + '\'' + 
-			",cCState = '" + cCState + '\'' + 
-			",tranResponse = '" + tranResponse + '\'' + 
-			",tranType = '" + tranType + '\'' + 
-			",cCAddress = '" + cCAddress + '\'' + 
-			",cCType = '" + cCType + '\'' + 
-			",paymentType = '" + paymentType + '\'' + 
-			",tranDate = '" + tranDate + '\'' + 
-			",tranStoreNo2 = '" + tranStoreNo2 + '\'' + 
-			",cCExprYear = '" + cCExprYear + '\'' + 
-			",tranStoreNo1 = '" + tranStoreNo1 + '\'' + 
-			"}";
+	public String toString(){
+		return
+				"Payment{" +
+						"authorizationCode = '" + authorizationCode + '\'' +
+						",tranUserID = '" + tranUserID + '\'' +
+						",cCNameOnCard = '" + cCNameOnCard + '\'' +
+						",paymentSequence = '" + paymentSequence + '\'' +
+						",amount = '" + amount + '\'' +
+						",cCNumber = '" + cCNumber + '\'' +
+						",cCCode = '" + cCCode + '\'' +
+						",tranNo = '" + tranNo + '\'' +
+						",checkNumber = '" + checkNumber + '\'' +
+						",cCExprMonth = '" + cCExprMonth + '\'' +
+						",cCZip = '" + cCZip + '\'' +
+						",cCCity = '" + cCCity + '\'' +
+						",cCState = '" + cCState + '\'' +
+						",tranResponse = '" + tranResponse + '\'' +
+						",tranType = '" + tranType + '\'' +
+						",cCAddress = '" + cCAddress + '\'' +
+						",cCType = '" + cCType + '\'' +
+						",paymentType = '" + paymentType + '\'' +
+						",tranDate = '" + tranDate + '\'' +
+						",tranStoreNo2 = '" + tranStoreNo2 + '\'' +
+						",cCExprYear = '" + cCExprYear + '\'' +
+						",tranStoreNo1 = '" + tranStoreNo1 + '\'' +
+						"}";
+	}
+
+	protected Payment(Parcel in) {
+		authorizationCode = in.readString();
+		tranUserID = in.readString();
+		cCNameOnCard = in.readString();
+		paymentSequence = in.readString();
+		amount = in.readString();
+		cCNumber = in.readString();
+		cCCode = in.readString();
+		tranNo = in.readString();
+		checkNumber = in.readString();
+		cCExprMonth = in.readString();
+		cCZip = in.readString();
+		cCCity = in.readString();
+		cCState = in.readString();
+		tranResponse = in.readString();
+		tranType = in.readString();
+		cCAddress = in.readString();
+		cCType = in.readString();
+		paymentType = in.readString();
+		tranDate = in.readString();
+		tranStoreNo2 = in.readString();
+		cCExprYear = in.readString();
+		tranStoreNo1 = in.readString();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(authorizationCode);
+		dest.writeString(tranUserID);
+		dest.writeString(cCNameOnCard);
+		dest.writeString(paymentSequence);
+		dest.writeString(amount);
+		dest.writeString(cCNumber);
+		dest.writeString(cCCode);
+		dest.writeString(tranNo);
+		dest.writeString(checkNumber);
+		dest.writeString(cCExprMonth);
+		dest.writeString(cCZip);
+		dest.writeString(cCCity);
+		dest.writeString(cCState);
+		dest.writeString(tranResponse);
+		dest.writeString(tranType);
+		dest.writeString(cCAddress);
+		dest.writeString(cCType);
+		dest.writeString(paymentType);
+		dest.writeString(tranDate);
+		dest.writeString(tranStoreNo2);
+		dest.writeString(cCExprYear);
+		dest.writeString(tranStoreNo1);
+	}
+
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<Payment> CREATOR = new Parcelable.Creator<Payment>() {
+		@Override
+		public Payment createFromParcel(Parcel in) {
+			return new Payment(in);
 		}
+
+		@Override
+		public Payment[] newArray(int size) {
+			return new Payment[size];
+		}
+	};
 }

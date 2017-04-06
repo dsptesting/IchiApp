@@ -1,10 +1,13 @@
 package com.ichi.inspection.app.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class OrderListItem{
+public class OrderListItem implements Parcelable {
 
 	@SerializedName("Locale")
 	@Expose
@@ -1075,98 +1078,301 @@ public class OrderListItem{
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"OrderListItem{" + 
-			"locale = '" + locale + '\'' + 
-			",bookedBy = '" + bookedBy + '\'' + 
-			",email = '" + email + '\'' + 
-			",address = '" + address + '\'' + 
-			",utilOther = '" + utilOther + '\'' + 
-			",spa = '" + spa + '\'' + 
-			",escrowDate = '" + escrowDate + '\'' + 
-			",listingAgentPhone = '" + listingAgentPhone + '\'' + 
-			",utilGas = '" + utilGas + '\'' + 
-			",backView = '" + backView + '\'' + 
-			",whoPlacedOrder = '" + whoPlacedOrder + '\'' + 
-			",dateOrdered = '" + dateOrdered + '\'' + 
-			",emailLog = '" + emailLog + '\'' + 
-			",feeCommisionable = '" + feeCommisionable + '\'' + 
-			",buildingType = '" + buildingType + '\'' + 
-			",utilPower = '" + utilPower + '\'' + 
-			",escrowOfficer = '" + escrowOfficer + '\'' + 
-			",zipcode = '" + zipcode + '\'' + 
-			",payment = '" + payment + '\'' + 
-			",pool = '" + pool + '\'' + 
-			",buyerName = '" + buyerName + '\'' + 
-			",agentName = '" + agentName + '\'' + 
-			",agentId = '" + agentId + '\'' + 
-			",buyerAgentPhone = '" + buyerAgentPhone + '\'' + 
-			",inspectionAgreement = '" + inspectionAgreement + '\'' + 
-			",escrowPhones = '" + escrowPhones + '\'' + 
-			",yearBuilt = '" + yearBuilt + '\'' + 
-			",status = '" + status + '\'' + 
-			",assigned = '" + assigned + '\'' + 
-			",escrowCompany = '" + escrowCompany + '\'' + 
-			",occupied = '" + occupied + '\'' + 
-			",buyerAgentEmail = '" + buyerAgentEmail + '\'' + 
-			",bedRooms = '" + bedRooms + '\'' + 
-			",iONum = '" + iONum + '\'' + 
-			",listingAgentName = '" + listingAgentName + '\'' + 
-			",sequence = '" + sequence + '\'' + 
-			",city = '" + city + '\'' + 
-			",timeStamp = '" + timeStamp + '\'' + 
-			",propertyState = '" + propertyState + '\'' + 
-			",propertyAccess = '" + propertyAccess + '\'' + 
-			",crossStreets = '" + crossStreets + '\'' + 
-			",inspectorId = '" + inspectorId + '\'' + 
-			",sMSSent = '" + sMSSent + '\'' + 
-			",propertyAddress = '" + propertyAddress + '\'' + 
-			",payInFull = '" + payInFull + '\'' + 
-			",listingAgentAgencyName = '" + listingAgentAgencyName + '\'' + 
-			",state = '" + state + '\'' + 
-			",eveningPhone = '" + eveningPhone + '\'' + 
-			",timeData = '" + timeData + '\'' + 
-			",propertyZip = '" + propertyZip + '\'' + 
-			",feeGrossPay = '" + feeGrossPay + '\'' + 
-			",lastName = '" + lastName + '\'' + 
-			",propertyCity = '" + propertyCity + '\'' + 
-			",propertyCode = '" + propertyCode + '\'' + 
-			",specialInstruction = '" + specialInstruction + '\'' + 
-			",imageMerged = '" + imageMerged + '\'' + 
-			",buyerEmail = '" + buyerEmail + '\'' + 
-			",numberOfSlots = '" + numberOfSlots + '\'' + 
-			",buyerAgentAgencyName = '" + buyerAgentAgencyName + '\'' + 
-			",inspectorName = '" + inspectorName + '\'' + 
-			",origInspection = '" + origInspection + '\'' + 
-			",timeEstimate = '" + timeEstimate + '\'' + 
-			",phone = '" + phone + '\'' + 
-			",whoTookOrder = '" + whoTookOrder + '\'' + 
-			",listingAgentEmail = '" + listingAgentEmail + '\'' + 
-			",email2 = '" + email2 + '\'' + 
-			",feeCharged = '" + feeCharged + '\'' + 
-			",bathRooms = '" + bathRooms + '\'' + 
-			",buyerAgentName = '" + buyerAgentName + '\'' + 
-			",nearCrossStreet = '" + nearCrossStreet + '\'' + 
-			",frontView = '" + frontView + '\'' + 
-			",agentAttending = '" + agentAttending + '\'' + 
-			",agencyName = '" + agencyName + '\'' + 
-			",specialRequest = '" + specialRequest + '\'' + 
-			",deliverTo = '" + deliverTo + '\'' + 
-			",listingAgentId = '" + listingAgentId + '\'' + 
-			",companyId = '" + companyId + '\'' + 
-			",firstName = '" + firstName + '\'' + 
-			",utilWater = '" + utilWater + '\'' + 
-			",charge = '" + charge + '\'' + 
-			",fees = '" + fees + '\'' + 
-			",escrowNumber = '" + escrowNumber + '\'' + 
-			",sqFoot = '" + sqFoot + '\'' + 
-			",escrowBillSent = '" + escrowBillSent + '\'' + 
-			",buyerAttending = '" + buyerAttending + '\'' + 
-			",agentPhone = '" + agentPhone + '\'' + 
-			",reInspection = '" + reInspection + '\'' + 
-			",referredBy = '" + referredBy + '\'' + 
-			",honSubmitted = '" + honSubmitted + '\'' + 
-			"}";
+	public String toString(){
+		return
+				"OrderListItem{" +
+						"locale = '" + locale + '\'' +
+						",bookedBy = '" + bookedBy + '\'' +
+						",email = '" + email + '\'' +
+						",address = '" + address + '\'' +
+						",utilOther = '" + utilOther + '\'' +
+						",spa = '" + spa + '\'' +
+						",escrowDate = '" + escrowDate + '\'' +
+						",listingAgentPhone = '" + listingAgentPhone + '\'' +
+						",utilGas = '" + utilGas + '\'' +
+						",backView = '" + backView + '\'' +
+						",whoPlacedOrder = '" + whoPlacedOrder + '\'' +
+						",dateOrdered = '" + dateOrdered + '\'' +
+						",emailLog = '" + emailLog + '\'' +
+						",feeCommisionable = '" + feeCommisionable + '\'' +
+						",buildingType = '" + buildingType + '\'' +
+						",utilPower = '" + utilPower + '\'' +
+						",escrowOfficer = '" + escrowOfficer + '\'' +
+						",zipcode = '" + zipcode + '\'' +
+						",payment = '" + payment + '\'' +
+						",pool = '" + pool + '\'' +
+						",buyerName = '" + buyerName + '\'' +
+						",agentName = '" + agentName + '\'' +
+						",agentId = '" + agentId + '\'' +
+						",buyerAgentPhone = '" + buyerAgentPhone + '\'' +
+						",inspectionAgreement = '" + inspectionAgreement + '\'' +
+						",escrowPhones = '" + escrowPhones + '\'' +
+						",yearBuilt = '" + yearBuilt + '\'' +
+						",status = '" + status + '\'' +
+						",assigned = '" + assigned + '\'' +
+						",escrowCompany = '" + escrowCompany + '\'' +
+						",occupied = '" + occupied + '\'' +
+						",buyerAgentEmail = '" + buyerAgentEmail + '\'' +
+						",bedRooms = '" + bedRooms + '\'' +
+						",iONum = '" + iONum + '\'' +
+						",listingAgentName = '" + listingAgentName + '\'' +
+						",sequence = '" + sequence + '\'' +
+						",city = '" + city + '\'' +
+						",timeStamp = '" + timeStamp + '\'' +
+						",propertyState = '" + propertyState + '\'' +
+						",propertyAccess = '" + propertyAccess + '\'' +
+						",crossStreets = '" + crossStreets + '\'' +
+						",inspectorId = '" + inspectorId + '\'' +
+						",sMSSent = '" + sMSSent + '\'' +
+						",propertyAddress = '" + propertyAddress + '\'' +
+						",payInFull = '" + payInFull + '\'' +
+						",listingAgentAgencyName = '" + listingAgentAgencyName + '\'' +
+						",state = '" + state + '\'' +
+						",eveningPhone = '" + eveningPhone + '\'' +
+						",timeData = '" + timeData + '\'' +
+						",propertyZip = '" + propertyZip + '\'' +
+						",feeGrossPay = '" + feeGrossPay + '\'' +
+						",lastName = '" + lastName + '\'' +
+						",propertyCity = '" + propertyCity + '\'' +
+						",propertyCode = '" + propertyCode + '\'' +
+						",specialInstruction = '" + specialInstruction + '\'' +
+						",imageMerged = '" + imageMerged + '\'' +
+						",buyerEmail = '" + buyerEmail + '\'' +
+						",numberOfSlots = '" + numberOfSlots + '\'' +
+						",buyerAgentAgencyName = '" + buyerAgentAgencyName + '\'' +
+						",inspectorName = '" + inspectorName + '\'' +
+						",origInspection = '" + origInspection + '\'' +
+						",timeEstimate = '" + timeEstimate + '\'' +
+						",phone = '" + phone + '\'' +
+						",whoTookOrder = '" + whoTookOrder + '\'' +
+						",listingAgentEmail = '" + listingAgentEmail + '\'' +
+						",email2 = '" + email2 + '\'' +
+						",feeCharged = '" + feeCharged + '\'' +
+						",bathRooms = '" + bathRooms + '\'' +
+						",buyerAgentName = '" + buyerAgentName + '\'' +
+						",nearCrossStreet = '" + nearCrossStreet + '\'' +
+						",frontView = '" + frontView + '\'' +
+						",agentAttending = '" + agentAttending + '\'' +
+						",agencyName = '" + agencyName + '\'' +
+						",specialRequest = '" + specialRequest + '\'' +
+						",deliverTo = '" + deliverTo + '\'' +
+						",listingAgentId = '" + listingAgentId + '\'' +
+						",companyId = '" + companyId + '\'' +
+						",firstName = '" + firstName + '\'' +
+						",utilWater = '" + utilWater + '\'' +
+						",charge = '" + charge + '\'' +
+						",fees = '" + fees + '\'' +
+						",escrowNumber = '" + escrowNumber + '\'' +
+						",sqFoot = '" + sqFoot + '\'' +
+						",escrowBillSent = '" + escrowBillSent + '\'' +
+						",buyerAttending = '" + buyerAttending + '\'' +
+						",agentPhone = '" + agentPhone + '\'' +
+						",reInspection = '" + reInspection + '\'' +
+						",referredBy = '" + referredBy + '\'' +
+						",honSubmitted = '" + honSubmitted + '\'' +
+						"}";
+	}
+
+	protected OrderListItem(Parcel in) {
+		locale = in.readString();
+		bookedBy = in.readString();
+		email = in.readString();
+		address = in.readString();
+		utilOther = in.readByte() != 0x00;
+		spa = in.readByte() != 0x00;
+		escrowDate = in.readString();
+		listingAgentPhone = in.readString();
+		utilGas = in.readByte() != 0x00;
+		backView = in.readString();
+		whoPlacedOrder = in.readString();
+		dateOrdered = in.readString();
+		emailLog = in.readString();
+		feeCommisionable = in.readInt();
+		buildingType = in.readString();
+		utilPower = in.readByte() != 0x00;
+		escrowOfficer = in.readString();
+		zipcode = in.readString();
+		payment = (Payment) in.readValue(Payment.class.getClassLoader());
+		pool = in.readByte() != 0x00;
+		buyerName = in.readString();
+		agentName = in.readString();
+		agentId = in.readInt();
+		buyerAgentPhone = in.readString();
+		inspectionAgreement = in.readByte() != 0x00;
+		escrowPhones = in.readString();
+		yearBuilt = in.readInt();
+		status = in.readString();
+		assigned = in.readByte() != 0x00;
+		escrowCompany = in.readString();
+		occupied = in.readString();
+		buyerAgentEmail = in.readString();
+		bedRooms = in.readInt();
+		iONum = in.readInt();
+		listingAgentName = in.readString();
+		sequence = in.readInt();
+		city = in.readString();
+		timeStamp = in.readString();
+		propertyState = in.readString();
+		propertyAccess = in.readString();
+		crossStreets = in.readString();
+		inspectorId = in.readInt();
+		sMSSent = in.readString();
+		propertyAddress = in.readString();
+		payInFull = in.readByte() != 0x00;
+		listingAgentAgencyName = in.readString();
+		state = in.readString();
+		eveningPhone = in.readString();
+		timeData = in.readString();
+		propertyZip = in.readString();
+		feeGrossPay = in.readDouble();
+		lastName = in.readString();
+		propertyCity = in.readString();
+		propertyCode = in.readString();
+		specialInstruction = in.readString();
+		imageMerged = in.readByte() != 0x00;
+		buyerEmail = in.readString();
+		numberOfSlots = in.readInt();
+		buyerAgentAgencyName = in.readString();
+		inspectorName = in.readString();
+		origInspection = in.readInt();
+		timeEstimate = in.readInt();
+		phone = in.readString();
+		whoTookOrder = in.readString();
+		listingAgentEmail = in.readString();
+		email2 = in.readString();
+		feeCharged = in.readInt();
+		bathRooms = in.readInt();
+		buyerAgentName = in.readString();
+		nearCrossStreet = in.readString();
+		frontView = in.readString();
+		agentAttending = in.readByte() != 0x00;
+		agencyName = in.readString();
+		specialRequest = in.readByte() != 0x00;
+		deliverTo = in.readString();
+		listingAgentId = in.readInt();
+		companyId = in.readInt();
+		firstName = in.readString();
+		utilWater = in.readByte() != 0x00;
+		charge = in.readInt();
+		fees = in.readString();
+		escrowNumber = in.readString();
+		sqFoot = in.readInt();
+		escrowBillSent = in.readByte() != 0x00;
+		buyerAttending = in.readByte() != 0x00;
+		agentPhone = in.readString();
+		reInspection = in.readByte() != 0x00;
+		referredBy = in.readString();
+		honSubmitted = in.readInt();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(locale);
+		dest.writeString(bookedBy);
+		dest.writeString(email);
+		dest.writeString(address);
+		dest.writeByte((byte) (utilOther ? 0x01 : 0x00));
+		dest.writeByte((byte) (spa ? 0x01 : 0x00));
+		dest.writeString(escrowDate);
+		dest.writeString(listingAgentPhone);
+		dest.writeByte((byte) (utilGas ? 0x01 : 0x00));
+		dest.writeString(backView);
+		dest.writeString(whoPlacedOrder);
+		dest.writeString(dateOrdered);
+		dest.writeString(emailLog);
+		dest.writeInt(feeCommisionable);
+		dest.writeString(buildingType);
+		dest.writeByte((byte) (utilPower ? 0x01 : 0x00));
+		dest.writeString(escrowOfficer);
+		dest.writeString(zipcode);
+		dest.writeValue(payment);
+		dest.writeByte((byte) (pool ? 0x01 : 0x00));
+		dest.writeString(buyerName);
+		dest.writeString(agentName);
+		dest.writeInt(agentId);
+		dest.writeString(buyerAgentPhone);
+		dest.writeByte((byte) (inspectionAgreement ? 0x01 : 0x00));
+		dest.writeString(escrowPhones);
+		dest.writeInt(yearBuilt);
+		dest.writeString(status);
+		dest.writeByte((byte) (assigned ? 0x01 : 0x00));
+		dest.writeString(escrowCompany);
+		dest.writeString(occupied);
+		dest.writeString(buyerAgentEmail);
+		dest.writeInt(bedRooms);
+		dest.writeInt(iONum);
+		dest.writeString(listingAgentName);
+		dest.writeInt(sequence);
+		dest.writeString(city);
+		dest.writeString(timeStamp);
+		dest.writeString(propertyState);
+		dest.writeString(propertyAccess);
+		dest.writeString(crossStreets);
+		dest.writeInt(inspectorId);
+		dest.writeString(sMSSent);
+		dest.writeString(propertyAddress);
+		dest.writeByte((byte) (payInFull ? 0x01 : 0x00));
+		dest.writeString(listingAgentAgencyName);
+		dest.writeString(state);
+		dest.writeString(eveningPhone);
+		dest.writeString(timeData);
+		dest.writeString(propertyZip);
+		dest.writeDouble(feeGrossPay);
+		dest.writeString(lastName);
+		dest.writeString(propertyCity);
+		dest.writeString(propertyCode);
+		dest.writeString(specialInstruction);
+		dest.writeByte((byte) (imageMerged ? 0x01 : 0x00));
+		dest.writeString(buyerEmail);
+		dest.writeInt(numberOfSlots);
+		dest.writeString(buyerAgentAgencyName);
+		dest.writeString(inspectorName);
+		dest.writeInt(origInspection);
+		dest.writeInt(timeEstimate);
+		dest.writeString(phone);
+		dest.writeString(whoTookOrder);
+		dest.writeString(listingAgentEmail);
+		dest.writeString(email2);
+		dest.writeInt(feeCharged);
+		dest.writeInt(bathRooms);
+		dest.writeString(buyerAgentName);
+		dest.writeString(nearCrossStreet);
+		dest.writeString(frontView);
+		dest.writeByte((byte) (agentAttending ? 0x01 : 0x00));
+		dest.writeString(agencyName);
+		dest.writeByte((byte) (specialRequest ? 0x01 : 0x00));
+		dest.writeString(deliverTo);
+		dest.writeInt(listingAgentId);
+		dest.writeInt(companyId);
+		dest.writeString(firstName);
+		dest.writeByte((byte) (utilWater ? 0x01 : 0x00));
+		dest.writeInt(charge);
+		dest.writeString(fees);
+		dest.writeString(escrowNumber);
+		dest.writeInt(sqFoot);
+		dest.writeByte((byte) (escrowBillSent ? 0x01 : 0x00));
+		dest.writeByte((byte) (buyerAttending ? 0x01 : 0x00));
+		dest.writeString(agentPhone);
+		dest.writeByte((byte) (reInspection ? 0x01 : 0x00));
+		dest.writeString(referredBy);
+		dest.writeInt(honSubmitted);
+	}
+
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<OrderListItem> CREATOR = new Parcelable.Creator<OrderListItem>() {
+		@Override
+		public OrderListItem createFromParcel(Parcel in) {
+			return new OrderListItem(in);
 		}
+
+		@Override
+		public OrderListItem[] newArray(int size) {
+			return new OrderListItem[size];
+		}
+	};
 }
