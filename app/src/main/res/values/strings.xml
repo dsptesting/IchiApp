@@ -77,7 +77,17 @@
     <string name="total">Total</string>
     <string name="cross_street">Cross Streets</string>
     <string name="yearbuilt">Year Built</string>
-
+    <string name="amount">Amount</string>
+    <string name="type">Type</string>
+    <string name="check_information">Check Information</string>
+    <string name="number">Number</string>
+    <string name="credit_card_information">Credit Card Information</string>
+    <string name="card_type">Card Type</string>
+    <string name="name_on_card">Name On Card</string>
+    <string name="experation_date">Expiration Date</string>
+    <string name="csc">CSC #</string>
+    <string name="authorization_code">Authorization Code</string>
+    <string name="save">Save</string>
 
 
     <string name="str_email_is_not_valid">Email is not valid!</string>
@@ -90,4 +100,10 @@
     <string name="inspections_title">Inspections</string>
     <string name="write_here">Write here</string>
 
+    <string-array name="type">
+        <item>xyzxyz</item>
+        <item>xyzxyz</item>
+        <item>xyzxyz</item>
+        <item>xyzxyz</item>
+    </string-array>
 </resources>
