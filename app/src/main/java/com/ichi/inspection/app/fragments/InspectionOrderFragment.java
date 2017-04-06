@@ -138,7 +138,7 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_SPECIAL_INSTRUCTION, null, true);
                 break;
             case R.id.rlPayment:
-               // ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_PAYMENT, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_PAYMENT, null, true);
                 break;
         }
     }

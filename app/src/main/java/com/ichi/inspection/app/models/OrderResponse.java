@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class OrderResponse implements Parcelable {
+public class OrderResponse extends BaseResponse implements Parcelable {
 
 	@SerializedName("Pay")
 	@Expose
@@ -44,7 +44,10 @@ public class OrderResponse implements Parcelable {
 						"}";
 	}
 
-	protected OrderResponse(Parcel in) {
+    public OrderResponse() {
+    }
+
+    protected OrderResponse(Parcel in) {
 		if (in.readByte() == 0x01) {
 			pay = new ArrayList<PayItem>();
 			in.readList(pay, PayItem.class.getClassLoader());
@@ -92,4 +95,6 @@ public class OrderResponse implements Parcelable {
 			return new OrderResponse[size];
 		}
 	};
+
+
 }

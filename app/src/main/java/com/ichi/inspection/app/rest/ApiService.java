@@ -1,11 +1,13 @@
 package com.ichi.inspection.app.rest;
 
 import com.ichi.inspection.app.models.GetTokenResponse;
+import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.utils.Constants;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiService {
@@ -14,6 +16,9 @@ public interface ApiService {
     @POST(Constants.URL_LOGIN)
     Call<GetTokenResponse> executeLogin(@Field("Username") String username, @Field("password") String password,
                                         @Field("grant_type") String grant_type,@Field("client_id") String client_id);
+
+    @GET(Constants.URL_ORDER_LIST)
+    Call<OrderResponse> executeOrderList();
 /*
     @FormUrlEncoded
     @POST(Constants.URL_CHECK_VCARD_ID)

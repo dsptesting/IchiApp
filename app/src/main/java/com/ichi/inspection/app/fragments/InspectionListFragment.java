@@ -26,6 +26,7 @@ import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.adapters.InspectionAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.task.OrderAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
@@ -62,7 +63,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
     private InspectionAdapter inspectionAdapter;
     private List<String> alInspections;
 
-    //private GetInspectionListAsyncTask getInspectionListAsyncTask;
+    private OrderAsyncTask orderAsyncTask;
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
@@ -126,6 +127,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         rvInspectionList.setLayoutManager(linearLayoutManager);
 
         rvInspectionList.setAdapter(inspectionAdapter);
+
     }
 
     private void getInspectionList(){
@@ -136,11 +138,12 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
             tvNoData.setVisibility(View.VISIBLE);
             rvInspectionList.setVisibility(View.GONE);
             Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
+            //access from pref
             return;
         }
 
-        /*getInspectionListAsyncTask = new GetInspectionListAsyncTask(getActivity(),this);
-        getInspectionListAsyncTask.execute();*/
+        orderAsyncTask = new OrderAsyncTask(getActivity(),this);
+        orderAsyncTask.execute();
     }
 
     @Override
@@ -182,7 +185,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onDestroy() {
-        //if(getInspectionListAsyncTask != null && !getInspectionListAsyncTask.isCancelled()) getInspectionListAsyncTask.cancel(true);
+        if(orderAsyncTask != null && !orderAsyncTask.isCancelled()) orderAsyncTask.cancel(true);
         super.onDestroy();
     }
 

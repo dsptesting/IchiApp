@@ -18,6 +18,7 @@ import com.ichi.inspection.app.fragments.InspectionOrderFragment;
 import com.ichi.inspection.app.fragments.InspectionSelectionFragment;
 import com.ichi.inspection.app.fragments.ListingAgentFragment;
 import com.ichi.inspection.app.fragments.LoginFragment;
+import com.ichi.inspection.app.fragments.PaymentFragment;
 import com.ichi.inspection.app.fragments.PropertyInfoFragment;
 import com.ichi.inspection.app.fragments.SchedulerFragment;
 import com.ichi.inspection.app.fragments.SpecialInstructionFragment;
@@ -131,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case Constants.INSPECTION_FEES:
                 fragment = new FeesFragment();
+                break;
+            case Constants.INSPECTION_PAYMENT:
+                fragment = new PaymentFragment();
                 break;
         }
 

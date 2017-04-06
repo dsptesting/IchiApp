@@ -42,6 +42,7 @@ public class Constants {
     public static final String CLIENT_ID = "98545254";
     public static final String BASE_URL = "http://www.samplegoogle.com";
     public static final String URL_LOGIN = "http://uat.ichisoftware.com:8088/token";
+    public static final String URL_ORDER_LIST = "http://uat.ichisoftware.com:8088/ichi/orders";
 
     //TODO sample... remove if unused. later
     public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd HH:mm:ss";
