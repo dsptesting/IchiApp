@@ -40,20 +40,11 @@ public class SchedulerFragment extends BaseFragment{
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
 
-    @BindView(R.id.etWhoPlacedOrder)
-    EditText etWhoPlacedOrder;
-
     @BindView(R.id.etDate)
     EditText etDate;
 
     @BindView(R.id.etTime)
     EditText etTime;
-
-    @BindView(R.id.etNumberOfSlot)
-    EditText etNumberOfSlot;
-
-    @BindView(R.id.etInspector)
-    EditText etInspector;
 
     @BindView(R.id.etAccess)
     EditText etAccess;
@@ -61,23 +52,11 @@ public class SchedulerFragment extends BaseFragment{
     @BindView(R.id.etAccessCode)
     EditText etAccessCode;
 
-    @BindView(R.id.etLocale)
-    EditText etLocale;
-
-    @BindView(R.id.etReferredBy)
-    EditText etReferredBy;
-
-    @BindView(R.id.cbInspectAgreement)
-    CheckBox cbInspectAgreement;
-
     @BindView(R.id.cbBuyerAttending)
     CheckBox cbBuyerAttending;
 
     @BindView(R.id.cbAgentAttending)
     CheckBox cbAgentAttending;
-
-    @BindView(R.id.cbSpecialRequest)
-    CheckBox cbSpecialRequest;
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
@@ -116,15 +95,12 @@ public class SchedulerFragment extends BaseFragment{
             }
         });
 
-        etWhoPlacedOrder.setText("abcd");
+
         etDate.setText("abcd");
         etTime.setText("abcd");
-        etNumberOfSlot.setText("abcd");
-        etInspector.setText("abcd");
         etAccess.setText("abcd");
         etAccessCode.setText("abcd");
-        etLocale.setText("abcd");
-        etReferredBy.setText("abcd");
+
     }
 
     @Override
