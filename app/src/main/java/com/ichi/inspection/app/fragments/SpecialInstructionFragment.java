@@ -20,6 +20,11 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
+import com.ichi.inspection.app.utils.Constants;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +44,9 @@ public class SpecialInstructionFragment extends BaseFragment{
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
 
+    @BindView(R.id.txtOrderNo)
+    public TextView txtOrderNo;
+
     @BindView(R.id.etWriteHere)
     EditText etWriteHere;
 
@@ -46,12 +54,16 @@ public class SpecialInstructionFragment extends BaseFragment{
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private int position;
+    private OrderListItem orderListItem;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_specialinstruction, container, false);
         ButterKnife.bind(this, view);
+        position = getArguments().getInt(Constants.INTENT_POSITION);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -78,8 +90,13 @@ public class SpecialInstructionFragment extends BaseFragment{
                 getActivity().onBackPressed();
             }
         });
+        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        orderListItem = orderListItems.get(position);
 
-        etWriteHere.setText("abcd");
+        if(orderListItem != null) {
+            txtOrderNo.setText(txtOrderNo.getText().toString() + orderListItem.getIONum());
+            etWriteHere.setText(orderListItem.getSpecialInstruction());
+        }
     }
 
     @Override

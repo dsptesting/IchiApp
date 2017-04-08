@@ -36,12 +36,23 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16">
+                    <com.ichi.inspection.app.utils.CustomTextView
+                        android:id="@+id/txtOrderNo"
+                        style="@style/txt_reg_12_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/values_10"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:text="@string/orderno"/>
 
                     <LinearLayout
                         android:id="@+id/llHome"
+                        android:layout_below="@+id/txtOrderNo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/values_28"
+                        android:layout_marginTop="@dimen/values_16"
                         android:orientation="horizontal">
 
                         <android.support.v7.widget.AppCompatCheckBox

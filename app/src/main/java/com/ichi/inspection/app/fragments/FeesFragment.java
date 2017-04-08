@@ -40,6 +40,9 @@ public class FeesFragment extends BaseFragment {
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
 
+    @BindView(R.id.txtOrderNo)
+    public TextView txtOrderNo;
+
     @BindView(R.id.etTotal)
     EditText etTotal;
 

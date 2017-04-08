@@ -17,7 +17,7 @@
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="city">City</string>
-    <string name="orderno">Order No:9129</string>
+    <string name="orderno">Order No:</string>
     <string name="clientinfo">Client Info</string>
     <string name="buyer_agent">Buyer Agent</string>
     <string name="listing_agent">Listing Agent</string>

@@ -21,6 +21,11 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
+import com.ichi.inspection.app.utils.Constants;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +44,9 @@ public class PropertyInfoFragment extends BaseFragment{
 
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
+
+    @BindView(R.id.txtOrderNo)
+    public TextView txtOrderNo;
 
     @BindView(R.id.etAddress)
     EditText etAddress;
@@ -89,12 +97,16 @@ public class PropertyInfoFragment extends BaseFragment{
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private int position;
+    private OrderListItem orderListItem;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_propertyinfo, container, false);
         ButterKnife.bind(this, view);
+        position = getArguments().getInt(Constants.INTENT_POSITION);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -122,17 +134,41 @@ public class PropertyInfoFragment extends BaseFragment{
             }
         });
 
-        etAddress.setText("abcd");
-        etCity.setText("abcd");
-        etState.setText("abcd");
-        etZip.setText("abcd");
-        etCrossStreets.setText("abcd");
-        etBuildingType.setText("abcd");
-        etSquareFootage.setText("abcd");
-        etYearBuilt.setText("abcd");
-        etOccupied.setText("abcd");
-        etBedRooms.setText("abcd");
-        etBathRooms.setText("abcd");
+        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        orderListItem = orderListItems.get(position);
+
+        if(orderListItem != null){
+            txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
+            etAddress.setText(orderListItem.getPropertyAddress());
+            etCity.setText(orderListItem.getPropertyCity());
+            etState.setText(orderListItem.getPropertyState());
+            etZip.setText(orderListItem.getPropertyZip());
+            etCrossStreets.setText(orderListItem.getCrossStreets());
+            etBuildingType.setText(orderListItem.getBuildingType());
+            etSquareFootage.setText(orderListItem.getSqFoot()+"");
+            etYearBuilt.setText(orderListItem.getYearBuilt()+"");
+            etOccupied.setText(orderListItem.getYearBuilt()+"");
+            etBedRooms.setText(orderListItem.getBedRooms()+"");
+            etBathRooms.setText(orderListItem.getBathRooms()+"");
+            if (orderListItem.isUtilPower())
+                cbPower.setChecked(true);
+
+            if (orderListItem.isUtilGas())
+                cbGas.setChecked(true);
+
+            if (orderListItem.isUtilWater())
+                cbWater.setChecked(true);
+
+            if (orderListItem.isUtilOther())
+                cbOtherUtility.setChecked(true);
+
+            cbPower.setClickable(false);
+            cbGas.setClickable(false);
+            cbWater.setClickable(false);
+            cbOtherUtility.setClickable(false);
+        }
+
+
     }
 
     @Override

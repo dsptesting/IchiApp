@@ -45,6 +45,9 @@ public class ClientInfoFragment extends BaseFragment{
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
 
+    @BindView(R.id.txtOrderNo)
+    public TextView txtOrderNo;
+
     @BindView(R.id.etFirstName)
     EditText etFirstName;
 
@@ -102,6 +105,7 @@ public class ClientInfoFragment extends BaseFragment{
         orderListItem = orderListItems.get(position);
 
         if(orderListItem != null){
+            txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
             etFirstName.setText(orderListItem.getFirstName());
             etLastName.setText(orderListItem.getLastName());
             etPhone.setText(orderListItem.getPhone());

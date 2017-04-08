@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,11 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
+import com.ichi.inspection.app.utils.Constants;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +45,9 @@ public class SchedulerFragment extends BaseFragment{
 
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
+
+    @BindView(R.id.txtOrderNo)
+    public TextView txtOrderNo;
 
     @BindView(R.id.etDate)
     EditText etDate;
@@ -62,12 +71,16 @@ public class SchedulerFragment extends BaseFragment{
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private int position;
+    private OrderListItem orderListItem;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_scheduler, container, false);
         ButterKnife.bind(this, view);
+        position = getArguments().getInt(Constants.INTENT_POSITION);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -95,11 +108,31 @@ public class SchedulerFragment extends BaseFragment{
             }
         });
 
+        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        orderListItem = orderListItems.get(position);
 
-        etDate.setText("abcd");
-        etTime.setText("abcd");
-        etAccess.setText("abcd");
-        etAccessCode.setText("abcd");
+        if(orderListItem != null){
+            txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
+            String Date=null;
+            String Time=null;
+            String[] DateTime=orderListItem.getTimeStamp().split("T");
+            Date=DateTime[0];
+            Time=DateTime[1];
+            etDate.setText(Date);
+            etTime.setText(Time);
+            etAccess.setText(orderListItem.getPropertyAccess());
+            etAccessCode.setText(orderListItem.getPropertyCode());
+
+            if (orderListItem.isAgentAttending())
+                cbAgentAttending.setChecked(true);
+
+            if (orderListItem.isBuyerAttending())
+                cbBuyerAttending.setChecked(true);
+
+            cbAgentAttending.setClickable(false);
+            cbBuyerAttending.setClickable(false);
+        }
+
 
     }
 
