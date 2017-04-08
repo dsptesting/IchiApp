@@ -121,7 +121,10 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
     private void getInspectionList(){
 
-        tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        if(prefs.contains(Constants.PREF_ORDER)){
+
+            tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        }
 
         if(tempOrderListItems != null && !tempOrderListItems.isEmpty()){
             inspectionAdapter.setData(tempOrderListItems);
