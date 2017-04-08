@@ -141,7 +141,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             if(asyncTask instanceof LoginAsyncTask){
                 GetTokenResponse getTokenResponse = (GetTokenResponse) baseResponse;
                 if(getTokenResponse.getAccessToken() != null && !getTokenResponse.getAccessToken().trim().isEmpty()){
-                    prefs.putObject(Constants.PREF_TOKEN_OBJECT,getTokenResponse);
+                    prefs.putGetTokenResponse(getActivity(),getTokenResponse);
                     goToHomeActivity();
                 }
             }

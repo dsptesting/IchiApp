@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.ichi.inspection.app.models.GetTokenResponse;
 
 /**
  * This class handles all the values which are stored/persisted.
@@ -120,21 +121,22 @@ public class PreferencesHelper {
         preferencesHelper.putString(Constants.PREF_DEVICE_TOKEN,deviceToken);
         preferencesHelper.putString(Constants.PREF_DEVICE_ID,deviceId);
     }
+*/
 
-    //Helper methods to store particular objects directly
-    public User getLoggedInUser(Context context){
+    //Helper methods to store particular objects directly. This gives token object from pref
+    public GetTokenResponse getSavedTokenResponse(Context context){
         PreferencesHelper prefs = getInstance(context);
 
-        if(prefs.contains(Constants.PREF_USER_OBJECT)){
-            return (User) prefs.getObject(Constants.PREF_USER_OBJECT , User.class);
+        if(prefs.contains(Constants.PREF_TOKEN_OBJECT)){
+            return (GetTokenResponse) prefs.getObject(Constants.PREF_TOKEN_OBJECT , GetTokenResponse.class);
         }
         return null;
     }
 
-    public void putLoggedInUser(Context context, User user){
+    public void putGetTokenResponse(Context context, GetTokenResponse getTokenResponse){
         PreferencesHelper prefs = getInstance(context);
-        prefs.putObject(Constants.PREF_USER_OBJECT , user);
+        prefs.putObject(Constants.PREF_TOKEN_OBJECT , getTokenResponse);
     }
-*/
+
 
 }

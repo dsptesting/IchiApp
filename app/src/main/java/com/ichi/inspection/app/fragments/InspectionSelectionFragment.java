@@ -57,6 +57,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
     @Nullable
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    private int position;
 
     @Nullable
     @Override
@@ -89,6 +90,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
                 getActivity().onBackPressed();
             }
         });
+        position = getArguments().getInt(Constants.INTENT_POSITION);
 
         cvInspectionOrder.setOnClickListener(this);
         cvInspectionDetail.setOnClickListener(this);
@@ -102,7 +104,10 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
                 //((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_DETAIL, null, true);
                 break;
             case R.id.cvInspectionOrder:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_ORDER, null, true);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.INTENT_POSITION, position);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_ORDER, bundle, true);
                 break;
         }
     }

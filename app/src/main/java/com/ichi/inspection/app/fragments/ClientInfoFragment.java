@@ -21,7 +21,11 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.utils.Constants;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,12 +61,16 @@ public class ClientInfoFragment extends BaseFragment{
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private int position;
+    private OrderListItem orderListItem;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_clientinfo, container, false);
         ButterKnife.bind(this, view);
+        position = getArguments().getInt(Constants.INTENT_POSITION);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -90,10 +98,16 @@ public class ClientInfoFragment extends BaseFragment{
             }
         });
 
-        etFirstName.setText("abcd");
-        etLastName.setText("abcd");
-        etPhone.setText("abcd");
-        etEmail.setText("abcd");
+        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        orderListItem = orderListItems.get(position);
+
+        if(orderListItem != null){
+            etFirstName.setText(orderListItem.getFirstName());
+            etLastName.setText(orderListItem.getLastName());
+            etPhone.setText(orderListItem.getPhone());
+            etEmail.setText(orderListItem.getEmail());
+        }
+
     }
 
     @Override

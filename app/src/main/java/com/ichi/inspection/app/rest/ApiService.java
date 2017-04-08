@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface ApiService {
@@ -18,7 +19,13 @@ public interface ApiService {
                                         @Field("grant_type") String grant_type,@Field("client_id") String client_id);
 
     @GET(Constants.URL_ORDER_LIST)
-    Call<OrderResponse> executeOrderList();
+    Call<OrderResponse> executeOrderList(@Header("Authorization") String authorization);
+
+    @FormUrlEncoded
+    @POST(Constants.URL_LOGIN)
+    Call<GetTokenResponse> executeRefreshToken(@Field("refresh_token") String refresh_token, @Field("grant_type") String grant_type,
+                                               @Field("client_id") String client_id);
+
 /*
     @FormUrlEncoded
     @POST(Constants.URL_CHECK_VCARD_ID)

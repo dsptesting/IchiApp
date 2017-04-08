@@ -16,6 +16,11 @@ public class BaseResponse implements Parcelable {
     @SerializedName("error")
     public String error;
 
+    @SerializedName("Message")
+    public String message;
+
+    private int action;
+
     public BaseResponse() {
     }
 
@@ -24,7 +29,25 @@ public class BaseResponse implements Parcelable {
         return "BaseResponse{" +
                 "resultCode=" + resultCode +
                 ", error='" + error + '\'' +
+                ", message='" + message + '\'' +
+                ", action=" + action +
                 '}';
+    }
+
+    public int getAction() {
+        return action;
+    }
+
+    public void setAction(int action) {
+        this.action = action;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public BaseResponse(int resultCode, String error) {

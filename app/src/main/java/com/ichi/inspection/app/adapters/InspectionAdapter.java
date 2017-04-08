@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.interfaces.OnListItemClickListener;
+import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -24,19 +27,19 @@ import butterknife.ButterKnife;
 public class InspectionAdapter extends RecyclerView.Adapter<InspectionAdapter.InspectionHolder>{
 
     public static final String TAG = InspectionAdapter.class.getSimpleName();
-    private List<String> mList;
+    private List<OrderListItem> mList;
     private Context mContext;
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_DATE);
-    private View.OnClickListener onClickListener;
+    private OnListItemClickListener onListItemClickListener;
     private String status = "";
 
-    public InspectionAdapter(Context context, List<String> mList,View.OnClickListener onClickListener) {
+    public InspectionAdapter(Context context, List<OrderListItem> mList,OnListItemClickListener onListItemClickListener) {
         this.mList = mList;
         mContext = context;
-        this.onClickListener = onClickListener;
+        this.onListItemClickListener = onListItemClickListener;
     }
 
-    public void setData(List<String> mList) {
+    public void setData(List<OrderListItem> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }
@@ -51,8 +54,12 @@ public class InspectionAdapter extends RecyclerView.Adapter<InspectionAdapter.In
     @Override
     public void onBindViewHolder(InspectionHolder holder, int position) {
 
-        String inspection = getItem(position);
-
+        OrderListItem orderListItem = getItem(position);
+        holder.tvBuyerName.setText(orderListItem.getLastName()+" "+orderListItem.getFirstName());
+        holder.tvInspectionNo.setText(""+orderListItem.getIONum());
+        holder.tvCity.setText(""+orderListItem.getPropertyCity());
+        holder.tvDate.setText(""+ Utils.getDateFromTimeDateString(orderListItem.getTimeStamp()));
+        holder.tvTime.setText(""+ Utils.getTimeFromTimeDateString(orderListItem.getTimeStamp()));
     }
 
     @Override
@@ -60,7 +67,7 @@ public class InspectionAdapter extends RecyclerView.Adapter<InspectionAdapter.In
         return mList.size();
     }
 
-    public String getItem(int position) {
+    public OrderListItem getItem(int position) {
         return mList.get(position);
     }
 
@@ -87,7 +94,13 @@ public class InspectionAdapter extends RecyclerView.Adapter<InspectionAdapter.In
         public InspectionHolder(View view) {
             super(view);
             ButterKnife.bind(this,view);
-            rlContainer.setOnClickListener(onClickListener);
+            rlContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onListItemClickListener.onListItemClick(rlContainer,getAdapterPosition());
+                }
+            });
+
         }
     }
 }

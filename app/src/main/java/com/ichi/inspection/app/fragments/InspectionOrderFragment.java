@@ -69,6 +69,8 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private int position;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -102,6 +104,8 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
             }
         });
 
+        position = getArguments().getInt(Constants.INTENT_POSITION);
+
         rlClientInfo.setOnClickListener(this);
         rlBuyersAgent.setOnClickListener(this);
         rlLinkingAgent.setOnClickListener(this);
@@ -115,30 +119,32 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
     @Override
     public void onClick(View view) {
 
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.INTENT_POSITION, position);
         switch (view.getId()){
             case R.id.rlClientInfo:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_CLIENT_INFO, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_CLIENT_INFO, bundle, true);
                 break;
             case R.id.rlBuyersAgent:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_BUYERS_AGENT, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_BUYERS_AGENT, bundle, true);
                 break;
             case R.id.rlLinkingAgent:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_LINKING_AGENT, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_LINKING_AGENT, bundle, true);
                 break;
             case R.id.rlPropertyInfo:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_PROPERTY_INFO, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_PROPERTY_INFO, bundle, true);
                 break;
             case R.id.rlScheduler:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_SCHEDULER, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_SCHEDULER, bundle, true);
                 break;
             case R.id.rlFees:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_FEES, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_FEES, bundle, true);
                 break;
             case R.id.rlSpecialInstruction:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_SPECIAL_INSTRUCTION, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_SPECIAL_INSTRUCTION, bundle, true);
                 break;
             case R.id.rlPayment:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_PAYMENT, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_PAYMENT, bundle, true);
                 break;
         }
     }

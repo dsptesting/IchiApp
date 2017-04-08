@@ -35,8 +35,10 @@ public class Constants {
     public static final int STATUS_SUCCESS_CODE = 1;
     public static final int STATUS_FAILURE_CODE = 0;
 
-    public static final int STATUS_NOT_SYNCED = 0;
-    public static final int STATUS_SYNCED = 1;
+    public static final int ACTION_DO_NOTHING = 0;
+    public static final int ACTION_LOGIN_AGAIN = 1;
+
+    public static final String INTENT_POSITION = "INTENT_POSITION";
 
     // api
     public static final String CLIENT_ID = "98545254";
@@ -45,13 +47,14 @@ public class Constants {
     public static final String URL_ORDER_LIST = "http://uat.ichisoftware.com:8088/ichi/orders";
 
     //TODO sample... remove if unused. later
-    public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd HH:mm:ss";
-    public static final String DATE_FORMAT_LOCALTIME_12 = "yyyy-MM-dd hh:mm:ss";
-    public static final String DATE_FORMAT_LOCALTIME_DATE = "dd/MM/yyyy";
+    public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String DATE_FORMAT_LOCALTIME_DATE = "yyyy-MM-dd";
+    public static final String DATE_FORMAT_LOCALTIME_TIME = "HH:mm:ss";
 
 
     //Pref helper keys
     public static final String PREF_TOKEN_OBJECT = "PREF_TOKEN_OBJECT";
+    public static final String PREF_ORDER = "PREF_ORDER";
 
     // result codes
     /*public static final int CREATE_NEW_CONTACT = 100;

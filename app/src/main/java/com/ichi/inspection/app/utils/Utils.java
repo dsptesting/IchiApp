@@ -16,6 +16,11 @@ import android.util.Log;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.models.BaseResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
@@ -140,5 +145,36 @@ public class Utils {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static String getTimeFromTimeDateString(String timeData) {
+
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME);
+            Date date = simpleDateFormat.parse(timeData);
+            simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_TIME);
+            return simpleDateFormat.format(date);
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getDateFromTimeDateString(String timeData) {
+
+        try {
+            Log.v(TAG,"timeData : " + timeData);
+            if(timeData == null) return "";
+            if(timeData.isEmpty()) return "";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME);
+            Date date = simpleDateFormat.parse(timeData);
+            simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_DATE);
+            return simpleDateFormat.format(date);
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

@@ -14,6 +14,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,10 @@ import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.adapters.InspectionAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
+import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.task.OrderAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
@@ -40,7 +44,7 @@ import butterknife.ButterKnife;
  * Created by Palak on 05-03-2017.
  */
 
-public class InspectionListFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener {
+public class InspectionListFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener, OnListItemClickListener {
 
     private static final String TAG = InspectionListFragment.class.getSimpleName();
     private Context mContext;
@@ -61,13 +65,15 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
     TextView tvNoData;
 
     private InspectionAdapter inspectionAdapter;
-    private List<String> alInspections;
+    private List<OrderListItem> alInspections;
 
     private OrderAsyncTask orderAsyncTask;
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+
+    private List<OrderListItem> tempOrderListItems;
 
     @Nullable
     @Override
@@ -85,23 +91,6 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
     private void initData() {
 
         alInspections = new ArrayList<>();
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
-        alInspections.add("a");
 
         //Toolbar shit!
         if (toolbar != null) {
@@ -132,18 +121,23 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
     private void getInspectionList(){
 
-        if(!Utils.isNetworkAvailable(getActivity())){
+        tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+
+        if(tempOrderListItems != null && !tempOrderListItems.isEmpty()){
+            inspectionAdapter.setData(tempOrderListItems);
+        }
+
+        if(Utils.isNetworkAvailable(getActivity())){
+            orderAsyncTask = new OrderAsyncTask(getActivity(),this);
+            orderAsyncTask.execute();
+        }
+        else{
             pbLoader.setVisibility(View.GONE);
             tvNoData.setText(getString(R.string.internet_not_avail));
             tvNoData.setVisibility(View.VISIBLE);
-            rvInspectionList.setVisibility(View.GONE);
+            rvInspectionList.setVisibility(View.VISIBLE);
             Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
-            //access from pref
-            return;
         }
-
-        orderAsyncTask = new OrderAsyncTask(getActivity(),this);
-        orderAsyncTask.execute();
     }
 
     @Override
@@ -153,34 +147,32 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
             case android.R.id.home:
                 getActivity().onBackPressed();
                 break;
-            case R.id.rlContainer:
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, null, true);
-                break;
         }
     }
 
     @Override
     public void onApiPreExecute(AsyncTask asyncTask) {
-        pbLoader.setVisibility(View.VISIBLE);
+        if(tempOrderListItems == null) pbLoader.setVisibility(View.VISIBLE);
+        if(tempOrderListItems != null && tempOrderListItems.isEmpty()) pbLoader.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
 
-        /*pbLoader.setVisibility(View.GONE);
+        pbLoader.setVisibility(View.GONE);
         if(!Utils.showCallError(coordinatorLayout,baseResponse)){
-            BookingResponse bookingResponse = (BookingResponse) baseResponse;
-            if(bookingResponse.bookings != null && !bookingResponse.bookings.isEmpty()){
-                recyclerView.setVisibility(View.VISIBLE);
+            OrderResponse orderResponse = (OrderResponse) baseResponse;
+            if(orderResponse.getOrderList() != null && !orderResponse.getOrderList().isEmpty()){
+                rvInspectionList.setVisibility(View.VISIBLE);
                 tvNoData.setVisibility(View.INVISIBLE);
-                bookingAdapter.setData(bookingResponse.bookings);
+                inspectionAdapter.setData(orderResponse.getOrderList());
             }
             else{
                 tvNoData.setText(getString(R.string.str_no_data));
                 tvNoData.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.INVISIBLE);
+                rvInspectionList.setVisibility(View.INVISIBLE);
             }
-        }*/
+        }
     }
 
     @Override
@@ -189,4 +181,15 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         super.onDestroy();
     }
 
+    @Override
+    public void onListItemClick(View view, int position) {
+        switch (view.getId()){
+            case R.id.rlContainer:
+                Log.v(TAG,"Position: " + position);
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.INTENT_POSITION, position);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, bundle, true);
+                break;
+        }
+    }
 }
