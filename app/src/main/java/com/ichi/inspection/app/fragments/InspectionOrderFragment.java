@@ -158,7 +158,7 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.logout){
-            //Do whatever you want to do
+            ((MainActivity) getActivity()).logout();
             return true;
         }
 

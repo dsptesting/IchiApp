@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,10 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
+import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.CustomEditText;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,13 +55,16 @@ public class FeesFragment extends BaseFragment {
     @BindView(R.id.etTotal)
     EditText etTotal;
 
-    @BindView(R.id.etSavedTotal)
-    EditText etSavedTotal;
+    /*@BindView(R.id.etSavedTotal)
+    EditText etSavedTotal;*/
 
     @BindView(R.id.etPaymentsMade)
     EditText etPaymentsMade;
 
-    @BindView(R.id.cbHome)
+    @BindView(R.id.ll)
+    LinearLayout ll;
+
+    /*@BindView(R.id.cbHome)
     CheckBox cbHome;
 
     @BindView(R.id.cbTownHouse)
@@ -95,11 +107,14 @@ public class FeesFragment extends BaseFragment {
     CheckBox cb4Plex;
 
     @BindView(R.id.cbDiscount)
-    CheckBox cbDiscount;
+    CheckBox cbDiscount;*/
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+
+    private int position;
+    private OrderListItem orderListItem;
 
     @Nullable
     @Override
@@ -107,6 +122,7 @@ public class FeesFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_fees, container, false);
         ButterKnife.bind(this, view);
+        position = getArguments().getInt(Constants.INTENT_POSITION);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -133,10 +149,37 @@ public class FeesFragment extends BaseFragment {
                 getActivity().onBackPressed();
             }
         });
+        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+        orderListItem = orderListItems.get(position);
 
-        etTotal.setText("$934");
-        etSavedTotal.setText("$624");
-        etPaymentsMade.setText("None");
+        if(orderListItem != null){
+            txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
+            etTotal.setText(orderListItem.getFeeCharged()+"");
+            etPaymentsMade.setText(orderListItem.getPayment().getAmount());
+            String fee=orderListItem.getFees();//"Fees":"299<inspect:Home>;325<inspect:Condo>",
+
+            String[] fees=fee.split(";");
+            if (fees!=null){
+                for (String f:fees){
+                    String value=f.substring(0,f.indexOf("<"));
+                    String hint=f.substring(f.indexOf(":")+1,f.indexOf(">"));
+                    Log.d(TAG, "initData: hint:"+hint);
+                    Log.d(TAG, "initData: value:"+value);
+
+                    LayoutInflater layoutInflater=getLayoutInflater(null);
+                    View view=layoutInflater.inflate(R.layout.edittext,null);
+
+                    CustomEditText customEditText= (CustomEditText) view.findViewById(R.id.et);
+                    customEditText.setText(hint+" : "+value);
+                    //customEditText.setHint(hint);
+                    ll.addView(view);
+                }
+
+
+            }
+        }
+
+
     }
 
     @Override
