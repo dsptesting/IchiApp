@@ -136,8 +136,8 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         }
         else{
             pbLoader.setVisibility(View.GONE);
-            tvNoData.setText(getString(R.string.internet_not_avail));
-            tvNoData.setVisibility(View.VISIBLE);
+            //tvNoData.setText(getString(R.string.internet_not_avail));
+            //tvNoData.setVisibility(View.VISIBLE);
             rvInspectionList.setVisibility(View.VISIBLE);
             Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
         }
