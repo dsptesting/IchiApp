@@ -101,7 +101,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
 
         switch (view.getId()){
             case R.id.cvInspectionDetail:
-                //((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_DETAIL, null, true);
+                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_DETAIL, null, true);
                 break;
             case R.id.cvInspectionOrder:
 

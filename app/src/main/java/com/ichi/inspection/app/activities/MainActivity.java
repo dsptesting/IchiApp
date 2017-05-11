@@ -20,6 +20,7 @@ import com.ichi.inspection.app.fragments.BuyersAgentFragment;
 import com.ichi.inspection.app.fragments.ClientInfoFragment;
 import com.ichi.inspection.app.fragments.FeesFragment;
 import com.ichi.inspection.app.fragments.ForgetPasswordFragment;
+import com.ichi.inspection.app.fragments.InspectionDetailsFragment;
 import com.ichi.inspection.app.fragments.InspectionListFragment;
 import com.ichi.inspection.app.fragments.InspectionOrderFragment;
 import com.ichi.inspection.app.fragments.InspectionSelectionFragment;
@@ -118,6 +119,7 @@ public class MainActivity extends BaseActivity {
                 fragment = new InspectionOrderFragment();
                 break;
             case Constants.INSPECTION_DETAIL:
+                fragment = new InspectionDetailsFragment();
                 break;
             case Constants.INSPECTION_CLIENT_INFO:
                 fragment = new ClientInfoFragment();
