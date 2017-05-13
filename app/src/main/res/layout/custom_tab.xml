@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.ichi.inspection.app.utils.CustomTextView
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/tab"
+style="@style/txt_reg_12_black"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:padding="@dimen/values_12"
+android:text="@string/orderno"
+android:textAllCaps="true" />

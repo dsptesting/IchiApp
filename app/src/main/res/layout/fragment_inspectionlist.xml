@@ -5,44 +5,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/logobg">
+    >
 
-    <RelativeLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <include layout="@layout/toolbar_plain"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvInspectionList"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/values_16"
-            android:clipToPadding="false"
-            android:layout_below="@+id/tbAppToolbarNormal"/>
-
-        <ProgressBar
-            android:id="@+id/pbLoader"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
+            app:tabMode="fixed"
+            app:tabGravity="fill"/>
+    </android.support.design.widget.AppBarLayout>
 
-        <com.ichi.inspection.app.utils.CustomTextView
-            android:id="@+id/tvNoData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/values_30"
-            android:layout_marginRight="@dimen/values_30"
-            android:gravity="center"
-            android:text="@string/str_no_data"
-            android:textColor="@color/c_47505c"
-            android:textSize="@dimen/values_txt_18"
-            android:visibility="gone"
-            app:customFont="@string/reg"/>
-
-    </RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
 
-</android.support.design.widget.CoordinatorLayout>
+   </android.support.design.widget.CoordinatorLayout>
