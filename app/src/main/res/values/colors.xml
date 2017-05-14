@@ -16,4 +16,9 @@
     <color name="transBlueDark">#033D7C</color>
     <color name="orange">#ED5000</color>
     <color name="c_47505c">#aa47505c</color>
+
+    <color name="btnS">#90EE90</color>
+    <color name="btnR">#F0E68C</color>
+    <color name="btnU">#F08080</color>
+    <color name="btnHide">#87A9DB</color>
 </resources>

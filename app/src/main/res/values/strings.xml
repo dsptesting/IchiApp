@@ -15,6 +15,7 @@
 
     <string name="buyer_name">Buyer Name</string>
     <string name="inspection_no">Inspection No</string>
+    <string name="inspection_note">Inspection Note</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="city">City</string>
