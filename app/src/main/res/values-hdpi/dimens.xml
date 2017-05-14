@@ -3,6 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="values_3">3dp</dimen>
     <dimen name="values_12">12dp</dimen>
     <dimen name="values_16">16dp</dimen>
     <dimen name="values_20">20dp</dimen>

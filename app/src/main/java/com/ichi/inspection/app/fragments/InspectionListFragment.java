@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -63,12 +64,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
 
-
-
-    @Nullable
-
-
-    @BindView(R.id.tabs)
+    @Nullable @BindView(R.id.tabs)
     TabLayout tabLayout;
 
     @BindView(R.id.viewpager)
@@ -78,10 +74,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
-
-
-    @Nullable
-    @Override
+    @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_inspectionlist, container, false);
@@ -90,21 +83,16 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         setHasOptionsMenu(true);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-
-
         return view;
     }
 
-
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFrag(new CurrentFragment(), mContext.getResources().getString(R.string.current));
         adapter.addFrag(new PendingFragment(), mContext.getResources().getString(R.string.pending));
 
         viewPager.setAdapter(adapter);
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -116,18 +104,8 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         }
     }
 
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-
-
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-    }
-
-
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -137,6 +115,13 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
         @Override
         public Fragment getItem(int position) {
+            /*if(position == 0){
+                return new CurrentFragment();
+            }
+            else if(position == 1){
+                return new PendingFragment();
+            }
+            return new CurrentFragment();*/
             return mFragmentList.get(position);
         }
 
@@ -155,6 +140,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
             return mFragmentTitleList.get(position);
         }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.inspection_logout, menu);

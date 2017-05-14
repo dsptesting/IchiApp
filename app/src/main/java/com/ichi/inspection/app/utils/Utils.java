@@ -161,6 +161,33 @@ public class Utils {
         return "";
     }
 
+    public static boolean isCurrentDay(long dateTime){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+
+        if(dateTime >= calendar.getTimeInMillis()) return true;
+
+        return false;
+    }
+
+    public static boolean isOlderThanThreeDay(long dateTime){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH,-3);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+
+        if(dateTime >= calendar.getTimeInMillis()) return false;
+
+        return true;
+    }
+
     public static String getDateFromTimeDateString(String timeData) {
 
         try {

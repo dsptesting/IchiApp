@@ -1,12 +1,9 @@
 package com.ichi.inspection.app.fragments;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -15,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
@@ -23,6 +19,7 @@ import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.CustomEditText;
 
 import java.util.List;
 
@@ -48,22 +45,21 @@ public class BuyersAgentFragment extends BaseFragment{
     public TextView txtOrderNo;
 
     @BindView(R.id.etAgentName)
-    EditText etAgentName;
+    CustomEditText etAgentName;
 
     @BindView(R.id.etAgencyName)
-    EditText etAgencyName;
+    CustomEditText etAgencyName;
 
     @BindView(R.id.etCellPhone)
-    EditText etCellPhone;
+    CustomEditText etCellPhone;
 
     @BindView(R.id.etWorkEmail)
-    EditText etWorkEmail;
+    CustomEditText etWorkEmail;
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
-    private int position;
     private OrderListItem orderListItem;
 
     @Nullable
@@ -72,7 +68,7 @@ public class BuyersAgentFragment extends BaseFragment{
 
         View view = inflater.inflate(R.layout.fragment_buyeragent, container, false);
         ButterKnife.bind(this, view);
-        position = getArguments().getInt(Constants.INTENT_POSITION);
+        orderListItem = getArguments().getParcelable(Constants.INTENT_SELECTED_ORDER);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -100,15 +96,12 @@ public class BuyersAgentFragment extends BaseFragment{
             }
         });
 
-        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
-        orderListItem = orderListItems.get(position);
-
         if(orderListItem != null){
             txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
-            etAgentName.setText(orderListItem.getBuyerAgentName());
-            etAgencyName.setText(orderListItem.getBuyerAgentAgencyName());
-            etCellPhone.setText(orderListItem.getBuyerAgentPhone());
-            etWorkEmail.setText(orderListItem.getBuyerAgentEmail());
+            etAgentName.setCustomText(orderListItem.getBuyerAgentName());
+            etAgencyName.setCustomText(orderListItem.getBuyerAgentAgencyName());
+            etCellPhone.setCustomText(orderListItem.getBuyerAgentPhone());
+            etWorkEmail.setCustomText(orderListItem.getBuyerAgentEmail());
         }
 
     }

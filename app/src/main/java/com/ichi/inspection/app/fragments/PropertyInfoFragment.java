@@ -1,12 +1,9 @@
 package com.ichi.inspection.app.fragments;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
@@ -24,6 +20,7 @@ import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.CustomEditText;
 
 import java.util.List;
 
@@ -49,37 +46,37 @@ public class PropertyInfoFragment extends BaseFragment{
     public TextView txtOrderNo;
 
     @BindView(R.id.etAddress)
-    EditText etAddress;
+    CustomEditText etAddress;
 
     @BindView(R.id.etCity)
-    EditText etCity;
+    CustomEditText etCity;
 
     @BindView(R.id.etState)
-    EditText etState;
+    CustomEditText etState;
 
     @BindView(R.id.etZip)
-    EditText etZip;
+    CustomEditText etZip;
 
     @BindView(R.id.etCrossStreets)
-    EditText etCrossStreets;
+    CustomEditText etCrossStreets;
 
     @BindView(R.id.etBuildingType)
-    EditText etBuildingType;
+    CustomEditText etBuildingType;
 
     @BindView(R.id.etSquareFootage)
-    EditText etSquareFootage;
+    CustomEditText etSquareFootage;
 
     @BindView(R.id.etYearBuilt)
-    EditText etYearBuilt;
+    CustomEditText etYearBuilt;
 
     @BindView(R.id.etOccupied)
-    EditText etOccupied;
+    CustomEditText etOccupied;
 
     @BindView(R.id.etBedRooms)
-    EditText etBedRooms;
+    CustomEditText etBedRooms;
 
     @BindView(R.id.etBathRooms)
-    EditText etBathRooms;
+    CustomEditText etBathRooms;
 
     @BindView(R.id.cbPower)
     CheckBox cbPower;
@@ -97,7 +94,6 @@ public class PropertyInfoFragment extends BaseFragment{
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
-    private int position;
     private OrderListItem orderListItem;
 
     @Nullable
@@ -106,7 +102,7 @@ public class PropertyInfoFragment extends BaseFragment{
 
         View view = inflater.inflate(R.layout.fragment_propertyinfo, container, false);
         ButterKnife.bind(this, view);
-        position = getArguments().getInt(Constants.INTENT_POSITION);
+        orderListItem = getArguments().getParcelable(Constants.INTENT_SELECTED_ORDER);
         setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
@@ -134,22 +130,19 @@ public class PropertyInfoFragment extends BaseFragment{
             }
         });
 
-        List<OrderListItem> orderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
-        orderListItem = orderListItems.get(position);
-
         if(orderListItem != null){
             txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
-            etAddress.setText(orderListItem.getPropertyAddress());
-            etCity.setText(orderListItem.getPropertyCity());
-            etState.setText(orderListItem.getPropertyState());
-            etZip.setText(orderListItem.getPropertyZip());
-            etCrossStreets.setText(orderListItem.getCrossStreets());
-            etBuildingType.setText(orderListItem.getBuildingType());
-            etSquareFootage.setText(orderListItem.getSqFoot()+"");
-            etYearBuilt.setText(orderListItem.getYearBuilt()+"");
-            etOccupied.setText(orderListItem.getYearBuilt()+"");
-            etBedRooms.setText(orderListItem.getBedRooms()+"");
-            etBathRooms.setText(orderListItem.getBathRooms()+"");
+            etAddress.setCustomText(orderListItem.getPropertyAddress());
+            etCity.setCustomText(orderListItem.getPropertyCity());
+            etState.setCustomText(orderListItem.getPropertyState());
+            etZip.setCustomText(orderListItem.getPropertyZip());
+            etCrossStreets.setCustomText(orderListItem.getCrossStreets());
+            etBuildingType.setCustomText(orderListItem.getBuildingType());
+            etSquareFootage.setCustomText(orderListItem.getSqFoot()+"");
+            etYearBuilt.setCustomText(orderListItem.getYearBuilt()+"");
+            etOccupied.setCustomText(orderListItem.getYearBuilt()+"");
+            etBedRooms.setCustomText(orderListItem.getBedRooms()+"");
+            etBathRooms.setCustomText(orderListItem.getBathRooms()+"");
             if (orderListItem.isUtilPower())
                 cbPower.setChecked(true);
 

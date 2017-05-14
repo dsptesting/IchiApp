@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import com.ichi.inspection.app.MyApp;
 import com.ichi.inspection.app.R;
@@ -46,5 +47,16 @@ public class CustomEditText extends AppCompatEditText {
                 typedArray.recycle();
             }
         }
+    }
+
+    public void setCustomText(String text) {
+        if(text == null){
+            text = "-";
+        }
+        else if(text.length() == 0){
+            text = "-";
+        }
+
+        setText(text);
     }
 }

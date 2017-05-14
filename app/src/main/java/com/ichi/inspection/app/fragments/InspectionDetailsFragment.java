@@ -13,12 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.adapters.InspectionAdapter;
+import com.ichi.inspection.app.adapters.LineAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.models.BaseResponse;
@@ -49,16 +49,16 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
 
-    @BindView(R.id.rvInspectionList)
-    RecyclerView rvInspectionList;
-
+    @BindView(R.id.rcvItems)
+    RecyclerView rcvItems;
+/*
     @Nullable @BindView(R.id.pbLoader)
     ProgressBar pbLoader;
 
     @BindView(R.id.tvNoData)
-    TextView tvNoData;
+    TextView tvNoData;*/
 
-    private InspectionAdapter inspectionAdapter;
+    private LineAdapter lineAdapter;
     private List<OrderListItem> alInspections;
 
     private OrderAsyncTask orderAsyncTask;
@@ -104,12 +104,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
         });
 
-        inspectionAdapter = new InspectionAdapter(getActivity(),alInspections,this);
+        lineAdapter = new LineAdapter(getActivity(),alInspections,this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        rvInspectionList.setLayoutManager(linearLayoutManager);
+        rcvItems.setLayoutManager(linearLayoutManager);
 
-        rvInspectionList.setAdapter(inspectionAdapter);
+        rcvItems.setAdapter(lineAdapter);
 
     }
 
@@ -121,7 +121,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
 
         if(tempOrderListItems != null && !tempOrderListItems.isEmpty()){
-            inspectionAdapter.setData(tempOrderListItems);
+            lineAdapter.setData(tempOrderListItems);
         }
 
         if(Utils.isNetworkAvailable(getActivity())){
@@ -129,10 +129,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             orderAsyncTask.execute();
         }
         else{
-            pbLoader.setVisibility(View.GONE);
+            //pbLoader.setVisibility(View.GONE);
             //tvNoData.setText(getString(R.string.internet_not_avail));
             //tvNoData.setVisibility(View.VISIBLE);
-            rvInspectionList.setVisibility(View.VISIBLE);
+            //rvInspectionList.setVisibility(View.VISIBLE);
             Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
         }
     }
@@ -149,14 +149,14 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onApiPreExecute(AsyncTask asyncTask) {
-        if(tempOrderListItems == null) pbLoader.setVisibility(View.VISIBLE);
-        if(tempOrderListItems != null && tempOrderListItems.isEmpty()) pbLoader.setVisibility(View.VISIBLE);
+        /*if(tempOrderListItems == null) pbLoader.setVisibility(View.VISIBLE);
+        if(tempOrderListItems != null && tempOrderListItems.isEmpty()) pbLoader.setVisibility(View.VISIBLE);*/
     }
 
     @Override
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
 
-        pbLoader.setVisibility(View.GONE);
+        /*pbLoader.setVisibility(View.GONE);
         if(!Utils.showCallError(coordinatorLayout,baseResponse)){
             OrderResponse orderResponse = (OrderResponse) baseResponse;
             if(orderResponse.getOrderList() != null && !orderResponse.getOrderList().isEmpty()){
@@ -169,7 +169,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 tvNoData.setVisibility(View.VISIBLE);
                 rvInspectionList.setVisibility(View.INVISIBLE);
             }
-        }
+        }*/
     }
 
     @Override
@@ -180,13 +180,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onListItemClick(View view, int position) {
-        switch (view.getId()){
+       /* switch (view.getId()){
             case R.id.rlContainer:
                 Log.v(TAG,"Position: " + position);
                 Bundle bundle = new Bundle();
-                bundle.putInt(Constants.INTENT_POSITION, position);
+                bundle.putParcelable(Constants.INTENT_SELECTED_ORDER, position);
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, bundle, true);
                 break;
-        }
+        }*/
     }
 }

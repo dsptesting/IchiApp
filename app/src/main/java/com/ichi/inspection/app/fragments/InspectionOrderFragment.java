@@ -1,14 +1,10 @@
 package com.ichi.inspection.app.fragments;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +17,7 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.utils.Constants;
 
 import butterknife.BindView;
@@ -69,7 +66,7 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
-    private int position;
+    private OrderListItem orderListItem;
 
     @Nullable
     @Override
@@ -104,7 +101,7 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
             }
         });
 
-        position = getArguments().getInt(Constants.INTENT_POSITION);
+        orderListItem = getArguments().getParcelable(Constants.INTENT_SELECTED_ORDER);
 
         rlClientInfo.setOnClickListener(this);
         rlBuyersAgent.setOnClickListener(this);
@@ -120,7 +117,7 @@ public class InspectionOrderFragment extends BaseFragment implements View.OnClic
     public void onClick(View view) {
 
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.INTENT_POSITION, position);
+        bundle.putParcelable(Constants.INTENT_SELECTED_ORDER, orderListItem);
         switch (view.getId()){
             case R.id.rlClientInfo:
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_CLIENT_INFO, bundle, true);

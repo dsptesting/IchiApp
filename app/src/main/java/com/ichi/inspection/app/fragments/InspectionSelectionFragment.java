@@ -1,34 +1,21 @@
 package com.ichi.inspection.app.fragments;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
-import com.ichi.inspection.app.adapters.InspectionAdapter;
-import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
-import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.utils.Constants;
-import com.ichi.inspection.app.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +44,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
     @Nullable
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
-    private int position;
+    private OrderListItem orderListItem;
 
     @Nullable
     @Override
@@ -90,7 +77,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
                 getActivity().onBackPressed();
             }
         });
-        position = getArguments().getInt(Constants.INTENT_POSITION);
+        orderListItem = getArguments().getParcelable(Constants.INTENT_SELECTED_ORDER);
 
         cvInspectionOrder.setOnClickListener(this);
         cvInspectionDetail.setOnClickListener(this);
@@ -106,7 +93,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
             case R.id.cvInspectionOrder:
 
                 Bundle bundle = new Bundle();
-                bundle.putInt(Constants.INTENT_POSITION, position);
+                bundle.putParcelable(Constants.INTENT_SELECTED_ORDER, orderListItem);
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_ORDER, bundle, true);
                 break;
         }

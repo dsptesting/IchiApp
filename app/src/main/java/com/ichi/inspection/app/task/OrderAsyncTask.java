@@ -48,6 +48,11 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
         try{
             ApiService apiService = ServiceGenerator.getApiService(context);
             orderResponse = callApi(apiService,orderResponse);
+
+            if(orderResponse != null && orderResponse.getOrderList() != null){
+                prefs.putObject(Constants.PREF_ORDER,orderResponse);
+            }
+
             Log.v(TAG,"OrderResponse : " + orderResponse);
         }
         catch (Exception e){
@@ -111,7 +116,5 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
     protected void onPostExecute(OrderResponse orderResponse) {
 
         onApiCallbackListener.onApiPostExecute(orderResponse,this);
-        prefs.putObject(Constants.PREF_ORDER,orderResponse);
-
     }
 }

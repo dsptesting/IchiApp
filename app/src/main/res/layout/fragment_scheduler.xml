@@ -78,7 +78,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/values_16"
-                        android:layout_marginLeft="@dimen/values_12"
+                        android:layout_marginLeft="@dimen/values_w17"
                         android:layout_toRightOf="@+id/txtDate"
                         app:hintAnimationEnabled="false">
 
@@ -95,11 +95,6 @@
                             android:textSize="@dimen/values_txt_14"/>
 
                     </android.support.design.widget.TextInputLayout>
-
-
-
-
-
 
                     <!--Access-->
                     <android.support.design.widget.TextInputLayout

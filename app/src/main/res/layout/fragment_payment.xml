@@ -47,29 +47,34 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/txtAmount"
-                    android:layout_below="@+id/txtOrderNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtOrderNo"
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
-                    android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    android:layout_marginTop="@dimen/values_w17"
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/amount"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -80,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
                     android:layout_marginLeft="@dimen/values_16"
-                    android:layout_marginTop="@dimen/values_10"
+                    android:layout_marginTop="@dimen/values_w17"
                     android:clickable="true"
                     android:focusable="false"
                     android:text="@string/type"/>
@@ -89,10 +94,10 @@
                     android:id="@+id/sType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/txtType"
                     android:layout_below="@+id/txtAmount"
                     android:layout_marginLeft="@dimen/values_28"
                     android:layout_marginTop="@dimen/values_10"
-                    android:layout_alignBaseline="@+id/txtType"
                     android:layout_toRightOf="@+id/txtType">
 
                 </android.support.v7.widget.AppCompatSpinner>
@@ -117,23 +122,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/number"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <com.ichi.inspection.app.utils.CustomTextView
@@ -164,10 +174,10 @@
                     android:id="@+id/sCardType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/txtCardType"
                     android:layout_below="@+id/txtCreditCardInformation"
                     android:layout_marginLeft="@dimen/values_28"
                     android:layout_marginTop="@dimen/values_10"
-                    android:layout_alignBaseline="@+id/txtCardType"
                     android:layout_toRightOf="@+id/txtCardType">
 
                 </android.support.v7.widget.AppCompatSpinner>
@@ -180,23 +190,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etCcNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/number"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -207,23 +222,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etNameOnCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/name_on_card"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <com.ichi.inspection.app.utils.CustomTextView
@@ -242,10 +262,10 @@
                     android:id="@+id/sMonth"
                     android:layout_width="@dimen/values_w154"
                     android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/txtExperationDate"
                     android:layout_below="@+id/txtNameOnCard"
                     android:layout_marginLeft="@dimen/values_28"
                     android:layout_marginTop="@dimen/values_10"
-                    android:layout_alignBaseline="@+id/txtExperationDate"
                     android:layout_toRightOf="@+id/txtExperationDate">
 
                 </android.support.v7.widget.AppCompatSpinner>
@@ -254,11 +274,11 @@
                     android:id="@+id/sYear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/txtExperationDate"
                     android:layout_below="@+id/txtNameOnCard"
                     android:layout_marginLeft="@dimen/values_28"
                     android:layout_marginTop="@dimen/values_10"
-                    android:layout_toRightOf="@+id/sMonth"
-                    android:layout_alignBaseline="@+id/txtExperationDate">
+                    android:layout_toRightOf="@+id/sMonth">
 
                 </android.support.v7.widget.AppCompatSpinner>
 
@@ -270,23 +290,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etCsc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/csc"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -297,23 +322,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etAuthorizationCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/authorization_code"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -324,23 +354,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/address"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -351,23 +386,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etCity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/city"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -378,23 +418,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etState"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/state"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -405,23 +450,28 @@
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_10"
-                    app:hintAnimationEnabled="false">
+                    app:hintAnimationEnabled="true">
 
                     <com.ichi.inspection.app.utils.CustomEditText
                         android:id="@+id/etZip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:ellipsize="end"
                         android:enabled="true"
                         android:hint="@string/zip"
+                        android:maxLines="1"
+                        android:paddingBottom="7dp"
                         android:paddingTop="5dp"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/values_txt_14"/>
+
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorPrimary" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.v7.widget.CardView

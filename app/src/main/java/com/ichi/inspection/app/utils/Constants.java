@@ -38,7 +38,7 @@ public class Constants {
     public static final int ACTION_DO_NOTHING = 0;
     public static final int ACTION_LOGIN_AGAIN = 1;
 
-    public static final String INTENT_POSITION = "INTENT_POSITION";
+    public static final String INTENT_SELECTED_ORDER = "INTENT_SELECTED_ORDER";
 
     // api
     public static final String CLIENT_ID = "98545254";

@@ -5,14 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -30,6 +26,7 @@ import com.ichi.inspection.app.task.OrderAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +36,7 @@ import butterknife.ButterKnife;
 public class PendingFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener, OnListItemClickListener {
     private static final String TAG = CurrentFragment.class.getSimpleName();
     private Context mContext;
+    private SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME);
 
     @BindView(R.id.rvInspectionList)
     RecyclerView rvInspectionList;
@@ -84,43 +82,50 @@ public class PendingFragment extends BaseFragment implements View.OnClickListene
 
     }
 
+    private void fillData(List<OrderListItem> list){
+
+        alInspections.clear();
+        for(OrderListItem orderListItem: list){
+            try {
+                long time = sdf.parse(orderListItem.getTimeStamp()).getTime();
+                if(!Utils.isCurrentDay(time) && !Utils.isOlderThanThreeDay(time)) {
+                    alInspections.add(orderListItem);
+                }
+            }
+            catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(alInspections != null && !alInspections.isEmpty()){
+            inspectionAdapter.setData(alInspections);
+        }
+        else{
+            pbLoader.setVisibility(View.GONE);
+            if(Utils.isNetworkAvailable(getActivity())){
+                tvNoData.setText(getString(R.string.str_no_data));
+            }
+            else{
+                tvNoData.setText(getString(R.string.internet_not_avail));
+                Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
+            }
+            tvNoData.setVisibility(View.VISIBLE);
+            rvInspectionList.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void getInspectionList(){
-
-        if(prefs.contains(Constants.PREF_ORDER)){
-
-            tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
-        }
-
-        if(tempOrderListItems != null && !tempOrderListItems.isEmpty()){
-            inspectionAdapter.setData(tempOrderListItems);
-        }
 
         if(Utils.isNetworkAvailable(getActivity())){
             orderAsyncTask = new OrderAsyncTask(getActivity(),this);
             orderAsyncTask.execute();
         }
-        else{
-            pbLoader.setVisibility(View.GONE);
-            //tvNoData.setText(getString(R.string.internet_not_avail));
-            //tvNoData.setVisibility(View.VISIBLE);
-            rvInspectionList.setVisibility(View.VISIBLE);
-            Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
-        }
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.inspection_logout, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.logout){
-            ((MainActivity) getActivity()).logout();
-            return true;
-        }
+        if(prefs.contains(Constants.PREF_ORDER)){
 
-        return super.onOptionsItemSelected(item);
+            tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
+            fillData(tempOrderListItems);
+        }
     }
 
     @Override
@@ -134,7 +139,7 @@ public class PendingFragment extends BaseFragment implements View.OnClickListene
             case R.id.rlContainer:
                 Log.v(TAG,"Position: " + position);
                 Bundle bundle = new Bundle();
-                bundle.putInt(Constants.INTENT_POSITION, position);
+                bundle.putParcelable(Constants.INTENT_SELECTED_ORDER, alInspections.get(position));
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, bundle, true);
                 break;
         }
@@ -154,12 +159,11 @@ public class PendingFragment extends BaseFragment implements View.OnClickListene
             if(orderResponse.getOrderList() != null && !orderResponse.getOrderList().isEmpty()){
                 rvInspectionList.setVisibility(View.VISIBLE);
                 tvNoData.setVisibility(View.INVISIBLE);
-                inspectionAdapter.setData(orderResponse.getOrderList());
-            }
-            else{
-                tvNoData.setText(getString(R.string.str_no_data));
-                tvNoData.setVisibility(View.VISIBLE);
-                rvInspectionList.setVisibility(View.INVISIBLE);
+
+                if(prefs.contains(Constants.PREF_ORDER)){
+
+                    fillData(orderResponse.getOrderList());
+                }
             }
         }
     }
