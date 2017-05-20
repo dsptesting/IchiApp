@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -52,6 +55,7 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
 
         View view = inflater.inflate(R.layout.fragment_inspection_selection, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
         mContext = getActivity();
         initData();
 
@@ -97,5 +101,22 @@ public class InspectionSelectionFragment extends BaseFragment implements View.On
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_ORDER, bundle, true);
                 break;
         }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.inspection_logout, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.logout){
+            ((MainActivity) getActivity()).logout();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

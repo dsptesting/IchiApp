@@ -11,6 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -76,6 +79,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         View view = inflater.inflate(R.layout.fragment_inspection_details, container, false);
         ButterKnife.bind(this, view);
         mContext = getActivity();
+        setHasOptionsMenu(true);
         initData();
         getInspectionList();
 
@@ -188,5 +192,22 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, bundle, true);
                 break;
         }*/
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.inspection_logout, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.logout){
+            ((MainActivity) getActivity()).logout();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

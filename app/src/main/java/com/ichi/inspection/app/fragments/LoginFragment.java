@@ -72,7 +72,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         mContext = getActivity();
         initData();
 
-        /*if(prefs.getSavedTokenResponse(getActivity()) != null){
+        if(prefs.getSavedTokenResponse(getActivity()) != null){
             if(!Utils.isNetworkAvailable(getActivity())){
                 goToHomeActivity();
             }
@@ -85,7 +85,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 loginAsyncTask = new LoginAsyncTask(getActivity(),this);
                 loginAsyncTask.execute(signInRequest);
             }
-        }*/
+        }
 
         return view;
     }

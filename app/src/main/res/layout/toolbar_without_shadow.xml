@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:id="@+id/tbAppToolbarNormal"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:background="@color/colorPrimary"
+                                   android:elevation="0dp"
+                                   app:theme="@style/ToolbarStyle"
+                                   android:minHeight="?attr/actionBarSize">
+
+    <com.ichi.inspection.app.utils.CustomTextView
+        android:id="@+id/tvAppTitle"
+        style="@style/txt_reg_18_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/app_name" />
+
+</android.support.v7.widget.Toolbar>

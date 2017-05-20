@@ -24,6 +24,7 @@ import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.models.PayItem;
+import com.ichi.inspection.app.models.Payment;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
@@ -145,14 +146,14 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
             txtOrderNo.setText(txtOrderNo.getText().toString() + orderListItem.getIONum());
             etAmount.setText(orderListItem.getPayment().getAmount());
             etNumber.setText(orderListItem.getPayment().getCheckNumber());
-            etCcNumber.setText(orderListItem.getPayment().getCCNumber());
-            etNameOnCard.setText(orderListItem.getPayment().getCCNameOnCard());
-            etCsc.setText(orderListItem.getPayment().getCCCode());
+            etCcNumber.setText(orderListItem.getPayment().getcCNumber());
+            etNameOnCard.setText(orderListItem.getPayment().getcCNameOnCard());
+            etCsc.setText(orderListItem.getPayment().getcCCode());
             etAuthorizationCode.setText(orderListItem.getPayment().getAuthorizationCode());
-            etAddress.setText(orderListItem.getPayment().getCCAddress());
-            etCity.setText(orderListItem.getPayment().getCCCity());
-            etState.setText(orderListItem.getPayment().getCCState());
-            etZip.setText(orderListItem.getPayment().getCCZip());
+            etAddress.setText(orderListItem.getPayment().getcCAddress());
+            etCity.setText(orderListItem.getPayment().getcCCity());
+            etState.setText(orderListItem.getPayment().getcCState());
+            etZip.setText(orderListItem.getPayment().getcCZip());
         }
 
         if(payItems!=null){
@@ -177,7 +178,7 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
             sType.setSelection(sTypeSelection);
             int sCCTypeSelection = 0;
             for (int i=0;i<cctypes.length;i++){
-                if (cctypes[i].equals(orderListItem.getPayment().getCCType()));{
+                if (cctypes[i].equals(orderListItem.getPayment().getcCType()));{
                     sCCTypeSelection=i;
                 }
             }
@@ -204,7 +205,7 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
 
         int sMonthSelection = 0;
         for (int i=0;i<months.length;i++){
-            if (months[i].equals(orderListItem.getPayment().getCCExprMonth())){
+            if (months[i].equals(orderListItem.getPayment().getcCExprMonth())){
                 sMonthSelection=i;
             }
         }
@@ -212,7 +213,7 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
         int sYearSelection = 0;
         for (int i=0;i<years.length;i++){
 
-            Log.d(TAG, "initData: "+orderListItem.getPayment().getCCExprYear()); /*if (years[i].equals(orderListItem.getPayment().getCCExprYear())){
+            Log.d(TAG, "initData: "+orderListItem.getPayment().getcCExprYear()); /*if (years[i].equals(orderListItem.getPayment().getCCExprYear())){
                 sYearSelection=i;
             }*/
         }
@@ -249,20 +250,75 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void savePaymentData(){
-        orderListItem.getPayment().setAmount(etAmount.getText().toString().trim());
-        orderListItem.getPayment().setCheckNumber(etNumber.getText().toString().trim());
-        orderListItem.getPayment().setCCNumber(etCcNumber.getText().toString().trim());
-        orderListItem.getPayment().setCCNameOnCard(etNameOnCard.getText().toString().trim());
-        orderListItem.getPayment().setCCCode(etCsc.getText().toString().trim());
-        orderListItem.getPayment().setAuthorizationCode(etAuthorizationCode.getText().toString().trim());
-        orderListItem.getPayment().setCCAddress(etAddress.getText().toString().trim());
-        orderListItem.getPayment().setCCCity(etCity.getText().toString().trim());
-        orderListItem.getPayment().setCCState(etState.getText().toString().trim());
-        orderListItem.getPayment().setCCZip(etZip.getText().toString().trim());
-        orderListItem.getPayment().setPaymentType(sType.getSelectedItem().toString().trim());
-        orderListItem.getPayment().setCCType(sCardType.getSelectedItem().toString().trim());
-        orderListItem.getPayment().setCCExprMonth(sMonth.getSelectedItem().toString().trim());
-        orderListItem.getPayment().setCCExprYear(sYear.getSelectedItem().toString().trim());
+
+        Payment payment = orderListItem.getPayment();
+        if(!payment.getAmount().equalsIgnoreCase(etAmount.getText().toString().trim())){
+            payment.setAmount(etAmount.getText().toString().trim());
+            payment.setAmountSynced(true);
+        }
+        if(!payment.getCheckNumber().equalsIgnoreCase(etNumber.getText().toString().trim())){
+            payment.setCheckNumber(etNumber.getText().toString().trim());
+            payment.setCheckNumberSynced(true);
+        }
+        if(!payment.getcCNumber().equalsIgnoreCase(etCcNumber.getText().toString().trim())){
+            payment.setcCNumber(etCcNumber.getText().toString().trim());
+            payment.setCcNumberSynced(true);
+        }
+        if(!payment.getcCNameOnCard().equalsIgnoreCase(etNameOnCard.getText().toString().trim())){
+            payment.setcCNameOnCard(etNameOnCard.getText().toString().trim());
+            payment.setCcNameOnCardSynced(true);
+        }
+        if(!payment.getcCCode().equalsIgnoreCase(etCsc.getText().toString().trim())){
+            payment.setcCCode(etCsc.getText().toString().trim());
+            payment.setCcCodeSynced(true);
+        }
+        if(!payment.getAuthorizationCode().equalsIgnoreCase(etAuthorizationCode.getText().toString().trim())){
+            payment.setAuthorizationCode(etAuthorizationCode.getText().toString().trim());
+            payment.setAuthorizatinCodeSynced(true);
+        }
+        if(!payment.getcCAddress().equalsIgnoreCase(etAddress.getText().toString().trim())){
+            payment.setcCAddress(etAddress.getText().toString().trim());
+            payment.setCcAddressSynced(true);
+        }
+        if(!payment.getcCCity().equalsIgnoreCase(etCity.getText().toString().trim())){
+            payment.setcCCity(etCity.getText().toString().trim());
+            payment.setCcCitySynced(true);
+        }
+        if(!payment.getcCState().equalsIgnoreCase(etState.getText().toString().trim())){
+            payment.setcCState(etState.getText().toString().trim());
+            payment.setCcStateSynced(true);
+        }
+        if(!payment.getcCZip().equalsIgnoreCase(etZip.getText().toString().trim())){
+            payment.setcCZip(etZip.getText().toString().trim());
+            payment.setCcZipSynced(true);
+        }
+        if(!payment.getPaymentType().equalsIgnoreCase(sType.getSelectedItem().toString().trim())){
+            payment.setPaymentType(sType.getSelectedItem().toString().trim());
+            payment.setPaymentTypeSynced(true);
+        }
+        if(!payment.getcCType().equalsIgnoreCase(sCardType.getSelectedItem().toString().trim())){
+            payment.setcCType(sCardType.getSelectedItem().toString().trim());
+            payment.setcCTypeSynced(true);
+        }
+        if(!payment.getcCExprMonth().equalsIgnoreCase(sMonth.getSelectedItem().toString().trim())){
+            payment.setcCExprMonth(sMonth.getSelectedItem().toString().trim());
+            payment.setCcExprMonthSynced(true);
+        }
+        if(!payment.getcCExprYear().equalsIgnoreCase(sYear.getSelectedItem().toString().trim())){
+            payment.setcCExprYear(sYear.getSelectedItem().toString().trim());
+            payment.setcCExprYearSynced(true);
+        }
+
+        OrderResponse orderResponse = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class));
+        List<OrderListItem> inspections =  orderResponse.getOrderList();
+        for(OrderListItem order : inspections){
+            if(order != null && order.getIONum() == orderListItem.getIONum()){
+                order.setPayment(payment);
+            }
+        }
+        prefs.putObject(Constants.PREF_ORDER,orderResponse);
+
+/*
         OrderResponse orderResponse=new OrderResponse();
         orderResponse.setOrderList(orderListItems);
         orderResponse.setPay(payItems);
@@ -271,7 +327,7 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
         orderResponse.setMessage(((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getMessage());
         orderResponse.setResultCode(((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getResultCode());
 
-        prefs.putObject(Constants.PREF_ORDER,orderResponse);
+        prefs.putObject(Constants.PREF_ORDER,orderResponse);*/
         Utils.showSnackBar(coordinatorLayout,"Saved");
     }
 }
