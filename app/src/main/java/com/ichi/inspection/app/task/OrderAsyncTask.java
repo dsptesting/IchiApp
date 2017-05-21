@@ -232,6 +232,16 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
             newPayment.setcCTypeSynced(savedPayment.iscCTypeSynced());
         }
 
+        if(savedPayment.isPaymentTypeSynced()){
+            newPayment.setPaymentType(savedPayment.getPaymentType());
+            newPayment.setPaymentTypeSynced(savedPayment.isPaymentTypeSynced());
+        }
+
+        if(savedPayment.iscCTypeSynced()){
+            newPayment.setcCType(savedPayment.getcCType());
+            newPayment.setcCTypeSynced(savedPayment.iscCTypeSynced());
+        }
+
         return orderListItem;
     }
 
