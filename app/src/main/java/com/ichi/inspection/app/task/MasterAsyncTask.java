@@ -6,20 +6,16 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
+import com.ichi.inspection.app.models.AddSection;
 import com.ichi.inspection.app.models.GetTokenResponse;
-import com.ichi.inspection.app.models.OrderListItem;
-import com.ichi.inspection.app.models.OrderResponse;
-import com.ichi.inspection.app.models.Payment;
-import com.ichi.inspection.app.models.SignInRequest;
+import com.ichi.inspection.app.models.MasterResponse;
+import com.ichi.inspection.app.models.NamedTemplates;
+import com.ichi.inspection.app.models.SelectSection;
+import com.ichi.inspection.app.models.Templates;
 import com.ichi.inspection.app.rest.ApiService;
 import com.ichi.inspection.app.rest.ServiceGenerator;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.PreferencesHelper;
-import com.ichi.inspection.app.utils.Utils;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -29,14 +25,14 @@ import retrofit2.Response;
  * Created by Palak on 05-03-2017.
  */
 
-public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
+public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
 
-    private static final String TAG = OrderAsyncTask.class.getSimpleName();
+    private static final String TAG = MasterAsyncTask.class.getSimpleName();
     private Context context;
     private OnApiCallbackListener onApiCallbackListener;
     private PreferencesHelper prefs;
 
-    public OrderAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener) {
+    public MasterAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener) {
         this.context = context;
         this.onApiCallbackListener = onApiCallbackListener;
         prefs = PreferencesHelper.getInstance(this.context);
@@ -49,51 +45,63 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
     }
 
     @Override
-    protected OrderResponse doInBackground(Void... params) {
+    protected MasterResponse doInBackground(Void... params) {
 
-        OrderResponse orderResponse = null;
+        MasterResponse masterResponse = null;
 
         try{
             ApiService apiService = ServiceGenerator.getApiService(context);
-            orderResponse = callApi(apiService,orderResponse);
+            masterResponse = callApi(apiService,masterResponse);
 
-            //TODO check below line
-            if(orderResponse != null && orderResponse.getOrderList() != null){
+            /*if(masterResponse != null && masterResponse.getOrderList() != null){
                 prefs.putObject(Constants.PREF_ORDER,orderResponse);
-            }
+            }*/
 
-            Log.v(TAG,"OrderResponse : " + orderResponse);
+            Log.v(TAG,"masterResponse : " + masterResponse);
         }
         catch (Exception e){
             if(Constants.showStackTrace) e.printStackTrace();
         }
 
-        return orderResponse;
+        return masterResponse;
     }
 
-    private OrderResponse callApi(ApiService apiService,OrderResponse orderResponse) throws Exception {
+    private MasterResponse callApi(ApiService apiService,MasterResponse masterResponse) throws Exception {
 
-        Call<OrderResponse> orderResponseCall = null;
+        Call<MasterResponse> masterResponseCall = null;
 
-        orderResponseCall = apiService.executeOrderList("bearer "+prefs.getSavedTokenResponse(context).getAccessToken());
+        masterResponseCall = apiService.executeMasterList("bearer "+prefs.getSavedTokenResponse(context).getAccessToken());
 
-        Response<OrderResponse> response = orderResponseCall.execute();
+        Response<MasterResponse> response = masterResponseCall.execute();
         if(response.isSuccessful()){
             if(response.body() != null){
-                orderResponse = response.body();
-                fillData(orderResponse.getOrderList());
-                orderResponse.setAction(Constants.ACTION_DO_NOTHING);
-                Log.v(TAG,"fillData printed : " + orderResponse.getOrderList());
-                prefs.putObject(Constants.PREF_ORDER,orderResponse.getOrderList());
+                masterResponse = response.body();
+                //fillData(masterResponse.getOrderList());
+                masterResponse.setAction(Constants.ACTION_DO_NOTHING);
+
+                Log.v(TAG,"MyObject masterResponse : " +masterResponse);
+                //Log.v(TAG,"masterResponse printed : " + masterResponse);
+                prefs.putObject(Constants.PREF_MASTER,masterResponse);
+                prefs.putObject(Constants.PREF_ADD_SECTION,new AddSection(masterResponse.getAddSection()));
+                prefs.putObject(Constants.PREF_SELECT_SECTION,masterResponse.getSelectSection());
+                prefs.putObject(Constants.PREF_NAMED_TEMPLATES,masterResponse.getNamedTemplates());
+                prefs.putObject(Constants.PREF_TEMPLATES,masterResponse.getTemplates());
+
+                prefs.putBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,false);
+
+                Log.v(TAG,"MyObject AddSection : " +prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
+                Log.v(TAG,"MyObject SelectSection : " +prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+                Log.v(TAG,"MyObject NamedTemplates : " +prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
+                Log.v(TAG,"MyObject Templates : " +prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
             }
         }
         else{
             if(response.errorBody() != null){
                 ResponseBody responseBody = response.errorBody();
-                orderResponse = new Gson().fromJson(new String(responseBody.bytes()), OrderResponse.class);
+                masterResponse = new Gson().fromJson(new String(responseBody.bytes()), MasterResponse.class);
 
-                if(orderResponse != null && orderResponse.getMessage() != null
-                        && !orderResponse.getMessage().isEmpty() && orderResponse.getMessage().startsWith("Authorization has been denied")){
+                if(masterResponse != null && masterResponse.getMessage() != null
+                        && !masterResponse.getMessage().isEmpty() && masterResponse.getMessage().startsWith("Authorization has been denied")){
 
                     //As we dont have any error code, we will directly compare error string.
                     Call<GetTokenResponse> getTokenResponseCall = apiService.executeRefreshToken(prefs.getSavedTokenResponse(context).getRefreshToken(),
@@ -106,31 +114,31 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
                         if(response.body() != null){
                             getTokenResponse = getTokenResp.body();
                             prefs.putGetTokenResponse(context,getTokenResponse);
-                            orderResponse.setAction(Constants.ACTION_DO_NOTHING);
-                            callApi(apiService,orderResponse);
+                            masterResponse.setAction(Constants.ACTION_DO_NOTHING);
+                            callApi(apiService,masterResponse);
                         }
                     }
                     else{
                         if(response.errorBody() != null){
                             responseBody = response.errorBody();
                             getTokenResponse = new Gson().fromJson(new String(responseBody.bytes()), GetTokenResponse.class);
-                            orderResponse.setAction(Constants.ACTION_LOGIN_AGAIN);
+                            masterResponse.setAction(Constants.ACTION_LOGIN_AGAIN);
                         }
                     }
                 }
             }
         }
 
-        return orderResponse;
+        return masterResponse;
     }
 
     @Override
-    protected void onPostExecute(OrderResponse orderResponse) {
+    protected void onPostExecute(MasterResponse orderResponse) {
 
         onApiCallbackListener.onApiPostExecute(orderResponse,this);
     }
 
-    private void fillData(List<OrderListItem> newList){
+    /*private void fillData(List<OrderListItem> newList){
 
         if(!prefs.contains(Constants.PREF_ORDER)) return;
 
@@ -244,6 +252,6 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
         }
 
         return orderListItem;
-    }
+    }*/
 
 }

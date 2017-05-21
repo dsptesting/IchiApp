@@ -14,8 +14,10 @@
         <include layout="@layout/toolbar_plain"/>
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:paddingBottom="@dimen/values_20"
+            android:visibility="visible"
             android:clipToPadding="false"
             android:layout_height="match_parent"
             android:layout_below="@+id/tbAppToolbarNormal">
@@ -41,7 +43,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAddTemplate"
-                    android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16">
 
                     <android.support.v7.widget.AppCompatSpinner
@@ -53,6 +54,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sAddTemplate"
                         android:background="@color/colorPrimary"/>
 
@@ -76,7 +78,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAddSection"
-                    android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16">
 
                     <android.support.v7.widget.AppCompatSpinner
@@ -88,6 +89,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sAddSection"
                         android:background="@color/colorPrimary"/>
 
@@ -110,7 +112,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtSelectSection"
-                    android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16">
 
                     <android.support.v7.widget.AppCompatSpinner
@@ -122,6 +123,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sSelectSection"
                         android:background="@color/colorPrimary"/>
 
@@ -211,6 +213,28 @@
 
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
+
+        <ProgressBar
+            android:id="@+id/pbLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvNoData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/values_30"
+            android:layout_marginRight="@dimen/values_30"
+            android:gravity="center"
+            android:text="@string/str_no_data"
+            android:textColor="@color/c_47505c"
+            android:textSize="@dimen/values_txt_18"
+            android:visibility="gone"
+            app:customFont="@string/reg"/>
+
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

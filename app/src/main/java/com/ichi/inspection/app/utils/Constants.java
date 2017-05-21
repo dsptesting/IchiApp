@@ -28,6 +28,7 @@ public class Constants {
     public static final boolean showStackTrace = debugging;
     public static final boolean showErrorMessages = debugging;
     public static final String INTENT_FROM = "FROM";
+
     public static boolean showDebugMessages = debugging;
     public static boolean showInfoMessages = debugging;
     public static boolean showWarningMessages = debugging;
@@ -45,6 +46,7 @@ public class Constants {
     public static final String BASE_URL = "http://www.samplegoogle.com";
     public static final String URL_LOGIN = "http://uat.ichisoftware.com:8088/token";
     public static final String URL_ORDER_LIST = "http://uat.ichisoftware.com:8088/ichi/orders";
+    public static final String URL_MASTER_LIST = "http://uat.ichisoftware.com:8088/ichi/master";
 
     //TODO sample... remove if unused. later
     public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd'T'HH:mm:ss";
@@ -55,6 +57,14 @@ public class Constants {
     //Pref helper keys
     public static final String PREF_TOKEN_OBJECT = "PREF_TOKEN_OBJECT";
     public static final String PREF_ORDER = "PREF_ORDER";
+    public static final String PREF_MASTER = "PREF_MASTER";
+    public static final String PREF_REQUEST_MASTER_AFTER_LOGIN = "PREF_REQUEST_MASTER_AFTER_LOGIN";
+
+    public static final String PREF_ADD_SECTION = "PREF_ADD_SECTION";
+    public static final String PREF_SELECT_SECTION = "PREF_SELECT_SECTION";
+    public static final String PREF_NAMED_TEMPLATES = "PREF_NAMED_TEMPLATES";
+    public static final String PREF_TEMPLATES = "PREF_TEMPLATES";
+
 
     // result codes
     /*public static final int CREATE_NEW_CONTACT = 100;

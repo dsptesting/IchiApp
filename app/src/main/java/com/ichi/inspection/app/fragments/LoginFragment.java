@@ -170,6 +170,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void goToHomeActivity(){
+        prefs.putBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,true);
         Intent intent = new Intent(getActivity() , MainActivity.class);
         startActivity(intent);
         getActivity().finish();

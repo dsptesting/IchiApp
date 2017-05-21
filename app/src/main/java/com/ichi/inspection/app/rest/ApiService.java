@@ -1,6 +1,7 @@
 package com.ichi.inspection.app.rest;
 
 import com.ichi.inspection.app.models.GetTokenResponse;
+import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.utils.Constants;
 
@@ -20,6 +21,9 @@ public interface ApiService {
 
     @GET(Constants.URL_ORDER_LIST)
     Call<OrderResponse> executeOrderList(@Header("Authorization") String authorization);
+
+    @GET(Constants.URL_MASTER_LIST)
+    Call<MasterResponse> executeMasterList(@Header("Authorization") String authorization);
 
     @FormUrlEncoded
     @POST(Constants.URL_LOGIN)
