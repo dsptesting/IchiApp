@@ -29,6 +29,18 @@ public class Templates {
                         "}";
     }
 
+    public List<TemplateItemsItem> getTemplateItems(String namedTemplateId){
+        List<TemplateItemsItem> headerSections = new ArrayList<>();
+
+        for(TemplateItemsItem templateItemsItem : templateItems){
+            if(templateItemsItem.getNamedTemplateId().equalsIgnoreCase(namedTemplateId)){
+                headerSections.add(templateItemsItem);
+            }
+        }
+
+        return headerSections;
+    }
+
     public List<TemplateItemsItem> getHeaderSections(String namedTemplateId){
         List<TemplateItemsItem> headerSections = new ArrayList<>();
 

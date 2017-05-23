@@ -28,6 +28,7 @@ public class Constants {
     public static final boolean showStackTrace = debugging;
     public static final boolean showErrorMessages = debugging;
     public static final String INTENT_FROM = "FROM";
+    public static final String PREF_GLOBAL_NUMBER = "PREF_GLOBAL_NUMBER";
 
     public static boolean showDebugMessages = debugging;
     public static boolean showInfoMessages = debugging;

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.CustomButton;
 import com.ichi.inspection.app.utils.Utils;
@@ -28,19 +29,19 @@ import butterknife.ButterKnife;
 public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
 
     public static final String TAG = LineAdapter.class.getSimpleName();
-    private List<OrderListItem> mList;
+    private List<SubSectionsItem> mList;
     private Context mContext;
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_DATE);
     private OnListItemClickListener onListItemClickListener;
     private String status = "";
 
-    public LineAdapter(Context context, List<OrderListItem> mList, OnListItemClickListener onListItemClickListener) {
+    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener) {
         this.mList = mList;
         mContext = context;
         this.onListItemClickListener = onListItemClickListener;
     }
 
-    public void setData(List<OrderListItem> mList) {
+    public void setData(List<SubSectionsItem> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }
@@ -55,8 +56,8 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
     @Override
     public void onBindViewHolder(LineHolder holder, int position) {
 
-        OrderListItem orderListItem = getItem(position);
-        //holder.tvName.setText(orderListItem.getLastName()+" "+orderListItem.getFirstName());
+        SubSectionsItem subSectionsItem = getItem(position);
+        holder.tvName.setText(subSectionsItem.getName()+"");
 
     }
 
@@ -65,7 +66,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
         return mList.size();
     }
 
-    public OrderListItem getItem(int position) {
+    public SubSectionsItem getItem(int position) {
         return mList.get(position);
     }
 

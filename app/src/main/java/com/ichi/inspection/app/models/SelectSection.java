@@ -20,6 +20,17 @@ public class SelectSection{
 		return subSections;
 	}
 
+    public List<SubSectionsItem> getSubSections(String inspectionId){
+
+        List<SubSectionsItem> subSectionsItemsWithInspectionId  = new ArrayList<>();
+        for(SubSectionsItem subSectionsItem : subSections){
+            if(subSectionsItem != null && subSectionsItem.getInspectionId().equalsIgnoreCase(inspectionId)){
+                subSectionsItemsWithInspectionId.add(subSectionsItem);
+            }
+        }
+        return subSectionsItemsWithInspectionId;
+    }
+
 	@Override
  	public String toString(){
 		return 

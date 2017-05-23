@@ -9,17 +9,21 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.models.SubSectionsItem;
+import com.ichi.inspection.app.models.TemplateItemsItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Utils {
 
@@ -203,5 +207,72 @@ public class Utils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static int getGlobalUniqueNumber(Context context, boolean shouldIncrement){
+
+        int number = 0;
+        PreferencesHelper prefs = PreferencesHelper.getInstance(context);
+        if(prefs.contains(Constants.PREF_GLOBAL_NUMBER)){
+            number = prefs.getInt(Constants.PREF_GLOBAL_NUMBER,number);
+        }
+        if(number == 0) shouldIncrement = true;
+        if(shouldIncrement){
+            number = number + 1;
+            prefs.putInt(Constants.PREF_GLOBAL_NUMBER,number);
+        }
+        return number;
+    }
+
+    public static SubSectionsItem convertTemplateToSubSection(Context context, TemplateItemsItem templateItemsItem, String inspectionId) {
+
+        SubSectionsItem subSectionsItem = new SubSectionsItem();
+        subSectionsItem.setIOLineId(new Date().getTime() +"");
+        subSectionsItem.setSectionId(templateItemsItem.getSectionId());
+        subSectionsItem.setInspectionId(inspectionId);
+        subSectionsItem.setGood("f");
+        subSectionsItem.setFair("f");
+        subSectionsItem.setPoor("f");
+        subSectionsItem.setComments(""+templateItemsItem.getComments());
+        subSectionsItem.setLineNumber("");
+        subSectionsItem.setIsHead(templateItemsItem.getIsHead());
+        subSectionsItem.setName(templateItemsItem.getName());
+        subSectionsItem.setLineOrder("");
+        subSectionsItem.setSuppressPrint("f");
+        subSectionsItem.setPageBreak("");
+
+        //if true, means its section, if not, means its line
+        if(Boolean.parseBoolean(templateItemsItem.getIsHead())){
+            //subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,true));
+            //TODO usedHead is comming in template data.. sections are having unique usedHead int, while followed lines are having same usedHead as of its section's
+            //Check this logic later
+            subSectionsItem.setUsedHead(""+templateItemsItem.getUsedHead());
+            subSectionsItem.setNotInspected("f");
+        }
+        else{
+            //subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,false));
+            subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,false));
+            subSectionsItem.setNotInspected(""+templateItemsItem.getUsedHead());
+        }
+
+        subSectionsItem.setNumberOfExposures("");
+        subSectionsItem.setVeryPoor("f");
+        subSectionsItem.setTemplatedId(templateItemsItem.getNamedTemplateId());
+
+        return subSectionsItem;
+    }
+
+    public static boolean hasSubSection(List<SubSectionsItem> alSubSections, SubSectionsItem subSectionsItem) {
+
+        //dont let it to put in array, so return true, to bypass..
+        if(subSectionsItem == null) return true;
+
+        for(SubSectionsItem sub : alSubSections){
+            if(sub.getSectionId().equalsIgnoreCase(subSectionsItem.getSectionId())){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

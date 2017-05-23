@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -34,13 +35,16 @@ import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.NamedTemplates;
 import com.ichi.inspection.app.models.NamedTemplatesItem;
+import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.SelectSection;
+import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
 import com.ichi.inspection.app.models.Templates;
 import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -105,6 +109,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private int selectedIndexAddSection = -1;
     private int selectedIndexSelectSection = -1;
 
+    private OrderListItem orderListItem;
+    private List<SubSectionsItem> alSubSections;
+    //below is for spinner to load sections only.
+    private List<SubSectionsItem> alSubSectionsOnly;
+
+    private List<SubSectionsItem> alSubSectionsLines;
 
     @Nullable
     @Override
@@ -126,6 +136,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if (toolbar != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
+
+        orderListItem = getArguments().getParcelable(Constants.INTENT_SELECTED_ORDER);
 
         tvAppTitle.setText(R.string.inspections_title);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -150,9 +162,20 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
             if(namedTemplatesItem != null) selectedNamedTemplate = namedTemplatesItem.getNamedTemplateId();
         }
-        selectSectionAdapter = new SelectSectionAdapter(getActivity(),templates.getHeaderSections(selectedNamedTemplate));
+
+        alSubSections = new ArrayList<>();
+        alSubSectionsOnly = new ArrayList<>();
+        alSubSectionsLines = new ArrayList<>();
+
+        //selectSectionAdapter = new SelectSectionAdapter(getActivity(),templates.getHeaderSections(selectedNamedTemplate));
+        selectSectionAdapter = new SelectSectionAdapter(getActivity(),alSubSectionsOnly);
         sSelectSection.setAdapter(selectSectionAdapter);
         sSelectSection.setOnItemSelectedListener(this);
+
+        lineAdapter = new LineAdapter(getActivity(),alSubSectionsLines,this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        rcvItems.setLayoutManager(linearLayoutManager);
+        rcvItems.setAdapter(lineAdapter);
 
     }
 
@@ -161,6 +184,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         //This is to refresh data once we get from web call async.
         templateAdapter.setData(namedTemplates.getNamedTemplatesItems());
         addSectionAdapter.setData(addSection.getHeaderItems());
+        selectSectionAdapter.setData(alSubSectionsOnly);
     }
 
     private void getMasterList(){
@@ -239,6 +263,25 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
                 templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
 
+                //if this satisfies, then we have data from web...
+
+                if(selectSection != null) {
+                    List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+                    if (temp != null && !temp.isEmpty()) {
+                        alSubSections.clear();
+                        //this will include sections, lines which are already selected... new selected template's lines and sections are going to be entered here to..
+                        alSubSections.addAll(temp);
+
+                        //Load sections only to show in select section spinner
+                        alSubSectionsOnly.clear();
+                        for(SubSectionsItem sub : alSubSections){
+                            if(Boolean.parseBoolean(sub.getIsHead())){
+                                alSubSectionsOnly.add(sub);
+                            }
+                        }
+                    }
+                }
+
                 initView();
                 setLayoutVisibility();
             }
@@ -292,7 +335,41 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                     if(selectedIndexNamedTemplates != -1){
                         NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
-                        if(namedTemplatesItem != null) selectSectionAdapter.setData(templates.getHeaderSections(namedTemplatesItem.getNamedTemplateId()));
+                        if(namedTemplatesItem != null){
+
+                            /*List<TemplateItemsItem> templateItemsItems = templates.getHeaderSections(namedTemplatesItem.getNamedTemplateId());
+                            SubSectionsItem subSectionsItem;
+                            for(TemplateItemsItem templateItemsItem : templateItemsItems){
+                                subSectionsItem = Utils.convertTemplateToSubSection(getActivity(),templateItemsItem, ""+orderListItem.getSequence());
+                                if(!Utils.hasSubSection(alSubSections,subSectionsItem)){
+                                    alSubSections.add(subSectionsItem);
+                                }
+                            }*/
+
+                            List<TemplateItemsItem> templateItemsItems = templates.getTemplateItems(namedTemplatesItem.getNamedTemplateId());
+
+                            SubSectionsItem subSectionsItem;
+
+                            for(TemplateItemsItem templateItemsItem : templateItemsItems){
+
+                                subSectionsItem = Utils.convertTemplateToSubSection(getActivity(),templateItemsItem, ""+orderListItem.getSequence());
+
+                                if(Boolean.parseBoolean(subSectionsItem.getIsHead()) && !Utils.hasSubSection(alSubSectionsOnly,subSectionsItem)){
+
+                                    alSubSectionsOnly.add(subSectionsItem);
+                                }
+
+                                if(!Utils.hasSubSection(alSubSections,subSectionsItem)){
+
+                                    alSubSections.add(subSectionsItem);
+                                }
+                            }
+
+                            Log.v(TAG,"after selected new temp, alSubSections size: " + alSubSections.size());
+                            Log.v(TAG,"after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
+
+                            selectSectionAdapter.setData(alSubSectionsOnly);
+                        }
                     }
 
                 }
@@ -316,6 +393,18 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         Log.v(TAG,"SelectSection "+ templateItemsItems.get(selectedIndexSelectSection));
                     }*/
 
+                    SubSectionsItem subSectionsItem = alSubSectionsOnly.get(selectedIndexSelectSection);
+                    if(subSectionsItem != null){
+                        String usedHead = subSectionsItem.getUsedHead();
+                        alSubSectionsLines.clear();
+                        for(SubSectionsItem sub : alSubSections){
+                            if(sub.getUsedHead().equalsIgnoreCase(usedHead) && !Boolean.parseBoolean(sub.getIsHead())){
+                                alSubSectionsLines.add(sub);
+                            }
+                        }
+                    }
+                    Log.v(TAG,"alSubSectionsLines: " + alSubSectionsLines);
+                    lineAdapter.setData(alSubSectionsLines);
                 }
                 break;
         }

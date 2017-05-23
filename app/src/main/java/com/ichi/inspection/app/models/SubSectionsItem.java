@@ -55,7 +55,49 @@ public class SubSectionsItem{
     @SerializedName("NotInspected")
     private String notInspected;
 
-	public void setIsHead(String isHead){
+    private String templatedId;
+
+    @Override
+    public String toString() {
+        return "SubSectionsItem{" +
+                "isHead='" + isHead + '\'' +
+                ", poor='" + poor + '\'' +
+                ", fair='" + fair + '\'' +
+                ", comments='" + comments + '\'' +
+                ", inspectionId='" + inspectionId + '\'' +
+                ", suppressPrint='" + suppressPrint + '\'' +
+                ", veryPoor='" + veryPoor + '\'' +
+                ", lineNumber='" + lineNumber + '\'' +
+                ", name='" + name + '\'' +
+                ", usedHead='" + usedHead + '\'' +
+                ", pageBreak='" + pageBreak + '\'' +
+                ", iOLineId='" + iOLineId + '\'' +
+                ", lineOrder='" + lineOrder + '\'' +
+                ", good='" + good + '\'' +
+                ", sectionId='" + sectionId + '\'' +
+                ", numberOfExposures='" + numberOfExposures + '\'' +
+                ", notInspected='" + notInspected + '\'' +
+                ", templatedId='" + templatedId + '\'' +
+                '}';
+    }
+
+    public String getTemplatedId() {
+        return templatedId;
+    }
+
+    public void setTemplatedId(String templatedId) {
+        this.templatedId = templatedId;
+    }
+
+    public String getiOLineId() {
+        return iOLineId;
+    }
+
+    public void setiOLineId(String iOLineId) {
+        this.iOLineId = iOLineId;
+    }
+
+    public void setIsHead(String isHead){
 		this.isHead = isHead;
 	}
 
@@ -191,27 +233,4 @@ public class SubSectionsItem{
 		return notInspected;
 	}
 
-	@Override
- 	public String toString(){
-		return 
-			"SubSectionsItem{" + 
-			"isHead = '" + isHead + '\'' + 
-			",poor = '" + poor + '\'' + 
-			",fair = '" + fair + '\'' + 
-			",comments = '" + comments + '\'' + 
-			",inspectionId = '" + inspectionId + '\'' + 
-			",suppressPrint = '" + suppressPrint + '\'' + 
-			",veryPoor = '" + veryPoor + '\'' + 
-			",lineNumber = '" + lineNumber + '\'' + 
-			",name = '" + name + '\'' + 
-			",usedHead = '" + usedHead + '\'' + 
-			",pageBreak = '" + pageBreak + '\'' + 
-			",iOLineId = '" + iOLineId + '\'' + 
-			",lineOrder = '" + lineOrder + '\'' + 
-			",good = '" + good + '\'' + 
-			",sectionId = '" + sectionId + '\'' + 
-			",numberOfExposures = '" + numberOfExposures + '\'' + 
-			",notInspected = '" + notInspected + '\'' + 
-			"}";
-		}
 }
