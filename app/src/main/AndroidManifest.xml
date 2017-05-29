@@ -19,7 +19,10 @@
         <activity
             android:name=".activities.StartActivity"
             android:screenOrientation="portrait">
-
+        </activity>
+        <activity
+            android:name=".activities.GridActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activities.SplashActivity"

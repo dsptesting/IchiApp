@@ -1,6 +1,7 @@
 package com.ichi.inspection.app.adapters;
 
 import android.content.Context;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,18 +28,20 @@ import butterknife.ButterKnife;
  */
 
 public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
-
     public static final String TAG = LineAdapter.class.getSimpleName();
     private List<SubSectionsItem> mList;
     private Context mContext;
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_DATE);
     private OnListItemClickListener onListItemClickListener;
     private String status = "";
+    BottomSheetBehavior behavior;
 
-    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener) {
+
+    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior) {
         this.mList = mList;
         mContext = context;
         this.onListItemClickListener = onListItemClickListener;
+        this.behavior=behavior;
     }
 
     public void setData(List<SubSectionsItem> mList) {
@@ -54,10 +57,20 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
     }
 
     @Override
-    public void onBindViewHolder(LineHolder holder, int position) {
+    public void onBindViewHolder(final LineHolder holder, int position) {
 
         SubSectionsItem subSectionsItem = getItem(position);
         holder.tvName.setText(subSectionsItem.getName()+"");
+        holder.btnR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.btnR.isSelected()){
+                    holder.btnR.setSelected(false);
+                }else{
+                    holder.btnR.setSelected(true);
+                }
+            }
+        });
 
     }
 
@@ -70,7 +83,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
         return mList.get(position);
     }
 
-    public class LineHolder extends RecyclerView.ViewHolder {
+    public class LineHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.tvName)
         TextView tvName;
@@ -90,10 +103,23 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
         @BindView(R.id.btnNA)
         CustomButton btnNA;
 
+        @BindView(R.id.btnUpload)
+        CustomButton btnUpload;
+
+        @BindView(R.id.btnPhoto)
+        CustomButton btnPhoto;
+
         public LineHolder(View view) {
             super(view);
             ButterKnife.bind(this,view);
 
+            btnUpload.setOnClickListener(this);
+            btnPhoto.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onListItemClickListener.onListItemClick(v,getAdapterPosition());
         }
     }
 }

@@ -3,6 +3,7 @@
     android:id="@+id/coordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/logobg">
@@ -128,12 +129,44 @@
                         android:background="@color/colorPrimary"/>
 
                 </RelativeLayout>
+                <com.ichi.inspection.app.utils.CustomTextView
+                    android:id="@+id/txtMarkAll"
+                    style="@style/txt_reg_12_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rlSelectSection"
+                    android:layout_marginLeft="@dimen/values_16"
+                    android:layout_marginTop="@dimen/values_w17"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:text="@string/mark_all_lines"/>
 
+                <RelativeLayout
+                    android:id="@+id/rlMarkAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtMarkAll"
+                    android:layout_marginLeft="@dimen/values_16"
+                    android:layout_marginRight="@dimen/values_16">
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/sMarkAll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/sMarkAll"
+                        android:background="@color/colorPrimary"/>
+
+                </RelativeLayout>
                 <LinearLayout
                     android:id="@+id/llControls"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/rlSelectSection"
+                    android:layout_below="@+id/rlMarkAll"
                     android:layout_marginBottom="@dimen/values_28"
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"

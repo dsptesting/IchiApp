@@ -104,6 +104,7 @@
     <string name="add_template">Add Template</string>
     <string name="add_a_section">Add a Section</string>
     <string name="select_section">Select Section</string>
+    <string name="mark_all_lines">Mark All Lines</string>
     <string name="edit_name">EDIT NAME</string>
     <string name="rename_name">Rename Name</string>
     <string name="add_new_line">Add New Line</string>

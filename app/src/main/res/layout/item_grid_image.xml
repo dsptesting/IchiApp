@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ichi.inspection.app.utils.SquareImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageView"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:scaleType="centerCrop"
+    android:background="@color/blue"
+    android:layout_margin="@dimen/values_3"/>

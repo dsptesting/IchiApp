@@ -1,9 +1,13 @@
 package com.ichi.inspection.app.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -19,10 +23,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.activities.GridActivity;
 import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.adapters.AddSectionAdapter;
 import com.ichi.inspection.app.adapters.LineAdapter;
@@ -75,6 +81,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.tvNoData)
     TextView tvNoData;
 
+    @BindView(R.id.btnEditName)
+    TextView btnEditName;
+
     @BindView(R.id.sAddTemplate)
     AppCompatSpinner sAddTemplate;
 
@@ -115,6 +124,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private List<SubSectionsItem> alSubSectionsOnly;
 
     private List<SubSectionsItem> alSubSectionsLines;
+    private BottomSheetBehavior<View> behavior;
 
     @Nullable
     @Override
@@ -131,6 +141,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     }
 
     private void initData() {
+
 
         //Toolbar shit!
         if (toolbar != null) {
@@ -172,11 +183,34 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         sSelectSection.setAdapter(selectSectionAdapter);
         sSelectSection.setOnItemSelectedListener(this);
 
-        lineAdapter = new LineAdapter(getActivity(),alSubSectionsLines,this);
+        lineAdapter = new LineAdapter(getActivity(),alSubSectionsLines,this,behavior);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         rcvItems.setLayoutManager(linearLayoutManager);
         rcvItems.setAdapter(lineAdapter);
 
+
+    }
+
+    private void showGallary(){
+        BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
+        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
+        mBottomSheetDialog.setContentView(sheetView);
+        //sheetView.findViewById(R.id.).
+        LinearLayout llCamera= (LinearLayout) sheetView.findViewById(R.id.llCamera);
+        LinearLayout llGallery= (LinearLayout) sheetView.findViewById(R.id.llGallery);
+        llCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, GridActivity.class));
+            }
+        });
+        llGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, GridActivity.class));
+            }
+        });
+        mBottomSheetDialog.show();
     }
 
     private void initView() {
@@ -238,6 +272,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case android.R.id.home:
                 getActivity().onBackPressed();
                 break;
+            case R.id.btnEditName:
+                if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+
         }
     }
 
@@ -296,14 +337,20 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onListItemClick(View view, int position) {
-       /* switch (view.getId()){
-            case R.id.rlContainer:
+        switch (view.getId()){
+           /* case R.id.rlContainer:
                 Log.v(TAG,"Position: " + position);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Constants.INTENT_SELECTED_ORDER, position);
                 ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, bundle, true);
+                break;*/
+            case R.id.btnUpload:
+                showGallary();
                 break;
-        }*/
+            case R.id.btnPhoto:
+                startActivity(new Intent(mContext, GridActivity.class));
+                break;
+        }
     }
 
 
