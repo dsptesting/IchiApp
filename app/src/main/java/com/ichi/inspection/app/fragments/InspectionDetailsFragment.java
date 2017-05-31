@@ -1,5 +1,6 @@
 package com.ichi.inspection.app.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -50,11 +51,15 @@ import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.aprilapps.easyphotopicker.EasyImageConfig;
 
 /**
  * Created by Palak on 05-03-2017.
@@ -201,16 +206,36 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         llCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext, GridActivity.class));
+                EasyImage.openCamera(getActivity(),0);
+                //startActivity(new Intent(mContext, GridActivity.class));
             }
         });
         llGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext, GridActivity.class));
+                EasyImage.openGallery(getActivity(),0);
+                //startActivity(new Intent(mContext, GridActivity.class));
             }
         });
         mBottomSheetDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                //Some error handling
+            }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+
+            }
+
+        });
     }
 
     private void initView() {
