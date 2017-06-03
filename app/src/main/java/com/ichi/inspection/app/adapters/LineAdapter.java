@@ -160,7 +160,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
 
         @Override
         public void onClick(View view) {
-            //onListItemClickListener.onListItemClick(v,getAdapterPosition());
+            onListItemClickListener.onListItemClick(view,getAdapterPosition());
             switch (view.getId()){
                 case R.id.btnS:
                     SubSectionsItem subSectionsItem = getItem(getAdapterPosition());

@@ -1,6 +1,7 @@
 package com.ichi.inspection.app.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.utils.SquareImageView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,9 +23,10 @@ import butterknife.ButterKnife;
  */
 
 public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGridHolder>{
+    ArrayList<String> images;
 
-    public GridViewAdapter(Context mContext){
-
+    public GridViewAdapter(Context mContext, ArrayList<String> images){
+        this.images=images;
     }
     @Override
     public MyGridHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,12 +36,12 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGrid
 
     @Override
     public void onBindViewHolder(MyGridHolder holder, int position) {
-        holder.imageView.setImageResource(R.drawable.beauty);
+        holder.imageView.setImageURI(Uri.parse(images.get(position)));
     }
 
     @Override
     public int getItemCount() {
-        return 25;
+        return images.size();
     }
 
     public class MyGridHolder  extends RecyclerView.ViewHolder implements View.OnClickListener{

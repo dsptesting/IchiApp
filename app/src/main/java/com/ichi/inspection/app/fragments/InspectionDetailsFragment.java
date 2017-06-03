@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
@@ -29,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -59,8 +63,15 @@ import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.CustomTextView;
 import com.ichi.inspection.app.utils.Utils;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -151,6 +162,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private List<SubSectionsItem> alSubSectionsLines;
     private BottomSheetBehavior<View> behavior;
     private SubSectionsItem selectedsubSectionsItem;
+    private int currentSelectedLinePositionForImage = -1;
 
     @Nullable
     @Override
@@ -161,6 +173,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         mContext = getActivity();
         setHasOptionsMenu(true);
         initData();
+        EasyImage.configuration(mContext).saveInAppExternalFilesDir().saveInRootPicturesDirectory().setCopyExistingPicturesToPublicLocation(true);
         getMasterList();
 
         return view;
@@ -220,8 +233,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
-    private void showGallary(){
-        BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
+    private void showGallary(int position){
+
+        currentSelectedLinePositionForImage =  position;
+        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
         View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
         mBottomSheetDialog.setContentView(sheetView);
         //sheetView.findViewById(R.id.).
@@ -230,15 +245,15 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         llCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EasyImage.openCamera(getActivity(),0);
-                //startActivity(new Intent(mContext, GridActivity.class));
+                EasyImage.openCamera(InspectionDetailsFragment.this,0);
+                mBottomSheetDialog.dismiss();
             }
         });
         llGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EasyImage.openGallery(getActivity(),0);
-                //startActivity(new Intent(mContext, GridActivity.class));
+                EasyImage.openGallery(InspectionDetailsFragment.this,0);
+                mBottomSheetDialog.dismiss();
             }
         });
         mBottomSheetDialog.show();
@@ -252,10 +267,51 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
                 //Some error handling
+                Log.d(TAG, "onImagePickerError: "+e.getMessage());
             }
 
             @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source1, int type) {
+                Log.v(TAG,"imageFile file : "+ imageFile.getAbsolutePath());
+                Log.d(TAG, "onImagePicked: "+imageFile.getAbsolutePath());
+                Log.d(TAG, "onImagePicked: ");
+                File file = null;
+                //TODO copy file to our folder..
+                try {
+                File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                File createDir = new File(root+"/ICHI"+File.separator);
+                if(!createDir.exists()) {
+                    createDir.mkdir();
+                }
+                file = new File(root + "/ICHI" + File.separator +imageFile.getName());
+                file.createNewFile();
+
+
+                    //Copy Image
+                    FileChannel source = null;
+                    FileChannel destination = null;
+                    source = new FileInputStream(imageFile).getChannel();
+                    destination = new FileOutputStream(file).getChannel();
+                    if (destination != null && source != null) {
+                        destination.transferFrom(source, 0, source.size());
+                    }
+                    if (source != null) {
+                        source.close();
+                    }
+                    if (destination != null) {
+                        destination.close();
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if(currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null){
+                    List<String> uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+                    uris.add(file.getAbsolutePath());
+                }
+
 
             }
 
@@ -412,10 +468,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.rlContainer:
                 Log.v(TAG, "Position: " + position);
             case R.id.btnUpload:
-                showGallary();
+                showGallary(position);
                 break;
             case R.id.btnPhoto:
-                startActivity(new Intent(mContext, GridActivity.class));
+                ArrayList<String> imageURIs=alSubSectionsLines.get(position).getImageURIs();
+                Intent intent = new Intent(mContext, GridActivity.class);
+                intent.putStringArrayListExtra("URIs",imageURIs);
+                startActivity(intent);
                 break;
         }
     }

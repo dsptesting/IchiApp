@@ -2,6 +2,8 @@ package com.ichi.inspection.app.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class SubSectionsItem{
 
     @SerializedName("IsHead")
@@ -55,7 +57,21 @@ public class SubSectionsItem{
     @SerializedName("NotInspected")
     private String notInspected;
 
+    private ArrayList<String> imageURIs;
+
     private String templatedId;
+
+    public SubSectionsItem() {
+        this.imageURIs = new ArrayList<>();
+    }
+
+    public ArrayList<String> getImageURIs() {
+        return imageURIs;
+    }
+
+    public void setImageURIs(ArrayList<String> imageURIs) {
+        this.imageURIs = imageURIs;
+    }
 
     @Override
     public String toString() {
