@@ -17,6 +17,7 @@ import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.CustomButton;
+import com.ichi.inspection.app.utils.CustomTextView;
 import com.ichi.inspection.app.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -89,6 +90,18 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
             holder.btnU.setSelected(false);
         }
 
+        try{
+            if(subSectionsItem.getComments() != null && !subSectionsItem.getComments().toString().trim().isEmpty()){
+                holder.txtComment.setText(""+subSectionsItem.getComments().toString().trim());
+            }
+            else{
+                holder.txtComment.setText("Add comment");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -129,6 +142,9 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
         @BindView(R.id.llAddComment)
         LinearLayout llAddComment;
 
+        @BindView(R.id.txtComment)
+        CustomTextView txtComment;
+
         public LineHolder(View view) {
             super(view);
             ButterKnife.bind(this,view);
@@ -151,27 +167,28 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
                     subSectionsItem.setGood("t");
                     subSectionsItem.setFair("f");
                     subSectionsItem.setPoor("f");
+                    onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
                     notifyDataSetChanged();
-                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
                     break;
                 case R.id.btnR:
                     subSectionsItem = getItem(getAdapterPosition());
                     subSectionsItem.setGood("f");
                     subSectionsItem.setFair("t");
                     subSectionsItem.setPoor("f");
+                    onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
                     notifyDataSetChanged();
-                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
                     break;
                 case R.id.btnU:
                     subSectionsItem = getItem(getAdapterPosition());
                     subSectionsItem.setGood("f");
                     subSectionsItem.setFair("f");
                     subSectionsItem.setPoor("t");
+                    onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
                     notifyDataSetChanged();
-                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
                     break;
                 case R.id.llAddComment:
-                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
+                    subSectionsItem = getItem(getAdapterPosition());
+                    onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
                     break;
             }
         }

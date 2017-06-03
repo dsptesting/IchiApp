@@ -210,7 +210,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         sSelectSection.setAdapter(selectSectionAdapter);
         sSelectSection.setOnItemSelectedListener(this);
 
-        lineAdapter = new LineAdapter(getActivity(),alSubSectionsLines,this,behavior);
+        lineAdapter = new LineAdapter(getActivity(),alSubSectionsLines,this,behavior,this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         rcvItems.setLayoutManager(linearLayoutManager);
         rcvItems.setAdapter(lineAdapter);
@@ -411,12 +411,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.rlContainer:
                 Log.v(TAG, "Position: " + position);
-           /* case R.id.rlContainer:
-                Log.v(TAG,"Position: " + position);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(Constants.INTENT_SELECTED_ORDER, position);
-                ((MainActivity)getActivity()).navigateToScreen(Constants.INSPECTION_NAVIGATION, bundle, true);
-                break;*/
             case R.id.btnUpload:
                 showGallary();
                 break;
@@ -454,7 +448,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                     if (selectedIndexNamedTemplates != -1) {
                         NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
-                        Log.v(TAG, "SelectedTemplates namedTemplatesItem: " + namedTemplatesItem);
+                        //Log.v(TAG, "SelectedTemplates namedTemplatesItem: " + namedTemplatesItem);
                         if (namedTemplatesItem != null) {
 
                             /*List<TemplateItemsItem> templateItemsItems = templates.getHeaderSections(namedTemplatesItem.getNamedTemplateId());
@@ -470,7 +464,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                             SubSectionsItem subSectionsItem;
 
-                            Log.v(TAG, "templateItemsItems size " + templateItemsItems.size());
+                            //Log.v(TAG, "templateItemsItems size " + templateItemsItems.size());
 
                             for (TemplateItemsItem templateItemsItem : templateItemsItems) {
 
@@ -487,8 +481,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                                 }
                             }
 
-                            Log.v(TAG, "after selected new temp, alSubSections size: " + alSubSections.size());
-                            Log.v(TAG, "after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
+                            //Log.v(TAG, "after selected new temp, alSubSections size: " + alSubSections.size());
+                            //Log.v(TAG, "after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
 
                             selectSectionAdapter.setData(alSubSectionsOnly);
                         }
@@ -499,7 +493,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.sAddSection:
                 if (position != -1) {
                     selectedIndexAddSection = position;
-                    Log.v(TAG, "SelectedAddSection " + addSection.getHeaderItems().get(selectedIndexAddSection));
+                    //Log.v(TAG, "SelectedAddSection " + addSection.getHeaderItems().get(selectedIndexAddSection));
                 }
                 break;
 
@@ -525,7 +519,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                             }
                         }
                     }
-                    Log.v(TAG, "alSubSectionsLines: " + alSubSectionsLines);
+                    //Log.v(TAG, "alSubSectionsLines: " + alSubSectionsLines);
                     lineAdapter.setData(alSubSectionsLines);
                 }
                 break;
@@ -607,18 +601,18 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 cancelThisDialog();
-                Log.v(TAG, "Total alSubSectionsOnly : " + alSubSectionsOnly.size());
+                //Log.v(TAG, "Total alSubSectionsOnly : " + alSubSectionsOnly.size());
                 Iterator<SubSectionsItem> iter1 = alSubSectionsOnly.iterator();
                 while (iter1.hasNext()) {
                     SubSectionsItem subSectionsItem = iter1.next();
                     if (subSectionsItem.getSectionId().equalsIgnoreCase("" + selectedsubSectionsItem.getSectionId()) &&
                             subSectionsItem.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
                         // Remove the current element from the iterator and the list.
-                        Log.v(TAG, "Total alSubSectionsOnly name : " + subSectionsItem);
+                        //Log.v(TAG, "Total alSubSectionsOnly name : " + subSectionsItem);
                         iter1.remove();
                     }
                 }
-                Log.v(TAG, "after Total alSubSectionsOnly : " + alSubSectionsOnly.size());
+                //Log.v(TAG, "after Total alSubSectionsOnly : " + alSubSectionsOnly.size());
 
 
                /* Log.v(TAG, "Total templates : " + templates.getTemplateItems().size());
@@ -632,23 +626,23 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 }
                 Log.v(TAG, "after Total templates : " + templates.getTemplateItems().size());*/
 
-                Log.v(TAG, "before Total selectSection : " + selectSection.getSubSections().size());
+                //Log.v(TAG, "before Total selectSection : " + selectSection.getSubSections().size());
                 Iterator<SubSectionsItem> iter3 = selectSection.getSubSections().iterator();
                 while (iter3.hasNext()) {
                     SubSectionsItem tmp = iter3.next();
                     if (tmp.getInspectionId().equalsIgnoreCase(""+orderListItem.getSequence()) &&
                             tmp.getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
                             tmp.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
-                        Log.v(TAG, "Total alSubSectionsOnly tmp.getSectionId() : " + tmp.getSectionId());
+                        //Log.v(TAG, "Total alSubSectionsOnly tmp.getSectionId() : " + tmp.getSectionId());
                         iter3.remove();
                     }
                 }
 
-                Log.v(TAG, "after Total selectSection : " + selectSection.getSubSections().size());
+                //Log.v(TAG, "after Total selectSection : " + selectSection.getSubSections().size());
                 prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
                 //prefs.putObject(Constants.PREF_TEMPLATES, templates);
                 selectSectionAdapter.setData(alSubSectionsOnly);
-                Log.v(TAG, "after Total getCount : " +selectSectionAdapter.getCount());
+                //Log.v(TAG, "after Total getCount : " +selectSectionAdapter.getCount());
 
             }
         });
@@ -679,7 +673,49 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.btnU:
                 changeLineStatus(subSectionsItem,position);
                 break;
+            case R.id.llAddComment:
+                showCommentBox(subSectionsItem,position);
+                break;
         }
+    }
+
+    private void showCommentBox(final SubSectionsItem subSectionsItem, final int position) {
+
+        if (subSectionsItem == null) return;
+
+        final View view = getActivity().getLayoutInflater().inflate(R.layout.item_textinput_edit_name, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Edit Note");
+        builder.setView(view);
+        builder.setMessage(null);
+
+        ((EditText) view.findViewById(R.id.et)).setText("" + subSectionsItem.getComments());
+        ((EditText) view.findViewById(R.id.et)).setSelection(subSectionsItem.getComments().length());
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (!((EditText) view.findViewById(R.id.et)).getText().toString().trim().isEmpty()) {
+                    cancelThisDialog();
+                    subSectionsItem.setComments(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
+
+                    changeLineStatus(subSectionsItem,position);
+                    lineAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelThisDialog();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void changeLineStatus(SubSectionsItem subSectionsItem, int position) {
