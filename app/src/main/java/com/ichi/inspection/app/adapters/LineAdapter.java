@@ -7,9 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.interfaces.OnLineItemClickListener;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.SubSectionsItem;
@@ -33,13 +35,16 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
     private Context mContext;
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LOCALTIME_DATE);
     private OnListItemClickListener onListItemClickListener;
+    private OnLineItemClickListener onLineItemClickListener;
     private String status = "";
     BottomSheetBehavior behavior;
 
 
-    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior) {
+    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior
+        , OnLineItemClickListener onLineItemClickListener) {
         this.mList = mList;
         mContext = context;
+        this.onLineItemClickListener = onLineItemClickListener;
         this.onListItemClickListener = onListItemClickListener;
         this.behavior=behavior;
     }
@@ -61,16 +66,28 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
 
         SubSectionsItem subSectionsItem = getItem(position);
         holder.tvName.setText(subSectionsItem.getName()+"");
-        holder.btnR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.btnR.isSelected()){
-                    holder.btnR.setSelected(false);
-                }else{
-                    holder.btnR.setSelected(true);
-                }
-            }
-        });
+
+
+        if(subSectionsItem.getGood().equalsIgnoreCase("t")){
+            holder.btnS.setSelected(true);
+            holder.btnR.setSelected(false);
+            holder.btnU.setSelected(false);
+        }
+        else if(subSectionsItem.getFair().equalsIgnoreCase("t")){
+            holder.btnS.setSelected(false);
+            holder.btnR.setSelected(true);
+            holder.btnU.setSelected(false);
+        }
+        else if(subSectionsItem.getPoor().equalsIgnoreCase("t")){
+            holder.btnS.setSelected(false);
+            holder.btnR.setSelected(false);
+            holder.btnU.setSelected(true);
+        }
+        else{
+            holder.btnS.setSelected(false);
+            holder.btnR.setSelected(false);
+            holder.btnU.setSelected(false);
+        }
 
     }
 
@@ -109,17 +126,54 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
         @BindView(R.id.btnPhoto)
         CustomButton btnPhoto;
 
+        @BindView(R.id.llAddComment)
+        LinearLayout llAddComment;
+
         public LineHolder(View view) {
             super(view);
             ButterKnife.bind(this,view);
-
+            btnS.setOnClickListener(this);
+            btnR.setOnClickListener(this);
+            btnU.setOnClickListener(this);
+            btnNA.setOnClickListener(this);
+            btnHide.setOnClickListener(this);
+            llAddComment.setOnClickListener(this);
             btnUpload.setOnClickListener(this);
             btnPhoto.setOnClickListener(this);
         }
 
         @Override
-        public void onClick(View v) {
-            onListItemClickListener.onListItemClick(v,getAdapterPosition());
+        public void onClick(View view) {
+            //onListItemClickListener.onListItemClick(v,getAdapterPosition());
+            switch (view.getId()){
+                case R.id.btnS:
+                    SubSectionsItem subSectionsItem = getItem(getAdapterPosition());
+                    subSectionsItem.setGood("t");
+                    subSectionsItem.setFair("f");
+                    subSectionsItem.setPoor("f");
+                    notifyDataSetChanged();
+                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
+                    break;
+                case R.id.btnR:
+                    subSectionsItem = getItem(getAdapterPosition());
+                    subSectionsItem.setGood("f");
+                    subSectionsItem.setFair("t");
+                    subSectionsItem.setPoor("f");
+                    notifyDataSetChanged();
+                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
+                    break;
+                case R.id.btnU:
+                    subSectionsItem = getItem(getAdapterPosition());
+                    subSectionsItem.setGood("f");
+                    subSectionsItem.setFair("f");
+                    subSectionsItem.setPoor("t");
+                    notifyDataSetChanged();
+                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
+                    break;
+                case R.id.llAddComment:
+                    onListItemClickListener.onListItemClick(view,getAdapterPosition());
+                    break;
+            }
         }
     }
 }

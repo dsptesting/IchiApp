@@ -8,8 +8,7 @@
     android:layout_marginRight="@dimen/values_16"
     android:clickable="true"
     android:layout_marginTop="@dimen/values_16"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -129,11 +128,12 @@
 
         <LinearLayout
             android:id="@+id/llAddComment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:clickable="true"
             android:layout_below="@+id/btnNA"
-            android:layout_marginTop="@dimen/values_20"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:layout_marginTop="@dimen/values_20"
             android:visibility="visible">
 
             <ImageView
@@ -154,12 +154,12 @@
 
         <LinearLayout
             android:id="@+id/llSaveComment"
+            android:layout_below="@+id/llAddComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/llAddComment"
-            android:layout_marginTop="@dimen/values_20"
-            android:layoutDirection="rtl"
             android:orientation="horizontal"
+            android:layoutDirection="rtl"
+            android:layout_marginTop="@dimen/values_20"
             android:visibility="gone">
 
             <ImageView

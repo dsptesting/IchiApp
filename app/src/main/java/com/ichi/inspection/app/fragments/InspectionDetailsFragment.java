@@ -2,7 +2,9 @@ package com.ichi.inspection.app.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,6 +42,7 @@ import com.ichi.inspection.app.adapters.LineAdapter;
 import com.ichi.inspection.app.adapters.SelectSectionAdapter;
 import com.ichi.inspection.app.adapters.TemplateAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
+import com.ichi.inspection.app.interfaces.OnLineItemClickListener;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.models.AddSection;
 import com.ichi.inspection.app.models.BaseResponse;
@@ -49,10 +56,13 @@ import com.ichi.inspection.app.models.TemplateItemsItem;
 import com.ichi.inspection.app.models.Templates;
 import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.CustomTextView;
 import com.ichi.inspection.app.utils.Utils;
-
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,7 +76,7 @@ import pl.aprilapps.easyphotopicker.EasyImageConfig;
  */
 
 public class InspectionDetailsFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener, OnListItemClickListener
-                    ,AdapterView.OnItemSelectedListener{
+                    ,AdapterView.OnItemSelectedListener,OnLineItemClickListener {
 
     private static final String TAG = InspectionDetailsFragment.class.getSimpleName();
     private Context mContext;
@@ -80,7 +90,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.rcvItems)
     RecyclerView rcvItems;
 
-    @Nullable @BindView(R.id.pbLoader)
+    @Nullable
+    @BindView(R.id.pbLoader)
     ProgressBar pbLoader;
 
     @BindView(R.id.tvNoData)
@@ -97,6 +108,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @BindView(R.id.sSelectSection)
     AppCompatSpinner sSelectSection;
+    private AlertDialog alertDialog;
 
     private LineAdapter lineAdapter;
     private MasterResponse masterResponse;
@@ -119,6 +131,14 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.mainLayout)
     NestedScrollView mainLayout;
 
+    @Nullable
+    @BindView(R.id.cvEditName)
+    CardView cvEditName;
+
+    @Nullable
+    @BindView(R.id.cvRemoveSection)
+    CardView cvRemoveSection;
+
     private int selectedIndexNamedTemplates = -1;
     private int selectedIndexAddSection = -1;
     private int selectedIndexSelectSection = -1;
@@ -130,6 +150,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     private List<SubSectionsItem> alSubSectionsLines;
     private BottomSheetBehavior<View> behavior;
+    private SubSectionsItem selectedsubSectionsItem;
 
     @Nullable
     @Override
@@ -165,18 +186,19 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
         });
 
-        templateAdapter = new TemplateAdapter(getActivity(),namedTemplates.getNamedTemplatesItems());
+        templateAdapter = new TemplateAdapter(getActivity(), namedTemplates.getNamedTemplatesItems());
         sAddTemplate.setAdapter(templateAdapter);
         sAddTemplate.setOnItemSelectedListener(this);
 
-        addSectionAdapter = new AddSectionAdapter(getActivity(),addSection.getHeaderItems());
+        addSectionAdapter = new AddSectionAdapter(getActivity(), addSection.getHeaderItems());
         sAddSection.setAdapter(addSectionAdapter);
         sAddSection.setOnItemSelectedListener(this);
 
         String selectedNamedTemplate = "-1";
-        if(selectedIndexNamedTemplates != -1){
+        if (selectedIndexNamedTemplates != -1) {
             NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
-            if(namedTemplatesItem != null) selectedNamedTemplate = namedTemplatesItem.getNamedTemplateId();
+            if (namedTemplatesItem != null)
+                selectedNamedTemplate = namedTemplatesItem.getNamedTemplateId();
         }
 
         alSubSections = new ArrayList<>();
@@ -184,7 +206,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         alSubSectionsLines = new ArrayList<>();
 
         //selectSectionAdapter = new SelectSectionAdapter(getActivity(),templates.getHeaderSections(selectedNamedTemplate));
-        selectSectionAdapter = new SelectSectionAdapter(getActivity(),alSubSectionsOnly);
+        selectSectionAdapter = new SelectSectionAdapter(getActivity(), alSubSectionsOnly);
         sSelectSection.setAdapter(selectSectionAdapter);
         sSelectSection.setOnItemSelectedListener(this);
 
@@ -193,6 +215,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         rcvItems.setLayoutManager(linearLayoutManager);
         rcvItems.setAdapter(lineAdapter);
 
+        cvEditName.setOnClickListener(this);
+        cvRemoveSection.setOnClickListener(this);
 
     }
 
@@ -240,6 +264,24 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     private void initView() {
 
+        //if this satisfies, then we have data from web...
+        if (selectSection != null) {
+            List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+            if (temp != null && !temp.isEmpty()) {
+                //alSubSections.clear();
+                //this will include sections, lines which are already selected... new selected template's lines and sections are going to be entered here too..
+                alSubSections.addAll(temp);
+
+                //Load sections only to show in select section spinner
+                alSubSectionsOnly.clear();
+                for (SubSectionsItem sub : alSubSections) {
+                    if (Boolean.parseBoolean(sub.getIsHead())) {
+                        alSubSectionsOnly.add(sub);
+                    }
+                }
+            }
+        }
+
         //This is to refresh data once we get from web call async.
         templateAdapter.setData(namedTemplates.getNamedTemplatesItems());
         addSectionAdapter.setData(addSection.getHeaderItems());
@@ -248,7 +290,24 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     private void getMasterList(){
 
-        if(Utils.isNetworkAvailable(getActivity()) && prefs.getBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,false)){
+        if (prefs.contains(Constants.PREF_MASTER)) {
+
+            masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
+            addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
+            selectSection = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+            namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
+            templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
+
+            initView();
+            setLayoutVisibility();
+        } else if (Utils.isNetworkAvailable(getActivity())) {
+            masterAsyncTask = new MasterAsyncTask(getActivity(), this);
+            masterAsyncTask.execute();
+        } else {
+            setLayoutVisibility();
+        }
+
+        /*if(Utils.isNetworkAvailable(getActivity()) && prefs.getBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,false)){
             masterAsyncTask = new MasterAsyncTask(getActivity(),this);
             masterAsyncTask.execute();
         }
@@ -265,7 +324,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
         else{
             setLayoutVisibility();
-        }
+        }*/
     }
 
     private void setLayoutVisibility() {
@@ -296,6 +355,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         switch (view.getId()){
             case android.R.id.home:
                 getActivity().onBackPressed();
+                break;
+            case R.id.cvRemoveSection:
+                showRemoveSectionDialog();
+                break;
+            case R.id.cvEditName:
+                showEditNameDialog();
                 break;
             case R.id.btnEditName:
                 if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -329,25 +394,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
                 templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
 
-                //if this satisfies, then we have data from web...
-
-                if(selectSection != null) {
-                    List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
-                    if (temp != null && !temp.isEmpty()) {
-                        alSubSections.clear();
-                        //this will include sections, lines which are already selected... new selected template's lines and sections are going to be entered here to..
-                        alSubSections.addAll(temp);
-
-                        //Load sections only to show in select section spinner
-                        alSubSectionsOnly.clear();
-                        for(SubSectionsItem sub : alSubSections){
-                            if(Boolean.parseBoolean(sub.getIsHead())){
-                                alSubSectionsOnly.add(sub);
-                            }
-                        }
-                    }
-                }
-
                 initView();
                 setLayoutVisibility();
             }
@@ -362,7 +408,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onListItemClick(View view, int position) {
-        switch (view.getId()){
+        switch (view.getId()) {
+            case R.id.rlContainer:
+                Log.v(TAG, "Position: " + position);
            /* case R.id.rlContainer:
                 Log.v(TAG,"Position: " + position);
                 Bundle bundle = new Bundle();
@@ -403,11 +451,11 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.sAddTemplate:
                 if(position != -1){
                     selectedIndexNamedTemplates = position;
-                    Log.v(TAG,"SelectedTemplates "+ namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates));
 
-                    if(selectedIndexNamedTemplates != -1){
+                    if (selectedIndexNamedTemplates != -1) {
                         NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
-                        if(namedTemplatesItem != null){
+                        Log.v(TAG, "SelectedTemplates namedTemplatesItem: " + namedTemplatesItem);
+                        if (namedTemplatesItem != null) {
 
                             /*List<TemplateItemsItem> templateItemsItems = templates.getHeaderSections(namedTemplatesItem.getNamedTemplateId());
                             SubSectionsItem subSectionsItem;
@@ -422,23 +470,25 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                             SubSectionsItem subSectionsItem;
 
-                            for(TemplateItemsItem templateItemsItem : templateItemsItems){
+                            Log.v(TAG, "templateItemsItems size " + templateItemsItems.size());
 
-                                subSectionsItem = Utils.convertTemplateToSubSection(getActivity(),templateItemsItem, ""+orderListItem.getSequence());
+                            for (TemplateItemsItem templateItemsItem : templateItemsItems) {
 
-                                if(Boolean.parseBoolean(subSectionsItem.getIsHead()) && !Utils.hasSubSection(alSubSectionsOnly,subSectionsItem)){
+                                subSectionsItem = Utils.convertTemplateToSubSection(getActivity(), templateItemsItem, "" + orderListItem.getSequence());
+
+                                if (Boolean.parseBoolean(subSectionsItem.getIsHead()) && !Utils.hasSubSection(alSubSectionsOnly, subSectionsItem)) {
 
                                     alSubSectionsOnly.add(subSectionsItem);
                                 }
 
-                                if(!Utils.hasSubSection(alSubSections,subSectionsItem)){
+                                if (!Utils.hasSubSection(alSubSections, subSectionsItem)) {
 
                                     alSubSections.add(subSectionsItem);
                                 }
                             }
 
-                            Log.v(TAG,"after selected new temp, alSubSections size: " + alSubSections.size());
-                            Log.v(TAG,"after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
+                            Log.v(TAG, "after selected new temp, alSubSections size: " + alSubSections.size());
+                            Log.v(TAG, "after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
 
                             selectSectionAdapter.setData(alSubSectionsOnly);
                         }
@@ -447,14 +497,14 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 }
                 break;
             case R.id.sAddSection:
-                if(position != -1){
+                if (position != -1) {
                     selectedIndexAddSection = position;
-                    Log.v(TAG,"SelectedAddSection "+ addSection.getHeaderItems().get(selectedIndexAddSection));
+                    Log.v(TAG, "SelectedAddSection " + addSection.getHeaderItems().get(selectedIndexAddSection));
                 }
                 break;
 
             case R.id.sSelectSection:
-                if(position != -1){
+                if (position != -1) {
                     selectedIndexSelectSection = position;
                     String selectedNamedTemplate = "-1";
                     /*if(selectedIndexNamedTemplates != -1){
@@ -465,17 +515,17 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         Log.v(TAG,"SelectSection "+ templateItemsItems.get(selectedIndexSelectSection));
                     }*/
 
-                    SubSectionsItem subSectionsItem = alSubSectionsOnly.get(selectedIndexSelectSection);
-                    if(subSectionsItem != null){
-                        String usedHead = subSectionsItem.getUsedHead();
+                    selectedsubSectionsItem = alSubSectionsOnly.get(selectedIndexSelectSection);
+                    if (selectedsubSectionsItem != null) {
+                        String usedHead = selectedsubSectionsItem.getUsedHead();
                         alSubSectionsLines.clear();
-                        for(SubSectionsItem sub : alSubSections){
-                            if(sub.getUsedHead().equalsIgnoreCase(usedHead) && !Boolean.parseBoolean(sub.getIsHead())){
+                        for (SubSectionsItem sub : alSubSections) {
+                            if (sub.getUsedHead().equalsIgnoreCase(usedHead) && !Boolean.parseBoolean(sub.getIsHead())) {
                                 alSubSectionsLines.add(sub);
                             }
                         }
                     }
-                    Log.v(TAG,"alSubSectionsLines: " + alSubSectionsLines);
+                    Log.v(TAG, "alSubSectionsLines: " + alSubSectionsLines);
                     lineAdapter.setData(alSubSectionsLines);
                 }
                 break;
@@ -488,4 +538,175 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         // TODO Auto-generated method stub
     }
 
+    public void showEditNameDialog() {
+
+        if (selectedsubSectionsItem == null) return;
+
+        final View view = getActivity().getLayoutInflater().inflate(R.layout.item_textinput_edit_name, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Please enter new name");
+        builder.setView(view);
+        builder.setMessage(null);
+
+        ((EditText) view.findViewById(R.id.et)).setText("" + selectedsubSectionsItem.getName());
+        ((EditText) view.findViewById(R.id.et)).setSelection(selectedsubSectionsItem.getName().length());
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (!((EditText) view.findViewById(R.id.et)).getText().toString().trim().isEmpty()) {
+                    cancelThisDialog();
+                    selectedsubSectionsItem.setName(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
+
+                    List<TemplateItemsItem> templateItemsItems = templates.getTemplateItems();
+                    for (int p = 0; p < templateItemsItems.size(); p++) {
+                        if (templateItemsItems.get(p).getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
+                                templateItemsItems.get(p).getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
+                            templateItemsItems.get(p).setName(selectedsubSectionsItem.getName());
+                        }
+                    }
+
+                    List<SubSectionsItem> selectTemp = selectSection.getSubSections("" + orderListItem.getSequence());
+                    for (int p = 0; p < selectTemp.size(); p++) {
+                        if (selectTemp.get(p).getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
+                                selectTemp.get(p).getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
+                            selectTemp.get(p).setName(selectedsubSectionsItem.getName());
+                        }
+                    }
+
+                    prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+                    prefs.putObject(Constants.PREF_TEMPLATES, templates);
+                    selectSectionAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelThisDialog();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    public void showRemoveSectionDialog() {
+
+        if (selectedsubSectionsItem == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Do you wish to delete this page?");
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                cancelThisDialog();
+                Log.v(TAG, "Total alSubSectionsOnly : " + alSubSectionsOnly.size());
+                Iterator<SubSectionsItem> iter1 = alSubSectionsOnly.iterator();
+                while (iter1.hasNext()) {
+                    SubSectionsItem subSectionsItem = iter1.next();
+                    if (subSectionsItem.getSectionId().equalsIgnoreCase("" + selectedsubSectionsItem.getSectionId()) &&
+                            subSectionsItem.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
+                        // Remove the current element from the iterator and the list.
+                        Log.v(TAG, "Total alSubSectionsOnly name : " + subSectionsItem);
+                        iter1.remove();
+                    }
+                }
+                Log.v(TAG, "after Total alSubSectionsOnly : " + alSubSectionsOnly.size());
+
+
+               /* Log.v(TAG, "Total templates : " + templates.getTemplateItems().size());
+                Iterator<TemplateItemsItem> iter2 = templates.getTemplateItems().iterator();
+                while (iter2.hasNext()) {
+                    TemplateItemsItem tmp = iter2.next();
+                    if (tmp.getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
+                            tmp.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
+                        iter2.remove();
+                    }
+                }
+                Log.v(TAG, "after Total templates : " + templates.getTemplateItems().size());*/
+
+                Log.v(TAG, "before Total selectSection : " + selectSection.getSubSections().size());
+                Iterator<SubSectionsItem> iter3 = selectSection.getSubSections().iterator();
+                while (iter3.hasNext()) {
+                    SubSectionsItem tmp = iter3.next();
+                    if (tmp.getInspectionId().equalsIgnoreCase(""+orderListItem.getSequence()) &&
+                            tmp.getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
+                            tmp.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
+                        Log.v(TAG, "Total alSubSectionsOnly tmp.getSectionId() : " + tmp.getSectionId());
+                        iter3.remove();
+                    }
+                }
+
+                Log.v(TAG, "after Total selectSection : " + selectSection.getSubSections().size());
+                prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+                //prefs.putObject(Constants.PREF_TEMPLATES, templates);
+                selectSectionAdapter.setData(alSubSectionsOnly);
+                Log.v(TAG, "after Total getCount : " +selectSectionAdapter.getCount());
+
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelThisDialog();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    public void cancelThisDialog() {
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onLineItemClick(View view, SubSectionsItem subSectionsItem, int position) {
+        switch (view.getId()){
+            case R.id.btnR:
+            case R.id.btnS:
+            case R.id.btnU:
+                changeLineStatus(subSectionsItem,position);
+                break;
+        }
+    }
+
+    private void changeLineStatus(SubSectionsItem subSectionsItem, int position) {
+
+        boolean hasChanged = false;
+        for (SubSectionsItem sub : alSubSections) {
+            if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                alSubSections.remove(sub);
+                alSubSections.add(position,subSectionsItem);
+
+                hasChanged = true;
+                break;
+            }
+        }
+
+        if(hasChanged){
+            List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+            if(temp != null && !temp.isEmpty()){
+                for(int i=0;i<temp.size();i++){
+                    if(temp.get(i).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())){
+                        temp.set(i,subSectionsItem);
+                        prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
 }

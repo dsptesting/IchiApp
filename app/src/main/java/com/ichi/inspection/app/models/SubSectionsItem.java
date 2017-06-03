@@ -89,14 +89,6 @@ public class SubSectionsItem{
         this.templatedId = templatedId;
     }
 
-    public String getiOLineId() {
-        return iOLineId;
-    }
-
-    public void setiOLineId(String iOLineId) {
-        this.iOLineId = iOLineId;
-    }
-
     public void setIsHead(String isHead){
 		this.isHead = isHead;
 	}
