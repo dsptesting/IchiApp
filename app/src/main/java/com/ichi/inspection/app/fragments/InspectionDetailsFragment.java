@@ -43,6 +43,7 @@ import com.ichi.inspection.app.activities.GridActivity;
 import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.adapters.AddSectionAdapter;
 import com.ichi.inspection.app.adapters.LineAdapter;
+import com.ichi.inspection.app.adapters.MarkAllAdapter;
 import com.ichi.inspection.app.adapters.SelectSectionAdapter;
 import com.ichi.inspection.app.adapters.TemplateAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
@@ -114,6 +115,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.sAddTemplate)
     AppCompatSpinner sAddTemplate;
 
+    @BindView(R.id.sMarkAll)
+    AppCompatSpinner sMarkAll;
+
     @BindView(R.id.sAddSection)
     AppCompatSpinner sAddSection;
 
@@ -133,6 +137,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private SelectSectionAdapter selectSectionAdapter;
 
     private MasterAsyncTask masterAsyncTask;
+
+
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
@@ -163,6 +169,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private BottomSheetBehavior<View> behavior;
     private SubSectionsItem selectedsubSectionsItem;
     private int currentSelectedLinePositionForImage = -1;
+
+    private List<String> markAllLines;
+    MarkAllAdapter markAllAdapter;
 
     @Nullable
     @Override
@@ -198,6 +207,19 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 getActivity().onBackPressed();
             }
         });
+
+        //Mark All Lines
+        markAllLines=new ArrayList<>();
+        markAllLines.add("Mark All Lines");
+        markAllLines.add("Good");
+        markAllLines.add("Fair");
+        markAllLines.add("Poor");
+        markAllLines.add("Hide");
+        markAllLines.add("N/A");
+
+        markAllAdapter=new MarkAllAdapter(getActivity(),markAllLines);
+        sMarkAll.setAdapter(markAllAdapter);
+        sMarkAll.setOnItemSelectedListener(this);
 
         templateAdapter = new TemplateAdapter(getActivity(), namedTemplates.getNamedTemplatesItems());
         sAddTemplate.setAdapter(templateAdapter);
@@ -308,8 +330,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 }
 
                 if(currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null){
-                    List<String> uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+                    ArrayList<String> uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
                     uris.add(file.getAbsolutePath());
+
+
+                    Intent intent = new Intent(mContext, GridActivity.class);
+                    intent.putStringArrayListExtra("URIs",uris);
+                    startActivity(intent);
                 }
 
 

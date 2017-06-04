@@ -11,9 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.interfaces.OnListItemClickListener;
+import com.ichi.inspection.app.interfaces.OnListItemLongClickListener;
+import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.utils.SquareImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,9 +28,16 @@ import butterknife.ButterKnife;
 
 public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGridHolder>{
     ArrayList<String> images;
-
-    public GridViewAdapter(Context mContext, ArrayList<String> images){
+    private OnListItemClickListener onListItemClickListener;
+    private OnListItemLongClickListener onListItemLongClickListener;
+    public GridViewAdapter(Context mContext, ArrayList<String> images, OnListItemClickListener onListItemClickListener, OnListItemLongClickListener onListItemLongClickListener){
         this.images=images;
+        this.onListItemClickListener=onListItemClickListener;
+        this.onListItemLongClickListener=onListItemLongClickListener;
+    }
+    public void setData(ArrayList<String> images) {
+        this.images=images;
+        notifyDataSetChanged();
     }
     @Override
     public MyGridHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,7 +55,7 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGrid
         return images.size();
     }
 
-    public class MyGridHolder  extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyGridHolder  extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
 
     @BindView(R.id.imageView)
     SquareImageView imageView;
@@ -52,11 +63,19 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGrid
     public MyGridHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
+        imageView.setOnClickListener(this);
+        imageView.setOnLongClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-
+        onListItemClickListener.onListItemClick(v,getAdapterPosition());
     }
-  }
+
+        @Override
+        public boolean onLongClick(View v) {
+            onListItemLongClickListener.onListItemLongClick(v,getAdapterPosition());
+            return true;
+        }
+    }
 }

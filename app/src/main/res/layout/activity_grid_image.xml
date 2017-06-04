@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include layout="@layout/toolbar_plain"/>
-        <android.support.v7.widget.RecyclerView
+        <ImageView
             android:layout_below="@+id/tbAppToolbarNormal"
-            android:id="@+id/rvGalleryView"
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/values_3"></android.support.v7.widget.RecyclerView>
+            android:scaleType="centerCrop"/>
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
