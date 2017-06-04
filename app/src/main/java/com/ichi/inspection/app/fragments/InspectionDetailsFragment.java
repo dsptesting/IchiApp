@@ -1,17 +1,12 @@
 package com.ichi.inspection.app.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
@@ -37,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.GridActivity;
@@ -61,17 +57,12 @@ import com.ichi.inspection.app.models.TemplateItemsItem;
 import com.ichi.inspection.app.models.Templates;
 import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
-import com.ichi.inspection.app.utils.CustomTextView;
 import com.ichi.inspection.app.utils.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -125,7 +116,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     AppCompatSpinner sSelectSection;
     private AlertDialog alertDialog;
 
-    private LineAdapter lineAdapter;
     private MasterResponse masterResponse;
     private AddSection addSection = new AddSection();
     private SelectSection selectSection = new SelectSection();
@@ -135,6 +125,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private TemplateAdapter templateAdapter;
     private AddSectionAdapter addSectionAdapter;
     private SelectSectionAdapter selectSectionAdapter;
+    private LineAdapter lineAdapter;
 
     private MasterAsyncTask masterAsyncTask;
 
@@ -151,6 +142,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @Nullable
     @BindView(R.id.cvEditName)
     CardView cvEditName;
+
+    @Nullable
+    @BindView(R.id.cvAddNewLine)
+    CardView cvAddNewLine;
 
     @Nullable
     @BindView(R.id.cvRemoveSection)
@@ -210,7 +205,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         //Mark All Lines
         markAllLines=new ArrayList<>();
-        markAllLines.add("Mark All Lines");
+        markAllLines.add("Select option");
         markAllLines.add("Good");
         markAllLines.add("Fair");
         markAllLines.add("Poor");
@@ -252,6 +247,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         cvEditName.setOnClickListener(this);
         cvRemoveSection.setOnClickListener(this);
+        cvAddNewLine.setOnClickListener(this);
 
     }
 
@@ -451,7 +447,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 } else {
                     behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
-
+                break;
+            case R.id.cvAddNewLine:
+                showAddNewLineDialog();
+                break;
         }
     }
 
@@ -584,6 +583,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 break;
 
             case R.id.sSelectSection:
+                sMarkAll.setSelection(0);
                 if (position != -1) {
                     selectedIndexSelectSection = position;
                     String selectedNamedTemplate = "-1";
@@ -607,6 +607,50 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     }
                     //Log.v(TAG, "alSubSectionsLines: " + alSubSectionsLines);
                     lineAdapter.setData(alSubSectionsLines);
+                }
+                break;
+            case R.id.sMarkAll:
+                if (position > 0) {
+                    for(int i=0;i<alSubSectionsLines.size();i++){
+                        SubSectionsItem subSectionsItem = alSubSectionsLines.get(i);
+                        if(position == 1){
+                            subSectionsItem.setGood("t");
+                            subSectionsItem.setFair("f");
+                            subSectionsItem.setPoor("f");
+                        }
+                        else if(position == 2){
+                            subSectionsItem.setGood("f");
+                            subSectionsItem.setFair("t");
+                            subSectionsItem.setPoor("f");
+                        }
+                        else if(position == 3){
+                            subSectionsItem.setGood("f");
+                            subSectionsItem.setFair("f");
+                            subSectionsItem.setPoor("t");
+                        }
+
+                        for (SubSectionsItem sub : alSubSections) {
+                            if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                                alSubSections.remove(sub);
+                                alSubSections.add(position,subSectionsItem);
+                                break;
+                            }
+                        }
+
+                        List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+                        if(temp != null && !temp.isEmpty()){
+                            for(int j=0;j<temp.size();j++){
+                                if(temp.get(j).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())){
+                                    temp.set(j,subSectionsItem);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    lineAdapter.notifyDataSetChanged();
+                    prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+
                 }
                 break;
         }
@@ -802,6 +846,69 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    public void showAddNewLineDialog() {
+
+        if (selectedsubSectionsItem == null){
+            Toast.makeText(getActivity(),"Please select section first to add new line to!",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        final View view = getActivity().getLayoutInflater().inflate(R.layout.item_textinput_edit_name, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Please enter the name of the new line");
+        builder.setView(view);
+        builder.setMessage(null);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (!((EditText) view.findViewById(R.id.et)).getText().toString().trim().isEmpty()) {
+                    cancelThisDialog();
+
+                    SubSectionsItem subSectionsItem = new SubSectionsItem();
+                    subSectionsItem.setName(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
+                    subSectionsItem.setIOLineId(Utils.getGlobalUniqueNumber(getActivity(),true) + "");
+                    subSectionsItem.setSectionId(selectedsubSectionsItem.getSectionId());
+                    subSectionsItem.setInspectionId(selectedsubSectionsItem.getInspectionId());
+                    subSectionsItem.setGood("f");
+                    subSectionsItem.setFair("f");
+                    subSectionsItem.setPoor("f");
+                    subSectionsItem.setComments("");
+                    subSectionsItem.setLineNumber("");
+                    subSectionsItem.setIsHead("false");
+                    subSectionsItem.setLineOrder("");
+                    subSectionsItem.setSuppressPrint("F");
+                    subSectionsItem.setPageBreak("");
+                    subSectionsItem.setUsedHead(selectedsubSectionsItem.getUsedHead());
+                    subSectionsItem.setNumberOfExposures("");
+                    subSectionsItem.setNotInspected("f");
+                    subSectionsItem.setVeryPoor("f");
+
+                    selectSection.getSubSections().add(subSectionsItem);
+                    prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+
+                    alSubSectionsLines.add(subSectionsItem);
+                    lineAdapter.notifyDataSetChanged();
+
+                    initView();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelThisDialog();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+
     }
 
     private void changeLineStatus(SubSectionsItem subSectionsItem, int position) {

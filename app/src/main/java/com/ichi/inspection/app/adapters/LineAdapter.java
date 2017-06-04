@@ -190,6 +190,13 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
                     subSectionsItem = getItem(getAdapterPosition());
                     onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
                     break;
+                case R.id.btnNA:
+                    /*subSectionsItem = getItem(getAdapterPosition());
+                    subSectionsItem.setFair("f");
+                    subSectionsItem.setPoor("f");
+                    onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
+                    notifyDataSetChanged();*/
+                    break;
             }
         }
     }
