@@ -7,6 +7,8 @@ import java.util.List;
 
 public class SelectSection{
 
+	private List<OrderUpdates> orderUpdatesList;
+
     @SerializedName("SubSections")
     private List<SubSectionsItem> subSections = new ArrayList<>();
 
@@ -32,10 +34,19 @@ public class SelectSection{
     }
 
 	@Override
- 	public String toString(){
-		return 
-			"SelectSection{" + 
-			"subSections = '" + subSections + '\'' + 
-			"}";
-		}
+	public String toString() {
+		return "SelectSection{" +
+				"orderUpdatesList=" + orderUpdatesList +
+				", subSections=" + subSections +
+				'}';
+	}
+
+	public List<OrderUpdates> getOrderUpdatesList() {
+		return orderUpdatesList;
+	}
+
+	public void setOrderUpdatesList(List<OrderUpdates> orderUpdatesList) {
+		this.orderUpdatesList = orderUpdatesList;
+	}
+
 }

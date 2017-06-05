@@ -10,12 +10,17 @@ import com.ichi.inspection.app.models.AddSection;
 import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.NamedTemplates;
+import com.ichi.inspection.app.models.OrderUpdates;
 import com.ichi.inspection.app.models.SelectSection;
+import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.Templates;
 import com.ichi.inspection.app.rest.ApiService;
 import com.ichi.inspection.app.rest.ServiceGenerator;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.PreferencesHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -83,7 +88,41 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
                 //Log.v(TAG,"masterResponse printed : " + masterResponse);
                 prefs.putObject(Constants.PREF_MASTER,masterResponse);
                 prefs.putObject(Constants.PREF_ADD_SECTION,new AddSection(masterResponse.getAddSection()));
-                prefs.putObject(Constants.PREF_SELECT_SECTION,masterResponse.getSelectSection());
+
+                //Here we will condition selectSection.. order syncing..
+                SelectSection selectSection = masterResponse.getSelectSection();
+                List<SubSectionsItem> updatedSubSectionsItemList = new ArrayList<>();
+                if(selectSection != null && selectSection.getSubSections() != null && !selectSection.getSubSections().isEmpty()){
+                    List<SubSectionsItem> newSubSectionsItem = selectSection.getSubSections();
+                    if(prefs.contains(Constants.PREF_SELECT_SECTION)){
+                        //data avail in pref, check
+                        SelectSection oldSelectSection = (SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class);
+                        if(oldSelectSection != null && oldSelectSection.getOrderUpdatesList() != null && !oldSelectSection.getOrderUpdatesList().isEmpty()){
+                            List<OrderUpdates> orderUpdatesList = oldSelectSection.getOrderUpdatesList();
+
+                            for(int i=0; i<newSubSectionsItem.size();i++){
+                                String inspectionId = newSubSectionsItem.get(i).getInspectionId();
+                                boolean found = false;
+                                for(int j=0;j<orderUpdatesList.size();j++){
+                                    if(inspectionId.equalsIgnoreCase(orderUpdatesList.get(j).getInspectionId())){
+                                        found = true;
+                                        if(!orderUpdatesList.get(j).isUpdated()){
+                                            updatedSubSectionsItemList.add(newSubSectionsItem.get(i));
+                                        }
+                                    }
+                                }
+                                if(!found) updatedSubSectionsItemList.add(newSubSectionsItem.get(i));
+                            }
+                        }
+
+                    }
+                    else{
+                        updatedSubSectionsItemList.addAll(newSubSectionsItem);
+                    }
+                }
+                selectSection.setSubSections(updatedSubSectionsItemList);
+                prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
+
                 prefs.putObject(Constants.PREF_NAMED_TEMPLATES,masterResponse.getNamedTemplates());
                 prefs.putObject(Constants.PREF_TEMPLATES,masterResponse.getTemplates());
 

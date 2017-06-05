@@ -369,7 +369,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     private void getMasterList(){
 
-        if (prefs.contains(Constants.PREF_MASTER)) {
+        //TODO dont delete this block
+        /*if (prefs.contains(Constants.PREF_MASTER)) {
 
             masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
             addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
@@ -384,9 +385,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             masterAsyncTask.execute();
         } else {
             setLayoutVisibility();
-        }
+        }*/
 
-        /*if(Utils.isNetworkAvailable(getActivity()) && prefs.getBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,false)){
+        if(Utils.isNetworkAvailable(getActivity()) && prefs.getBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,false)){
             masterAsyncTask = new MasterAsyncTask(getActivity(),this);
             masterAsyncTask.execute();
         }
@@ -403,7 +404,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
         else{
             setLayoutVisibility();
-        }*/
+        }
     }
 
     private void setLayoutVisibility() {
