@@ -305,7 +305,26 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 if(!createDir.exists()) {
                     createDir.mkdir();
                 }
-                file = new File(root + "/ICHI" + File.separator +imageFile.getName());
+
+
+                /*String orderNum= String.valueOf(orderListItem.getIONum());
+                String lineIONum=alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId();
+                String imageName=null;
+
+                    Log.d(TAG, "onImagePicked: array size"+alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().size());
+                    if (alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().size()==0){
+                        imageName=orderNum+"_"+lineIONum+"_"+1;
+                    }else{
+                        String lastImageName=alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().get(alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().size()-1);
+                        //lastImageName.substring(0,lastImageName.lastIndexOf(".")+1);
+                        int lastNum= Integer.parseInt(lastImageName.split("_")[2]);
+                        lastNum++;
+                        imageName=orderNum+"_"+lineIONum+"_"+lastNum;
+                    }
+                    Log.d(TAG, "onImagePicked: array"+alSubSections.get(currentSelectedLinePositionForImage).getImageURIs());
+                    Log.d(TAG, "onImagePicked: imagename:"+imageName);
+*/
+                file = new File(root + "/ICHI" + File.separator +imageFile);
                 file.createNewFile();
 
 
@@ -332,7 +351,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 if(currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null){
                     ArrayList<String> uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
                     uris.add(file.getAbsolutePath());
-
+                    //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
 
                     Intent intent = new Intent(mContext, GridActivity.class);
                     intent.putStringArrayListExtra("URIs",uris);
