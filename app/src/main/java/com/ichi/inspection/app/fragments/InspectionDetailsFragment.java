@@ -298,6 +298,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 Log.d(TAG, "onImagePicked: "+imageFile.getAbsolutePath());
                 Log.d(TAG, "onImagePicked: ");
                 File file = null;
+                ArrayList<String> uris = null;
                 //TODO copy file to our folder..
                 try {
                 File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
@@ -306,27 +307,35 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     createDir.mkdir();
                 }
 
-
-                /*String orderNum= String.valueOf(orderListItem.getIONum());
+                //Create Image Name
+                String orderNum= String.valueOf(orderListItem.getIONum());
                 String lineIONum=alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId();
                 String imageName=null;
+                    String extension=imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
+                   uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+                    Log.d(TAG, "onImagePicked: array size:"+uris.size());
 
-                    Log.d(TAG, "onImagePicked: array size"+alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().size());
-                    if (alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().size()==0){
-                        imageName=orderNum+"_"+lineIONum+"_"+1;
+                    if (uris.size()==0){
+                        String numberOfExplosure=alSubSections.get(currentSelectedLinePositionForImage).getNumberOfExposures();
+                        imageName=orderNum+"_"+lineIONum+"_"+1+extension;
                     }else{
-                        String lastImageName=alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().get(alSubSections.get(currentSelectedLinePositionForImage).getImageURIs().size()-1);
-                        //lastImageName.substring(0,lastImageName.lastIndexOf(".")+1);
-                        int lastNum= Integer.parseInt(lastImageName.split("_")[2]);
+                        File fileUri=new File(uris.get(uris.size()-1));
+                        String lastImageName=fileUri.getName();
+                        Log.d(TAG, "onImagePicked: lastImage:"+lastImageName);
+                       String li= lastImageName.substring(0,lastImageName.lastIndexOf("."));
+                        Log.d(TAG, "onImagePicked: With Ext:"+li);
+                        int lastNum= Integer.parseInt(li.split("_")[2]);
                         lastNum++;
-                        imageName=orderNum+"_"+lineIONum+"_"+lastNum;
+                        imageName=orderNum+"_"+lineIONum+"_"+lastNum+extension;
                     }
-                    Log.d(TAG, "onImagePicked: array"+alSubSections.get(currentSelectedLinePositionForImage).getImageURIs());
-                    Log.d(TAG, "onImagePicked: imagename:"+imageName);
-*/
-                file = new File(root + "/ICHI" + File.separator +imageFile);
+
+                    Log.d(TAG, "onImagePicked: array:"+uris.toString());
+                    Log.d(TAG, "onImagePicked: name:"+imageName);
+
+                file = new File(root + "/ICHI" + File.separator +imageName);
                 file.createNewFile();
 
+                    Log.d(TAG, "onImagePicked: FileName: "+file.getName());
 
                     //Copy Image
                     FileChannel source = null;
@@ -345,11 +354,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
 
                 } catch (IOException e) {
+                    Log.d(TAG, "onImagePicked error: "+e.getMessage());
                     e.printStackTrace();
                 }
 
                 if(currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null){
-                    ArrayList<String> uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+
                     uris.add(file.getAbsolutePath());
                     //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
 
