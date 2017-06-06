@@ -312,7 +312,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     Log.d(TAG, "onImagePicked: array size:"+uris.size());
 
                     if (uris.size()==0){
-                        String numberOfExplosure=alSubSections.get(currentSelectedLinePositionForImage).getNumberOfExposures();
                         imageName=orderNum+"_"+lineIONum+"_"+1+extension;
                     }else{
                         File fileUri=new File(uris.get(uris.size()-1));
