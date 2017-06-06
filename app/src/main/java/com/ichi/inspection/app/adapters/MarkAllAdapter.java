@@ -21,11 +21,13 @@ public class MarkAllAdapter extends BaseAdapter {
     Context context;
     List<String> markAllLines;
     LayoutInflater inflter;
-    public MarkAllAdapter(Context context,List<String> markAllLines){
+
+    public MarkAllAdapter(Context context, List<String> markAllLines) {
         this.context = context;
         this.markAllLines = markAllLines;
         inflter = (LayoutInflater.from(context));
     }
+
     @Override
     public int getCount() {
         return markAllLines.size();
@@ -48,4 +50,6 @@ public class MarkAllAdapter extends BaseAdapter {
         txtItem.setText(markAllLines.get(position));
         return view;
     }
+
+
 }

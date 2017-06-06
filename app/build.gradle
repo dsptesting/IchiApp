@@ -43,7 +43,7 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.5.0'
     compile 'com.squareup.okio:okio:1.11.0'
-
+    compile 'me.srodrigo:androidhintspinner:1.0.0'
     //for permissions
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
     compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
