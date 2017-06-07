@@ -937,6 +937,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     lineAdapter.notifyDataSetChanged();
 
                     initView();
+
+
                 }
             }
         });
