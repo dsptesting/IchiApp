@@ -109,6 +109,11 @@
     <string name="rename_name">Rename Name</string>
     <string name="add_new_line">Add New Line</string>
 
+    <string name="button_allow">Allow</string>
+    <string name="button_deny">Deny</string>
+    <string name="permission_camera_rationale">Camera permission is needed to proceed further.</string>
+    <string name="permission_camera_denied">Camera permission was denied. Please consider granting it in order to access the Camera!</string>
+    <string name="permission_camera_never_askagain">Camera permission was denied with never ask again.</string>
     <string-array name="type">
         <item>xyzxyz</item>
         <item>xyzxyz</item>

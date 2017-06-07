@@ -1,11 +1,13 @@
 package com.ichi.inspection.app.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -70,6 +72,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.aprilapps.easyphotopicker.EasyImageConfig;
@@ -77,7 +85,7 @@ import pl.aprilapps.easyphotopicker.EasyImageConfig;
 /**
  * Created by Palak on 05-03-2017.
  */
-
+@RuntimePermissions
 public class InspectionDetailsFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener, OnListItemClickListener
                     ,AdapterView.OnItemSelectedListener,OnLineItemClickListener {
 
@@ -115,6 +123,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.sSelectSection)
     AppCompatSpinner sSelectSection;
     private AlertDialog alertDialog;
+
+    private static final int REQUEST_CODE_IMAGE_PICKER = 24;
 
     private MasterResponse masterResponse;
     private AddSection addSection = new AddSection();
@@ -167,6 +177,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     private List<String> markAllLines;
     MarkAllAdapter markAllAdapter;
+    private boolean uploadClicked;
 
     @Nullable
     @Override
@@ -523,13 +534,15 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.rlContainer:
                 Log.v(TAG, "Position: " + position);
             case R.id.btnUpload:
-                showGallary(position);
+                currentSelectedLinePositionForImage =  position;
+                uploadClicked = true;
+                InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
+                //showGallary(position);
                 break;
             case R.id.btnPhoto:
-                ArrayList<String> imageURIs=alSubSectionsLines.get(position).getImageURIs();
-                Intent intent = new Intent(mContext, GridActivity.class);
-                intent.putStringArrayListExtra("URIs",imageURIs);
-                startActivity(intent);
+                currentSelectedLinePositionForImage =  position;
+                uploadClicked = false;
+                InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
                 break;
         }
     }
@@ -966,5 +979,54 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
         }
 
+    }
+
+    @NeedsPermission({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showCamera() {
+        if(uploadClicked){
+            EasyImage.openChooserWithGallery(this, "Select profile picture", REQUEST_CODE_IMAGE_PICKER);
+        }
+        else{
+            ArrayList<String> imageURIs=alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+            Intent intent = new Intent(mContext, GridActivity.class);
+            intent.putStringArrayListExtra("URIs",imageURIs);
+            startActivity(intent);
+        }
+    }
+
+    @OnShowRationale({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.cancel();
+                    }
+                })
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showDeniedForCamera() {
+        Utils.showSnackBar(coordinatorLayout, getString( R.string.permission_camera_denied));
+    }
+
+    @OnNeverAskAgain({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showNeverAskForCamera() {
+        Utils.showSnackBar(coordinatorLayout, getString(R.string.permission_camera_never_askagain));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        InspectionDetailsFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }
