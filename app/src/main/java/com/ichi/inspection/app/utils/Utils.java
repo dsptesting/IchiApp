@@ -16,6 +16,8 @@ import android.util.Log;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.models.OrderUpdateContainer;
+import com.ichi.inspection.app.models.OrderUpdates;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
 
@@ -274,5 +276,42 @@ public class Utils {
         }
 
         return false;
+    }
+
+
+    public static boolean hasSubSectionItem(List<SubSectionsItem> alSubSections, SubSectionsItem subSectionsItem) {
+
+        //dont let it to put in array, so return true, to bypass..
+        if(subSectionsItem == null) return true;
+
+        for(SubSectionsItem sub : alSubSections){
+            if(sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void updateThisSubSection(Context context, SubSectionsItem subSectionsItem) {
+        if(subSectionsItem == null) return;
+        PreferencesHelper prefs = PreferencesHelper.getInstance(context);
+
+        if(!prefs.contains(Constants.PREF_ORDER_UPDATE)){
+            OrderUpdateContainer orderUpdateContainer = new OrderUpdateContainer();
+            prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
+        }
+
+        OrderUpdateContainer orderUpdateContainer = (OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE, OrderUpdateContainer.class);
+        if(orderUpdateContainer != null && orderUpdateContainer.getOrderUpdatesList() != null && !orderUpdateContainer.getOrderUpdatesList().isEmpty()){
+            List<OrderUpdates> orderUpdates = orderUpdateContainer.getOrderUpdatesList();
+            for(OrderUpdates orderUpdate : orderUpdates){
+                if(subSectionsItem.getInspectionId().equalsIgnoreCase(orderUpdate.getInspectionId())){
+                    orderUpdate.setUpdated(true);
+                }
+            }
+        }
+        prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
+        Log.v(TAG,"inspection updated");
     }
 }

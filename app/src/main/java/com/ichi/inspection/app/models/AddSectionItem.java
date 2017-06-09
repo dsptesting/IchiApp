@@ -31,6 +31,10 @@ public class AddSectionItem {
 	@SerializedName("HasRating")
 	private String hasRating;
 
+	public AddSectionItem(String name) {
+		this.name = name;
+	}
+
 	public void setAddSectionId(String addSectionId){
 		this.addSectionId = addSectionId;
 	}

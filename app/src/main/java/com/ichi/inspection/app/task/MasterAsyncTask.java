@@ -10,6 +10,7 @@ import com.ichi.inspection.app.models.AddSection;
 import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.NamedTemplates;
+import com.ichi.inspection.app.models.OrderUpdateContainer;
 import com.ichi.inspection.app.models.OrderUpdates;
 import com.ichi.inspection.app.models.SelectSection;
 import com.ichi.inspection.app.models.SubSectionsItem;
@@ -18,6 +19,7 @@ import com.ichi.inspection.app.rest.ApiService;
 import com.ichi.inspection.app.rest.ServiceGenerator;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.PreferencesHelper;
+import com.ichi.inspection.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,13 +94,18 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
                 //Here we will condition selectSection.. order syncing..
                 SelectSection selectSection = masterResponse.getSelectSection();
                 List<SubSectionsItem> updatedSubSectionsItemList = new ArrayList<>();
+                if(prefs.contains(Constants.PREF_SELECT_SECTION)){
+                    SelectSection storedSubSections = (SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class);
+                    updatedSubSectionsItemList.addAll(storedSubSections.getSubSections());
+                }
+
                 if(selectSection != null && selectSection.getSubSections() != null && !selectSection.getSubSections().isEmpty()){
                     List<SubSectionsItem> newSubSectionsItem = selectSection.getSubSections();
-                    if(prefs.contains(Constants.PREF_SELECT_SECTION)){
+                    if(prefs.contains(Constants.PREF_ORDER_UPDATE)){
                         //data avail in pref, check
-                        SelectSection oldSelectSection = (SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class);
-                        if(oldSelectSection != null && oldSelectSection.getOrderUpdatesList() != null && !oldSelectSection.getOrderUpdatesList().isEmpty()){
-                            List<OrderUpdates> orderUpdatesList = oldSelectSection.getOrderUpdatesList();
+                        OrderUpdateContainer orderUpdateContainer = (OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE,OrderUpdateContainer.class);
+                        if(orderUpdateContainer != null && orderUpdateContainer.getOrderUpdatesList() != null && !orderUpdateContainer.getOrderUpdatesList().isEmpty()){
+                            List<OrderUpdates> orderUpdatesList = orderUpdateContainer.getOrderUpdatesList();
 
                             for(int i=0; i<newSubSectionsItem.size();i++){
                                 String inspectionId = newSubSectionsItem.get(i).getInspectionId();
@@ -107,11 +114,11 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
                                     if(inspectionId.equalsIgnoreCase(orderUpdatesList.get(j).getInspectionId())){
                                         found = true;
                                         if(!orderUpdatesList.get(j).isUpdated()){
-                                            updatedSubSectionsItemList.add(newSubSectionsItem.get(i));
+                                            if (!Utils.hasSubSectionItem(updatedSubSectionsItemList, newSubSectionsItem.get(i))) updatedSubSectionsItemList.add(newSubSectionsItem.get(i));
                                         }
                                     }
                                 }
-                                if(!found) updatedSubSectionsItemList.add(newSubSectionsItem.get(i));
+                                if(!found && !Utils.hasSubSectionItem(updatedSubSectionsItemList, newSubSectionsItem.get(i))) updatedSubSectionsItemList.add(newSubSectionsItem.get(i));
                             }
                         }
 

@@ -126,4 +126,5 @@
     <string name="remove_section">Remove Section</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="no_image_avail">No image selected yet!</string>
 </resources>

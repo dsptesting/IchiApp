@@ -65,6 +65,7 @@ public class Constants {
     public static final String PREF_SELECT_SECTION = "PREF_SELECT_SECTION";
     public static final String PREF_NAMED_TEMPLATES = "PREF_NAMED_TEMPLATES";
     public static final String PREF_TEMPLATES = "PREF_TEMPLATES";
+    public static final String PREF_ORDER_UPDATE = "PREF_ORDER_UPDATE";
 
 
     // result codes

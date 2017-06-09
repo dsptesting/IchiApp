@@ -90,6 +90,19 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
             holder.btnU.setSelected(false);
         }
 
+        if(subSectionsItem.getNotInspected().equalsIgnoreCase("t")){
+            holder.btnNA.setSelected(true);
+            holder.btnHide.setSelected(false);
+        }
+        else if(subSectionsItem.getSuppressPrint().equalsIgnoreCase("t")){
+            holder.btnNA.setSelected(false);
+            holder.btnHide.setSelected(true);
+        }
+        else{
+            holder.btnNA.setSelected(false);
+            holder.btnHide.setSelected(false);
+        }
+
         try{
             if(subSectionsItem.getComments() != null && !subSectionsItem.getComments().toString().trim().isEmpty()){
                 holder.txtComment.setText(""+subSectionsItem.getComments().toString().trim());
@@ -164,6 +177,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
             switch (view.getId()){
                 case R.id.btnS:
                     SubSectionsItem subSectionsItem = getItem(getAdapterPosition());
+                    Utils.updateThisSubSection(mContext,subSectionsItem);
                     subSectionsItem.setGood("t");
                     subSectionsItem.setFair("f");
                     subSectionsItem.setPoor("f");
@@ -172,6 +186,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
                     break;
                 case R.id.btnR:
                     subSectionsItem = getItem(getAdapterPosition());
+                    Utils.updateThisSubSection(mContext,subSectionsItem);
                     subSectionsItem.setGood("f");
                     subSectionsItem.setFair("t");
                     subSectionsItem.setPoor("f");
@@ -180,6 +195,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
                     break;
                 case R.id.btnU:
                     subSectionsItem = getItem(getAdapterPosition());
+                    Utils.updateThisSubSection(mContext,subSectionsItem);
                     subSectionsItem.setGood("f");
                     subSectionsItem.setFair("f");
                     subSectionsItem.setPoor("t");
@@ -191,11 +207,20 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
                     onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
                     break;
                 case R.id.btnNA:
-                    /*subSectionsItem = getItem(getAdapterPosition());
-                    subSectionsItem.setFair("f");
-                    subSectionsItem.setPoor("f");
+                    subSectionsItem = getItem(getAdapterPosition());
+                    Utils.updateThisSubSection(mContext,subSectionsItem);
+                    subSectionsItem.setNotInspected("t");
+                    subSectionsItem.setSuppressPrint("f");
                     onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
-                    notifyDataSetChanged();*/
+                    notifyDataSetChanged();
+                    break;
+                case R.id.btnHide:
+                    subSectionsItem = getItem(getAdapterPosition());
+                    Utils.updateThisSubSection(mContext,subSectionsItem);
+                    subSectionsItem.setNotInspected("f");
+                    subSectionsItem.setSuppressPrint("t");
+                    onLineItemClickListener.onLineItemClick(view,subSectionsItem,getAdapterPosition());
+                    notifyDataSetChanged();
                     break;
             }
         }

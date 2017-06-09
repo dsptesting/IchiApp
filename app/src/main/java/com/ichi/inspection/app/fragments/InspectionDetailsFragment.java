@@ -48,6 +48,7 @@ import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.interfaces.OnLineItemClickListener;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.models.AddSection;
+import com.ichi.inspection.app.models.AddSectionItem;
 import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.NamedTemplates;
@@ -87,7 +88,7 @@ import pl.aprilapps.easyphotopicker.EasyImageConfig;
  */
 @RuntimePermissions
 public class InspectionDetailsFragment extends BaseFragment implements View.OnClickListener, OnApiCallbackListener, OnListItemClickListener
-                    ,AdapterView.OnItemSelectedListener,OnLineItemClickListener {
+        , AdapterView.OnItemSelectedListener, OnLineItemClickListener {
 
     private static final String TAG = InspectionDetailsFragment.class.getSimpleName();
     private Context mContext;
@@ -138,7 +139,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private LineAdapter lineAdapter;
 
     private MasterAsyncTask masterAsyncTask;
-
 
 
     @Nullable
@@ -215,7 +215,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         });
 
         //Mark All Lines
-        markAllLines=new ArrayList<>();
+        markAllLines = new ArrayList<>();
         markAllLines.add("Select option");
         markAllLines.add("Good");
         markAllLines.add("Fair");
@@ -223,7 +223,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         markAllLines.add("Hide");
         markAllLines.add("N/A");
 
-        markAllAdapter=new MarkAllAdapter(getActivity(),markAllLines);
+        markAllAdapter = new MarkAllAdapter(getActivity(), markAllLines);
         sMarkAll.setAdapter(markAllAdapter);
         sMarkAll.setOnItemSelectedListener(this);
 
@@ -251,8 +251,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         sSelectSection.setAdapter(selectSectionAdapter);
         sSelectSection.setOnItemSelectedListener(this);
 
-        lineAdapter = new LineAdapter(getActivity(),alSubSectionsLines,this,behavior,this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        lineAdapter = new LineAdapter(getActivity(), alSubSectionsLines, this, behavior, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rcvItems.setLayoutManager(linearLayoutManager);
         rcvItems.setAdapter(lineAdapter);
 
@@ -260,124 +260,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         cvRemoveSection.setOnClickListener(this);
         cvAddNewLine.setOnClickListener(this);
 
-    }
-
-    private void showGallary(int position){
-
-        currentSelectedLinePositionForImage =  position;
-        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
-        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
-        mBottomSheetDialog.setContentView(sheetView);
-        //sheetView.findViewById(R.id.).
-        LinearLayout llCamera= (LinearLayout) sheetView.findViewById(R.id.llCamera);
-        LinearLayout llGallery= (LinearLayout) sheetView.findViewById(R.id.llGallery);
-        llCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EasyImage.openCamera(InspectionDetailsFragment.this,0);
-                mBottomSheetDialog.dismiss();
-            }
-        });
-        llGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EasyImage.openGallery(InspectionDetailsFragment.this,0);
-                mBottomSheetDialog.dismiss();
-            }
-        });
-        mBottomSheetDialog.show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
-            @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
-                //Some error handling
-                Log.d(TAG, "onImagePickerError: "+e.getMessage());
-            }
-
-            @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source1, int type) {
-                Log.v(TAG,"imageFile file : "+ imageFile.getAbsolutePath());
-                Log.d(TAG, "onImagePicked: "+imageFile.getAbsolutePath());
-                Log.d(TAG, "onImagePicked: ");
-                File file = null;
-                ArrayList<String> uris = null;
-                //TODO copy file to our folder..
-                try {
-                File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                File createDir = new File(root+"/ICHI"+File.separator);
-                if(!createDir.exists()) {
-                    createDir.mkdir();
-                }
-
-                //Create Image Name
-                String orderNum= String.valueOf(orderListItem.getIONum());
-                String lineIONum=alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId();
-                String imageName=null;
-                    String extension=imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
-                   uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
-                    Log.d(TAG, "onImagePicked: array size:"+uris.size());
-
-                    if (uris.size()==0){
-                        imageName=orderNum+"_"+lineIONum+"_"+1+extension;
-                    }else{
-                        File fileUri=new File(uris.get(uris.size()-1));
-                        String lastImageName=fileUri.getName();
-                        Log.d(TAG, "onImagePicked: lastImage:"+lastImageName);
-                       String li= lastImageName.substring(0,lastImageName.lastIndexOf("."));
-                        Log.d(TAG, "onImagePicked: With Ext:"+li);
-                        int lastNum= Integer.parseInt(li.split("_")[2]);
-                        lastNum++;
-                        imageName=orderNum+"_"+lineIONum+"_"+lastNum+extension;
-                    }
-
-                    Log.d(TAG, "onImagePicked: array:"+uris.toString());
-                    Log.d(TAG, "onImagePicked: name:"+imageName);
-
-                file = new File(root + "/ICHI" + File.separator +imageName);
-                file.createNewFile();
-
-                    Log.d(TAG, "onImagePicked: FileName: "+file.getName());
-
-                    //Copy Image
-                    FileChannel source = null;
-                    FileChannel destination = null;
-                    source = new FileInputStream(imageFile).getChannel();
-                    destination = new FileOutputStream(file).getChannel();
-                    if (destination != null && source != null) {
-                        destination.transferFrom(source, 0, source.size());
-                    }
-                    if (source != null) {
-                        source.close();
-                    }
-                    if (destination != null) {
-                        destination.close();
-                    }
-
-
-                } catch (IOException e) {
-                    Log.d(TAG, "onImagePicked error: "+e.getMessage());
-                    e.printStackTrace();
-                }
-
-                if(currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null){
-
-                    uris.add(file.getAbsolutePath());
-                    //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
-
-                    Intent intent = new Intent(mContext, GridActivity.class);
-                    intent.putStringArrayListExtra("URIs",uris);
-                    startActivity(intent);
-                }
-
-
-            }
-
-        });
     }
 
     private void initView() {
@@ -401,12 +283,157 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
 
         //This is to refresh data once we get from web call async.
-        templateAdapter.setData(namedTemplates.getNamedTemplatesItems());
-        addSectionAdapter.setData(addSection.getHeaderItems());
+        List<NamedTemplatesItem> templateNameList = namedTemplates.getNamedTemplatesItems();
+        templateNameList.add(0,new NamedTemplatesItem("Select option"));
+        templateAdapter.setData(templateNameList);
+
+        List<AddSectionItem> addSectionList = addSection.getHeaderItems();
+        addSectionList.add(0,new AddSectionItem("Select option"));
+        addSectionAdapter.setData(addSectionList);
+
         selectSectionAdapter.setData(alSubSectionsOnly);
     }
 
-    private void getMasterList(){
+    private void showGallary(int position) {
+
+        currentSelectedLinePositionForImage = position;
+        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
+        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
+        mBottomSheetDialog.setContentView(sheetView);
+        //sheetView.findViewById(R.id.).
+        LinearLayout llCamera = (LinearLayout) sheetView.findViewById(R.id.llCamera);
+        LinearLayout llGallery = (LinearLayout) sheetView.findViewById(R.id.llGallery);
+        llCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EasyImage.openCamera(InspectionDetailsFragment.this, 0);
+                mBottomSheetDialog.dismiss();
+            }
+        });
+        llGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EasyImage.openGallery(InspectionDetailsFragment.this, 0);
+                mBottomSheetDialog.dismiss();
+            }
+        });
+        mBottomSheetDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                //Some error handling
+                Log.d(TAG, "onImagePickerError: " + e.getMessage());
+            }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source1, int type) {
+                Log.v(TAG, "imageFile file : " + imageFile.getAbsolutePath());
+                Log.d(TAG, "onImagePicked: " + imageFile.getAbsolutePath());
+                Log.d(TAG, "onImagePicked: ");
+                File file = null;
+                ArrayList<String> uris = null;
+                //TODO copy file to our folder..
+                try {
+                    File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    File createDir = new File(root + "/ICHI" + File.separator);
+                    if (!createDir.exists()) {
+                        createDir.mkdir();
+                    }
+
+                    //Create Image Name
+                    String orderNum = String.valueOf(orderListItem.getIONum());
+                    SubSectionsItem updatedSubSection = alSubSectionsLines.get(currentSelectedLinePositionForImage);
+                    String lineIONum = alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId();
+                    String imageName = null;
+                    String extension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
+                    uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+                    Log.d(TAG, "onImagePicked: array size:" + uris.size());
+
+                    if (uris.size() == 0) {
+                        String noe = "0";
+                        noe = alSubSectionsLines.get(currentSelectedLinePositionForImage).getNumberOfExposures();
+                        if (noe == null || noe.equalsIgnoreCase("") || noe.isEmpty()) {
+                            noe = "0";
+                        }
+                        int numofEX = Integer.parseInt(noe);
+                        imageName = orderNum + "_" + lineIONum + "_" + numofEX + extension;
+                    } else {
+                        File fileUri = new File(uris.get(uris.size() - 1));
+                        String lastImageName = fileUri.getName();
+                        Log.d(TAG, "onImagePicked: lastImage:" + lastImageName);
+                        String li = lastImageName.substring(0, lastImageName.lastIndexOf("."));
+                        Log.d(TAG, "onImagePicked: With Ext:" + li);
+                        int lastNum = Integer.parseInt(li.split("_")[2]);
+                        lastNum++;
+                        imageName = orderNum + "_" + lineIONum + "_" + lastNum + extension;
+                    }
+
+                    Log.d(TAG, "onImagePicked: array:" + uris.toString());
+                    Log.d(TAG, "onImagePicked: name:" + imageName);
+
+                    file = new File(root + "/ICHI" + File.separator + imageName);
+                    file.createNewFile();
+
+                    Log.d(TAG, "onImagePicked: FileName: " + file.getName());
+
+                    //Copy Image
+                    FileChannel source = null;
+                    FileChannel destination = null;
+                    source = new FileInputStream(imageFile).getChannel();
+                    destination = new FileOutputStream(file).getChannel();
+                    if (destination != null && source != null) {
+                        destination.transferFrom(source, 0, source.size());
+                    }
+                    if (source != null) {
+                        source.close();
+                    }
+                    if (destination != null) {
+                        destination.close();
+                    }
+
+                    if (currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null) {
+
+                        uris.add(file.getAbsolutePath());
+                        //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
+
+                        for (SubSectionsItem subSectionsItem : alSubSections) {
+                            if (subSectionsItem.getIOLineId().equalsIgnoreCase(lineIONum)){
+                                subSectionsItem.setImageURIs(uris);
+                            }
+                        }
+
+                        List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+                        if (temp != null && !temp.isEmpty()) {
+                            for (int j = 0; j < temp.size(); j++) {
+                                if (temp.get(j).getIOLineId().equalsIgnoreCase(lineIONum)) {
+                                    temp.set(j, updatedSubSection);
+                                    break;
+                                }
+                            }
+                        }
+                        prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+
+                        Intent intent = new Intent(mContext, GridActivity.class);
+                        intent.putStringArrayListExtra("URIs", uris);
+                        startActivity(intent);
+                    }
+                } catch (IOException e) {
+                    Log.d(TAG, "onImagePicked error: " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+            }
+
+        });
+    }
+
+    private void getMasterList() {
 
         //TODO dont delete this block
         /*if (prefs.contains(Constants.PREF_MASTER)) {
@@ -426,11 +453,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             setLayoutVisibility();
         }*/
 
-        if(Utils.isNetworkAvailable(getActivity()) && prefs.getBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN,false)){
-            masterAsyncTask = new MasterAsyncTask(getActivity(),this);
+        if (Utils.isNetworkAvailable(getActivity()) && prefs.getBoolean(Constants.PREF_REQUEST_MASTER_AFTER_LOGIN, false)) {
+            masterAsyncTask = new MasterAsyncTask(getActivity(), this);
             masterAsyncTask.execute();
-        }
-        else if(prefs.contains(Constants.PREF_MASTER)) {
+        } else if (prefs.contains(Constants.PREF_MASTER)) {
 
             masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
             addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
@@ -440,28 +466,25 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
             initView();
             setLayoutVisibility();
-        }
-        else{
+        } else {
             setLayoutVisibility();
         }
     }
 
     private void setLayoutVisibility() {
 
-        if(masterResponse != null){
+        if (masterResponse != null) {
 
             tvNoData.setVisibility(View.GONE);
             pbLoader.setVisibility(View.GONE);
             mainLayout.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             pbLoader.setVisibility(View.GONE);
-            if(Utils.isNetworkAvailable(getActivity())){
+            if (Utils.isNetworkAvailable(getActivity())) {
                 tvNoData.setText(getString(R.string.str_no_data));
-            }
-            else{
+            } else {
                 tvNoData.setText(getString(R.string.internet_not_avail));
-                Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
+                Utils.showSnackBar(coordinatorLayout, getString(R.string.internet_not_avail));
             }
             tvNoData.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
@@ -471,7 +494,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @Override
     public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
                 break;
@@ -505,10 +528,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
 
         pbLoader.setVisibility(View.GONE);
-        if(!Utils.showCallError(coordinatorLayout,baseResponse)){
+        if (!Utils.showCallError(coordinatorLayout, baseResponse)) {
 
             MasterResponse masterResponseData = (MasterResponse) baseResponse;
-            if(masterResponseData != null){
+            if (masterResponseData != null) {
 
                 masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
                 addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
@@ -524,7 +547,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onDestroy() {
-        if(masterAsyncTask != null && !masterAsyncTask.isCancelled()) masterAsyncTask.cancel(true);
+        if (masterAsyncTask != null && !masterAsyncTask.isCancelled()) masterAsyncTask.cancel(true);
         super.onDestroy();
     }
 
@@ -534,13 +557,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.rlContainer:
                 Log.v(TAG, "Position: " + position);
             case R.id.btnUpload:
-                currentSelectedLinePositionForImage =  position;
+                currentSelectedLinePositionForImage = position;
                 uploadClicked = true;
                 InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
                 //showGallary(position);
                 break;
             case R.id.btnPhoto:
-                currentSelectedLinePositionForImage =  position;
+                currentSelectedLinePositionForImage = position;
                 uploadClicked = false;
                 InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
                 break;
@@ -556,7 +579,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.logout){
+        if (id == R.id.logout) {
             ((MainActivity) getActivity()).logout();
             return true;
         }
@@ -566,14 +589,14 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     //Performing action onItemSelected and onNothing selected
     @Override
-    public void onItemSelected(AdapterView<?> parent, View arg1, int position,long id) {
+    public void onItemSelected(AdapterView<?> parent, View arg1, int position, long id) {
 
-        switch (parent.getId()){
+        switch (parent.getId()) {
             case R.id.sAddTemplate:
-                if(position != -1){
+                if (position > 0) {
                     selectedIndexNamedTemplates = position;
 
-                    if (selectedIndexNamedTemplates != -1) {
+                    if (selectedIndexNamedTemplates > 0) {
                         NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
                         //Log.v(TAG, "SelectedTemplates namedTemplatesItem: " + namedTemplatesItem);
                         if (namedTemplatesItem != null) {
@@ -653,37 +676,43 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 break;
             case R.id.sMarkAll:
                 if (position > 0) {
-                    for(int i=0;i<alSubSectionsLines.size();i++){
+                    for (int i = 0; i < alSubSectionsLines.size(); i++) {
                         SubSectionsItem subSectionsItem = alSubSectionsLines.get(i);
-                        if(position == 1){
+                        if (position == 1) {
                             subSectionsItem.setGood("t");
                             subSectionsItem.setFair("f");
                             subSectionsItem.setPoor("f");
-                        }
-                        else if(position == 2){
+                        } else if (position == 2) {
                             subSectionsItem.setGood("f");
                             subSectionsItem.setFair("t");
                             subSectionsItem.setPoor("f");
-                        }
-                        else if(position == 3){
+                        } else if (position == 3) {
                             subSectionsItem.setGood("f");
                             subSectionsItem.setFair("f");
                             subSectionsItem.setPoor("t");
+                        } else if (position == 4) {
+                            subSectionsItem.setNotInspected("f");
+                            subSectionsItem.setSuppressPrint("t");
+                        } else if (position == 5) {
+                            subSectionsItem.setNotInspected("t");
+                            subSectionsItem.setSuppressPrint("f");
                         }
+
+                        Utils.updateThisSubSection(getActivity(), subSectionsItem);
 
                         for (SubSectionsItem sub : alSubSections) {
                             if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
                                 alSubSections.remove(sub);
-                                alSubSections.add(position,subSectionsItem);
+                                alSubSections.add(position, subSectionsItem);
                                 break;
                             }
                         }
 
                         List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
-                        if(temp != null && !temp.isEmpty()){
-                            for(int j=0;j<temp.size();j++){
-                                if(temp.get(j).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())){
-                                    temp.set(j,subSectionsItem);
+                        if (temp != null && !temp.isEmpty()) {
+                            for (int j = 0; j < temp.size(); j++) {
+                                if (temp.get(j).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                                    temp.set(j, subSectionsItem);
                                     break;
                                 }
                             }
@@ -724,6 +753,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                 if (!((EditText) view.findViewById(R.id.et)).getText().toString().trim().isEmpty()) {
                     cancelThisDialog();
+                    Utils.updateThisSubSection(getActivity(), selectedsubSectionsItem);
                     selectedsubSectionsItem.setName(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
 
                     List<TemplateItemsItem> templateItemsItems = templates.getTemplateItems();
@@ -761,6 +791,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
+    //TODO remove baki from sync
     public void showRemoveSectionDialog() {
 
         if (selectedsubSectionsItem == null) return;
@@ -802,7 +833,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 Iterator<SubSectionsItem> iter3 = selectSection.getSubSections().iterator();
                 while (iter3.hasNext()) {
                     SubSectionsItem tmp = iter3.next();
-                    if (tmp.getInspectionId().equalsIgnoreCase(""+orderListItem.getSequence()) &&
+                    if (tmp.getInspectionId().equalsIgnoreCase("" + orderListItem.getSequence()) &&
                             tmp.getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
                             tmp.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
                         //Log.v(TAG, "Total alSubSectionsOnly tmp.getSectionId() : " + tmp.getSectionId());
@@ -839,14 +870,16 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onLineItemClick(View view, SubSectionsItem subSectionsItem, int position) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btnR:
             case R.id.btnS:
             case R.id.btnU:
-                changeLineStatus(subSectionsItem,position);
+            case R.id.btnNA:
+            case R.id.btnHide:
+                changeLineStatus(subSectionsItem, position);
                 break;
             case R.id.llAddComment:
-                showCommentBox(subSectionsItem,position);
+                showCommentBox(subSectionsItem, position);
                 break;
         }
     }
@@ -873,7 +906,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     cancelThisDialog();
                     subSectionsItem.setComments(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
 
-                    changeLineStatus(subSectionsItem,position);
+                    Utils.updateThisSubSection(mContext, subSectionsItem);
+                    changeLineStatus(subSectionsItem, position);
                     lineAdapter.notifyDataSetChanged();
                 }
             }
@@ -892,8 +926,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     public void showAddNewLineDialog() {
 
-        if (selectedsubSectionsItem == null){
-            Toast.makeText(getActivity(),"Please select section first to add new line to!",Toast.LENGTH_LONG).show();
+        if (selectedsubSectionsItem == null) {
+            Toast.makeText(getActivity(), "Please select section first to add new line to!", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -913,7 +947,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                     SubSectionsItem subSectionsItem = new SubSectionsItem();
                     subSectionsItem.setName(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
-                    subSectionsItem.setIOLineId(Utils.getGlobalUniqueNumber(getActivity(),true) + "");
+                    subSectionsItem.setIOLineId(Utils.getGlobalUniqueNumber(getActivity(), true) + "");
                     subSectionsItem.setSectionId(selectedsubSectionsItem.getSectionId());
                     subSectionsItem.setInspectionId(selectedsubSectionsItem.getInspectionId());
                     subSectionsItem.setGood("f");
@@ -930,6 +964,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     subSectionsItem.setNotInspected("f");
                     subSectionsItem.setVeryPoor("f");
 
+                    Utils.updateThisSubSection(mContext, subSectionsItem);
                     selectSection.getSubSections().add(subSectionsItem);
                     prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
 
@@ -961,19 +996,19 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         for (SubSectionsItem sub : alSubSections) {
             if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
                 alSubSections.remove(sub);
-                alSubSections.add(position,subSectionsItem);
+                alSubSections.add(position, subSectionsItem);
 
                 hasChanged = true;
                 break;
             }
         }
 
-        if(hasChanged){
+        if (hasChanged) {
             List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
-            if(temp != null && !temp.isEmpty()){
-                for(int i=0;i<temp.size();i++){
-                    if(temp.get(i).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())){
-                        temp.set(i,subSectionsItem);
+            if (temp != null && !temp.isEmpty()) {
+                for (int i = 0; i < temp.size(); i++) {
+                    if (temp.get(i).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                        temp.set(i, subSectionsItem);
                         prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
                         break;
                     }
@@ -983,20 +1018,25 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void showCamera() {
-        if(uploadClicked){
+        Log.v(TAG, "showCamera called");
+        if (uploadClicked) {
             EasyImage.openChooserWithGallery(this, "Select profile picture", REQUEST_CODE_IMAGE_PICKER);
-        }
-        else{
-            ArrayList<String> imageURIs=alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
-            Intent intent = new Intent(mContext, GridActivity.class);
-            intent.putStringArrayListExtra("URIs",imageURIs);
-            startActivity(intent);
+        } else {
+            ArrayList<String> imageURIs = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+            if (imageURIs != null && !imageURIs.isEmpty()) {
+                Intent intent = new Intent(mContext, GridActivity.class);
+                intent.putStringArrayListExtra("URIs", imageURIs);
+                startActivity(intent);
+            } else {
+                Utils.showSnackBar(coordinatorLayout, getString(R.string.no_image_avail));
+            }
+
         }
     }
 
-    @OnShowRationale({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnShowRationale({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void showRationaleForCamera(final PermissionRequest request) {
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.permission_camera_rationale)
@@ -1015,12 +1055,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 .show();
     }
 
-    @OnPermissionDenied({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void showDeniedForCamera() {
-        Utils.showSnackBar(coordinatorLayout, getString( R.string.permission_camera_denied));
+        Utils.showSnackBar(coordinatorLayout, getString(R.string.permission_camera_denied));
     }
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnNeverAskAgain({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void showNeverAskForCamera() {
         Utils.showSnackBar(coordinatorLayout, getString(R.string.permission_camera_never_askagain));
     }
@@ -1028,7 +1068,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // NOTE: delegate the permission handling to generated method
         InspectionDetailsFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }

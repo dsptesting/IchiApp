@@ -16,8 +16,11 @@ public class NamedTemplatesItem {
     @SerializedName("Name")
     private String name;
 
+	public NamedTemplatesItem(String name) {
+		this.name = name;
+	}
 
-    public void setCompanyId(String companyId){
+	public void setCompanyId(String companyId){
 		this.companyId = companyId;
 	}
 
