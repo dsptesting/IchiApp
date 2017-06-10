@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +29,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.GridActivity;
@@ -82,7 +79,6 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
-import pl.aprilapps.easyphotopicker.EasyImageConfig;
 
 /**
  * Created by Palak on 05-03-2017.
@@ -354,6 +350,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 Log.d(TAG, "onImagePicked: " + imageFile.getAbsolutePath());
                 Log.d(TAG, "onImagePicked: ");
                 File file = null;
+                String name ="";
                 ArrayList<String> uris = null;
                 //TODO copy file to our folder..
                 try {
@@ -370,6 +367,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     String imageName = null;
                     String extension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
                     uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+                    name = alSubSectionsLines.get(currentSelectedLinePositionForImage).getName();
                     Log.d(TAG, "onImagePicked: array size:" + uris.size());
 
                     if (uris.size() == 0) {
@@ -437,6 +435,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
 
                         Intent intent = new Intent(mContext, GridActivity.class);
+                        intent.putExtra("name",name);
                         intent.putStringArrayListExtra("URIs", uris);
                         startActivity(intent);
                     }
@@ -679,6 +678,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     if (templateId == null || templateId.isEmpty()) {
 
                         Utils.showSnackBar(coordinatorLayout,"Select Template first!");
+                        sAddSection.setSelection(0);
                         return;
                     }
 
@@ -764,6 +764,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     lineAdapter.setData(alSubSectionsLines);
                 }
                 else{
+                    selectedIndexSelectSection = -1;
+                    selectedsubSectionsItem = null;
                     alSubSectionsLines.clear();
                     lineAdapter.setData(alSubSectionsLines);
                 }
@@ -832,6 +834,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private String getTemplateIdFromSections(int position) {
 
         if(alSubSections == null || alSubSections.isEmpty()) return null;
+
+        if(alSubSections.size() == position) return null;
 
         SubSectionsItem subSectionsItem = alSubSections.get(position);
         if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER){
@@ -1044,7 +1048,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     public void showAddNewLineDialog() {
 
         if (selectedsubSectionsItem == null) {
-            Toast.makeText(getActivity(), "Please select section first to add new line to!", Toast.LENGTH_LONG).show();
+            Utils.showSnackBar(coordinatorLayout, "Please select section first to add new line to!");
             return;
         }
 
@@ -1144,6 +1148,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             ArrayList<String> imageURIs = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
             if (imageURIs != null && !imageURIs.isEmpty()) {
                 Intent intent = new Intent(mContext, GridActivity.class);
+                intent.putExtra("name",alSubSectionsLines.get(currentSelectedLinePositionForImage).getName());
                 intent.putStringArrayListExtra("URIs", imageURIs);
                 startActivity(intent);
             } else {

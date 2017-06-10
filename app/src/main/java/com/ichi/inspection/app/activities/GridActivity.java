@@ -40,6 +40,7 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
     @BindView(R.id.tvAppTitle)
     public TextView tvAppTitle;
     private ArrayList<String> imageURIs;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,8 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
         setContentView(R.layout.activity_gallery);
         ButterKnife.bind(this);
         mContext = this;
+        name = getIntent().getStringExtra("name");
         init();
-
     }
 
     private void init(){
@@ -56,7 +57,7 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-        tvAppTitle.setText(R.string.clientinfo);
+        tvAppTitle.setText("Pictures of "+name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -87,6 +88,7 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
         switch (view.getId()){
             case R.id.imageView:
                 Intent intent=new Intent(GridActivity.this,GridImageActivity.class);
+                intent.putExtra("name",name);
                 intent.putExtra("URI",imageURIs.get(position));
                 startActivity(intent);
                 break;

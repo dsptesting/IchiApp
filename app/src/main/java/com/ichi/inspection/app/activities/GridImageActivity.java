@@ -31,6 +31,7 @@ public class GridImageActivity extends BaseActivity {
 
     @BindView(R.id.imageView)
     public ImageView imageView;
+    private String name;
 
 
     @Override
@@ -39,12 +40,13 @@ public class GridImageActivity extends BaseActivity {
         setContentView(R.layout.activity_grid_image);
         ButterKnife.bind(this);
         mContext = this;
+        name = getIntent().getStringExtra("name");
 
         //Toolbar shit!
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-        tvAppTitle.setText(R.string.clientinfo);
+        tvAppTitle.setText("Pictures of "+name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
