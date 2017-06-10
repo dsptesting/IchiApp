@@ -60,10 +60,17 @@ public class SubSectionsItem{
     private ArrayList<String> imageURIs;
 
     private String templatedId;
+	private int contentType;
 
     public SubSectionsItem() {
         this.imageURIs = new ArrayList<>();
     }
+
+	public SubSectionsItem(String name, int contentType) {
+		this.name = name;
+		this.contentType = contentType;
+		this.imageURIs = new ArrayList<>();
+	}
 
     public ArrayList<String> getImageURIs() {
         return imageURIs;
@@ -73,31 +80,41 @@ public class SubSectionsItem{
         this.imageURIs = imageURIs;
     }
 
-    @Override
-    public String toString() {
-        return "SubSectionsItem{" +
-                "isHead='" + isHead + '\'' +
-                ", poor='" + poor + '\'' +
-                ", fair='" + fair + '\'' +
-                ", comments='" + comments + '\'' +
-                ", inspectionId='" + inspectionId + '\'' +
-                ", suppressPrint='" + suppressPrint + '\'' +
-                ", veryPoor='" + veryPoor + '\'' +
-                ", lineNumber='" + lineNumber + '\'' +
-                ", name='" + name + '\'' +
-                ", usedHead='" + usedHead + '\'' +
-                ", pageBreak='" + pageBreak + '\'' +
-                ", iOLineId='" + iOLineId + '\'' +
-                ", lineOrder='" + lineOrder + '\'' +
-                ", good='" + good + '\'' +
-                ", sectionId='" + sectionId + '\'' +
-                ", numberOfExposures='" + numberOfExposures + '\'' +
-                ", notInspected='" + notInspected + '\'' +
-                ", templatedId='" + templatedId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "SubSectionsItem{" +
+				"isHead='" + isHead + '\'' +
+				", poor='" + poor + '\'' +
+				", fair='" + fair + '\'' +
+				", comments='" + comments + '\'' +
+				", inspectionId='" + inspectionId + '\'' +
+				", suppressPrint='" + suppressPrint + '\'' +
+				", veryPoor='" + veryPoor + '\'' +
+				", lineNumber='" + lineNumber + '\'' +
+				", name='" + name + '\'' +
+				", usedHead='" + usedHead + '\'' +
+				", pageBreak='" + pageBreak + '\'' +
+				", iOLineId='" + iOLineId + '\'' +
+				", lineOrder='" + lineOrder + '\'' +
+				", good='" + good + '\'' +
+				", sectionId='" + sectionId + '\'' +
+				", numberOfExposures='" + numberOfExposures + '\'' +
+				", notInspected='" + notInspected + '\'' +
+				", imageURIs=" + imageURIs +
+				", templatedId='" + templatedId + '\'' +
+				", contentType=" + contentType +
+				'}';
+	}
 
-    public String getTemplatedId() {
+	public int getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(int contentType) {
+		this.contentType = contentType;
+	}
+
+	public String getTemplatedId() {
         return templatedId;
     }
 

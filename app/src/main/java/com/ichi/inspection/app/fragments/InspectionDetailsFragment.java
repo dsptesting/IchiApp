@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -230,6 +231,20 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         templateAdapter = new TemplateAdapter(getActivity(), namedTemplates.getNamedTemplatesItems());
         sAddTemplate.setAdapter(templateAdapter);
         sAddTemplate.setOnItemSelectedListener(this);
+        sAddTemplate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()){
+                    case MotionEvent.ACTION_DOWN:
+
+                        if(alSubSections != null && !alSubSections.isEmpty()){
+                            Utils.showSnackBar(coordinatorLayout,"Template selected already!");
+                            return true;
+                        }
+                }
+                return false;
+            }
+        });
 
         addSectionAdapter = new AddSectionAdapter(getActivity(), addSection.getHeaderItems());
         sAddSection.setAdapter(addSectionAdapter);
@@ -244,6 +259,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         alSubSections = new ArrayList<>();
         alSubSectionsOnly = new ArrayList<>();
+        alSubSectionsOnly.add(new SubSectionsItem("Select option",Constants.HEADER));
         alSubSectionsLines = new ArrayList<>();
 
         //selectSectionAdapter = new SelectSectionAdapter(getActivity(),templates.getHeaderSections(selectedNamedTemplate));
@@ -274,6 +290,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                 //Load sections only to show in select section spinner
                 alSubSectionsOnly.clear();
+                alSubSectionsOnly.add(new SubSectionsItem("Select option",Constants.HEADER));
                 for (SubSectionsItem sub : alSubSections) {
                     if (Boolean.parseBoolean(sub.getIsHead())) {
                         alSubSectionsOnly.add(sub);
@@ -594,6 +611,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         switch (parent.getId()) {
             case R.id.sAddTemplate:
                 if (position > 0) {
+
                     selectedIndexNamedTemplates = position;
 
                     if (selectedIndexNamedTemplates > 0) {
@@ -616,6 +634,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                             //Log.v(TAG, "templateItemsItems size " + templateItemsItems.size());
 
+                            if(selectSection == null){
+                                selectSection = new SelectSection();
+                            }
+                            List<SubSectionsItem> storedSubSections = selectSection.getSubSections(/*orderListItem.getSequence()+""*/);
+
+                            //Log.v(TAG,"storedSubSections sze: "+ storedSubSections.size());
                             for (TemplateItemsItem templateItemsItem : templateItemsItems) {
 
                                 subSectionsItem = Utils.convertTemplateToSubSection(getActivity(), templateItemsItem, "" + orderListItem.getSequence());
@@ -629,7 +653,15 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                                     alSubSections.add(subSectionsItem);
                                 }
+
+                                if(!Utils.hasSubSection(storedSubSections, subSectionsItem)){
+
+                                    storedSubSections.add(subSectionsItem);
+                                }
                             }
+                            //Log.v(TAG,"storedSubSections sze after: "+ storedSubSections.size());
+                            selectSection.setSubSections(storedSubSections);
+                            prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
 
                             //Log.v(TAG, "after selected new temp, alSubSections size: " + alSubSections.size());
                             //Log.v(TAG, "after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
@@ -641,15 +673,73 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 }
                 break;
             case R.id.sAddSection:
-                if (position != -1) {
-                    selectedIndexAddSection = position;
+                if (position > 0) {
+
+                    String templateId = getTemplateIdFromSections(0);
+                    if (templateId == null || templateId.isEmpty()) {
+
+                        Utils.showSnackBar(coordinatorLayout,"Select Template first!");
+                        return;
+                    }
+
+                    Log.v(TAG,"template ID got : "+ templateId);
+
+
+                    //TODO -1 is magic
+                    selectedIndexAddSection = position-1;
+                    AddSectionItem selectedAddSectionItem = addSection.getHeaderItems().get(selectedIndexAddSection);
+                    if(selectedAddSectionItem != null){
+
+                        //TODO Ask if duplicate add section is allowed or not to Amit
+                        if(Utils.hasSubSection(alSubSections,selectedAddSectionItem)){
+                            Utils.showSnackBar(coordinatorLayout,"This section is already selected!");
+                            sAddSection.setSelection(0);
+                            return;
+                        }
+
+                        String sectionId = selectedAddSectionItem.getSectionId();
+                        if(sectionId != null && !sectionId.toString().trim().isEmpty() && Utils.isNumeric(sectionId.toString().trim())){
+                            int sectionIdNumberStart = Integer.parseInt(sectionId);
+                            int sectionIdNumberEnd = Integer.parseInt(sectionId.replace("00","99"));
+
+                            List<AddSectionItem> allAddSections = addSection.getItems();
+                            List<AddSectionItem> selectedAddSectionsItems = new ArrayList<>();
+                            for(int i=0;i<allAddSections.size();i++){
+                                if(Integer.parseInt(allAddSections.get(i).getSectionId()) > sectionIdNumberStart &&
+                                        Integer.parseInt(allAddSections.get(i).getSectionId()) < sectionIdNumberEnd){
+                                    selectedAddSectionsItems.add(allAddSections.get(i));
+                                }
+                            }
+
+                            List<SubSectionsItem> orgList = selectSection.getSubSections();
+                            SubSectionsItem subSectionsItemSectionOnly = Utils.convertAddSectionToSubSection(getActivity(), selectedAddSectionItem,""+ orderListItem.getSequence(),templateId);
+                            alSubSections.add(subSectionsItemSectionOnly);
+                            alSubSectionsOnly.add(subSectionsItemSectionOnly);
+                            orgList.add(subSectionsItemSectionOnly);
+
+                            for(AddSectionItem addSectionItem : selectedAddSectionsItems){
+                                SubSectionsItem subSectionsItemTemp = Utils.convertAddSectionItemToSubSection(getActivity(),addSectionItem,""+ orderListItem.getSequence(),templateId);
+                                alSubSections.add(subSectionsItemTemp);
+                                orgList.add(subSectionsItemTemp);
+                            }
+
+                            selectSectionAdapter.setData(alSubSectionsOnly);
+                            sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
+
+                            selectSection.setSubSections(orgList);
+                            prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
+
+                        }
+
+                    }
                     //Log.v(TAG, "SelectedAddSection " + addSection.getHeaderItems().get(selectedIndexAddSection));
                 }
                 break;
 
             case R.id.sSelectSection:
                 sMarkAll.setSelection(0);
-                if (position != -1) {
+
+                if (alSubSectionsOnly.get(position).getContentType() != Constants.HEADER && position != -1) {
                     selectedIndexSelectSection = position;
                     String selectedNamedTemplate = "-1";
                     /*if(selectedIndexNamedTemplates != -1){
@@ -673,9 +763,20 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     //Log.v(TAG, "alSubSectionsLines: " + alSubSectionsLines);
                     lineAdapter.setData(alSubSectionsLines);
                 }
+                else{
+                    alSubSectionsLines.clear();
+                    lineAdapter.setData(alSubSectionsLines);
+                }
                 break;
             case R.id.sMarkAll:
                 if (position > 0) {
+
+                    if(alSubSectionsLines == null || alSubSectionsLines.isEmpty()){
+                        Utils.showSnackBar(coordinatorLayout,"Select Section first!");
+                        sMarkAll.setSelection(0);
+                        return;
+                    }
+
                     for (int i = 0; i < alSubSectionsLines.size(); i++) {
                         SubSectionsItem subSectionsItem = alSubSectionsLines.get(i);
                         if (position == 1) {
@@ -728,9 +829,25 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
+    private String getTemplateIdFromSections(int position) {
+
+        if(alSubSections == null || alSubSections.isEmpty()) return null;
+
+        SubSectionsItem subSectionsItem = alSubSections.get(position);
+        if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER){
+            if(subSectionsItem.getTemplatedId() != null && !subSectionsItem.getTemplatedId().trim().isEmpty()){
+                return subSectionsItem.getTemplatedId();
+            }
+        }
+
+        position++;
+        return getTemplateIdFromSections(position);
+    }
+
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
+        Log.v(TAG,"nothing");
     }
 
     public void showEditNameDialog() {

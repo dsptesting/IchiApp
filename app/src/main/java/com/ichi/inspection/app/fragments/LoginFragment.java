@@ -149,10 +149,12 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
         Utils.showCallError(coordinatorLayout,baseResponse);
         pbLoader.setVisibility(View.GONE);
-        if(Utils.hasCallErrorInBackground(baseResponse)){
+        cvLogin.setVisibility(View.VISIBLE);
+        /*if(Utils.hasCallErrorInBackground(baseResponse)){
             cvLogin.setVisibility(View.VISIBLE);
         }
-        else if(baseResponse != null){
+        else */
+        if(baseResponse != null){
             if(asyncTask instanceof LoginAsyncTask){
                 GetTokenResponse getTokenResponse = (GetTokenResponse) baseResponse;
                 if(getTokenResponse.getAccessToken() != null && !getTokenResponse.getAccessToken().trim().isEmpty()){

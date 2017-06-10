@@ -15,6 +15,8 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.ichi.inspection.app.R;
+import com.ichi.inspection.app.models.AddSection;
+import com.ichi.inspection.app.models.AddSectionItem;
 import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.OrderUpdateContainer;
 import com.ichi.inspection.app.models.OrderUpdates;
@@ -229,7 +231,7 @@ public class Utils {
     public static SubSectionsItem convertTemplateToSubSection(Context context, TemplateItemsItem templateItemsItem, String inspectionId) {
 
         SubSectionsItem subSectionsItem = new SubSectionsItem();
-        subSectionsItem.setIOLineId(new Date().getTime() +"");
+        subSectionsItem.setIOLineId(System.nanoTime() +"");
         subSectionsItem.setSectionId(templateItemsItem.getSectionId());
         subSectionsItem.setInspectionId(inspectionId);
         subSectionsItem.setGood("f");
@@ -244,18 +246,18 @@ public class Utils {
         subSectionsItem.setPageBreak("");
 
         //if true, means its section, if not, means its line
-        if(Boolean.parseBoolean(templateItemsItem.getIsHead())){
+        //if(Boolean.parseBoolean(templateItemsItem.getIsHead())){
             //subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,true));
             //TODO usedHead is comming in template data.. sections are having unique usedHead int, while followed lines are having same usedHead as of its section's
             //Check this logic later
             subSectionsItem.setUsedHead(""+templateItemsItem.getUsedHead());
             subSectionsItem.setNotInspected("f");
-        }
+        /*}
         else{
             //subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,false));
             subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,false));
             subSectionsItem.setNotInspected(""+templateItemsItem.getUsedHead());
-        }
+        }*/
 
         subSectionsItem.setNumberOfExposures("");
         subSectionsItem.setVeryPoor("f");
@@ -264,13 +266,80 @@ public class Utils {
         return subSectionsItem;
     }
 
+    public static SubSectionsItem convertAddSectionToSubSection(Context context, AddSectionItem addSectionItem, String inspectionId, String templateId) {
+
+        SubSectionsItem subSectionsItem = new SubSectionsItem();
+        subSectionsItem.setIOLineId(System.nanoTime() +"");
+        subSectionsItem.setSectionId(addSectionItem.getSectionId());
+        subSectionsItem.setInspectionId(inspectionId);
+        subSectionsItem.setGood("f");
+        subSectionsItem.setFair("f");
+        subSectionsItem.setPoor("f");
+        subSectionsItem.setComments("");
+        subSectionsItem.setLineNumber("");
+        subSectionsItem.setIsHead(addSectionItem.getIsHead());
+        subSectionsItem.setName(addSectionItem.getName());
+        subSectionsItem.setLineOrder("");
+        if(addSectionItem.getIncludeInReports().equalsIgnoreCase("True")){
+            subSectionsItem.setSuppressPrint("F");
+        }
+        else{
+            subSectionsItem.setSuppressPrint("T");
+        }
+
+        subSectionsItem.setPageBreak("");
+        subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,true));
+        Log.v(TAG,"UsedHead for addSection: " + subSectionsItem.getUsedHead() + ", name : " + subSectionsItem.getName());
+        subSectionsItem.setNotInspected("f");
+        subSectionsItem.setNumberOfExposures("");
+        subSectionsItem.setVeryPoor("f");
+        subSectionsItem.setTemplatedId(templateId);
+
+        return subSectionsItem;
+    }
+
+    public static SubSectionsItem convertAddSectionItemToSubSection(Context context, AddSectionItem addSectionItem, String inspectionId, String templateId) {
+
+        SubSectionsItem subSectionsItem = new SubSectionsItem();
+        subSectionsItem.setIOLineId(System.nanoTime() +"");
+        subSectionsItem.setSectionId(addSectionItem.getSectionId());
+        subSectionsItem.setInspectionId(inspectionId);
+        subSectionsItem.setGood("f");
+        subSectionsItem.setFair("f");
+        subSectionsItem.setPoor("f");
+        subSectionsItem.setComments("");
+        subSectionsItem.setLineNumber("");
+        subSectionsItem.setIsHead(addSectionItem.getIsHead());
+        subSectionsItem.setName(addSectionItem.getName());
+        subSectionsItem.setLineOrder("");
+        if(addSectionItem.getIncludeInReports().equalsIgnoreCase("True")){
+            subSectionsItem.setSuppressPrint("F");
+        }
+        else{
+            subSectionsItem.setSuppressPrint("T");
+        }
+
+        subSectionsItem.setPageBreak("");
+        subSectionsItem.setUsedHead(""+Utils.getGlobalUniqueNumber(context,false));
+        Log.v(TAG,"UsedHead for addSection: " + subSectionsItem.getUsedHead() + ", name : " + subSectionsItem.getName());
+        subSectionsItem.setNotInspected("f");
+        subSectionsItem.setNumberOfExposures("");
+        subSectionsItem.setVeryPoor("f");
+        subSectionsItem.setTemplatedId(templateId);
+
+        return subSectionsItem;
+    }
+
+
     public static boolean hasSubSection(List<SubSectionsItem> alSubSections, SubSectionsItem subSectionsItem) {
 
         //dont let it to put in array, so return true, to bypass..
         if(subSectionsItem == null) return true;
 
         for(SubSectionsItem sub : alSubSections){
-            if(sub.getSectionId().equalsIgnoreCase(subSectionsItem.getSectionId())){
+            //Log.v(TAG,"sub: " +sub.getSectionId() + " , " + sub.getIOLineId() +" , "+ sub.getName());
+            if(sub.getContentType() == Constants.HEADER) continue;
+            if(sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())){
                 return true;
             }
         }
@@ -292,6 +361,24 @@ public class Utils {
 
         return false;
     }
+
+    public static boolean hasSubSection(List<SubSectionsItem> alSubSections, AddSectionItem addSectionItem) {
+
+        //dont let it to put in array, so return true, to bypass..
+        if(addSectionItem == null) return true;
+
+        for(SubSectionsItem sub : alSubSections){
+            //Log.v(TAG,"sub: " +sub.getSectionId() + " , " + sub.getIOLineId() +" , "+ sub.getName());
+            if(sub.getContentType() == Constants.HEADER) continue;
+            if(sub.getSectionId().equalsIgnoreCase(addSectionItem.getSectionId()) && sub.getName().equalsIgnoreCase(addSectionItem.getName())){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
     public static void updateThisSubSection(Context context, SubSectionsItem subSectionsItem) {
         if(subSectionsItem == null) return;
