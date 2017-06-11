@@ -162,15 +162,25 @@
                         android:background="@color/colorPrimary"/>
 
                 </RelativeLayout>
+
+                <com.ichi.inspection.app.utils.CustomTextView
+                    android:id="@+id/tvErrorCount"
+                    android:layout_marginLeft="@dimen/values_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Error Count:"
+                    android:layout_marginTop="@dimen/values_20"
+                    android:textColor="#ff0000"
+                    android:layout_below="@+id/rlMarkAll"/>
                 <LinearLayout
                     android:id="@+id/llControls"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/rlMarkAll"
+                    android:layout_below="@+id/tvErrorCount"
                     android:layout_marginBottom="@dimen/values_28"
                     android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginRight="@dimen/values_16"
-                    android:layout_marginTop="@dimen/values_28"
+                    android:layout_marginTop="@dimen/values_20"
                     android:weightSum="2">
 
                     <android.support.v7.widget.CardView

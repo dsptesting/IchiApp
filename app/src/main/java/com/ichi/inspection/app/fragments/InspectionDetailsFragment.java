@@ -183,6 +183,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private MarkAllSelectedAsyncTask markAllSelectedAsyncTask;
     private ChangeStatusAsyncTask changeStatusAsyncTask;
 
+    @BindView(R.id.tvErrorCount)
+    TextView tvErrorCount;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -196,6 +199,50 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         getMasterList();
 
         return view;
+    }
+    private void errorCount(){
+        int errorCount=0;
+        Log.d(TAG, "onListItemClick: Size:"+alSubSections.size());
+
+        for (SubSectionsItem sub:alSubSections){
+            if (!Boolean.parseBoolean(sub.getIsHead())){
+
+                        /*boolean g=false,f=false,p=false,na=false,hide=false,comment=false;
+                        if (sub.getGood().equalsIgnoreCase("f")){
+                            g=true;
+                        }
+                        if (sub.getFair().equalsIgnoreCase("f")){
+                            f=true;
+                        }
+                        if (sub.getPoor().equalsIgnoreCase("f")){
+                            p=true;
+                        }
+                        if (sub.getSuppressPrint().equalsIgnoreCase("F")){
+                            hide=true;
+                        }
+                        if (sub.getNotInspected()==null || sub.getNotInspected().equalsIgnoreCase("")||sub.getNotInspected().equalsIgnoreCase("f")){
+                            na=true;
+                        }
+                        if (sub.getComments()==null||sub.getComments().equals("")){
+                            comment=true;
+                        }*/
+
+                if(((sub.getPoor().equalsIgnoreCase("t") || sub.getFair().equalsIgnoreCase("t"))
+                        && (sub.getComments() == null || sub.getComments().isEmpty()))
+                        || ((sub.getPoor().equalsIgnoreCase("f") && sub.getFair().equalsIgnoreCase("f") && sub.getGood().equalsIgnoreCase("f"))
+                        && (sub.getSuppressPrint().equalsIgnoreCase("f") && (sub.getNotInspected() == null || sub.getNotInspected().isEmpty() || sub.getNotInspected().equalsIgnoreCase("f"))))){
+                    errorCount++;
+                }
+
+                        /*if (g && f && p && hide && na && comment){
+                            Log.d(TAG, "onListItemClick: Array:"+sub.toString());
+                            errorCount++;
+                        }*/
+            }
+        }
+
+        Log.d(TAG, "onListItemClick: Error Count:"+errorCount);
+            tvErrorCount.setText("You have "+tvErrorCount+" errors");
     }
 
     private void initData() {
@@ -312,6 +359,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         addSectionAdapter.setData(addSectionList);
 
         selectSectionAdapter.setData(alSubSectionsOnly);
+        errorCount();
     }
 
     private void showGallary(int position) {
@@ -578,48 +626,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 uploadClicked = true;
                 InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
                 //showGallary(position);
-
-                int errorCount=0;
-                Log.d(TAG, "onListItemClick: Size:"+alSubSections.size());
-
-                for (SubSectionsItem sub:alSubSections){
-                    if (!Boolean.parseBoolean(sub.getIsHead())){
-
-                        /*boolean g=false,f=false,p=false,na=false,hide=false,comment=false;
-                        if (sub.getGood().equalsIgnoreCase("f")){
-                            g=true;
-                        }
-                        if (sub.getFair().equalsIgnoreCase("f")){
-                            f=true;
-                        }
-                        if (sub.getPoor().equalsIgnoreCase("f")){
-                            p=true;
-                        }
-                        if (sub.getSuppressPrint().equalsIgnoreCase("F")){
-                            hide=true;
-                        }
-                        if (sub.getNotInspected()==null || sub.getNotInspected().equalsIgnoreCase("")||sub.getNotInspected().equalsIgnoreCase("f")){
-                            na=true;
-                        }
-                        if (sub.getComments()==null||sub.getComments().equals("")){
-                            comment=true;
-                        }*/
-
-                        if(((sub.getPoor().equalsIgnoreCase("t") || sub.getFair().equalsIgnoreCase("t"))
-                                && (sub.getComments() == null || sub.getComments().isEmpty()))
-                                || ((sub.getPoor().equalsIgnoreCase("f") && sub.getFair().equalsIgnoreCase("f") && sub.getGood().equalsIgnoreCase("f"))
-                            && (sub.getSuppressPrint().equalsIgnoreCase("f") && (sub.getNotInspected() == null || sub.getNotInspected().isEmpty() || sub.getNotInspected().equalsIgnoreCase("f"))))){
-                            errorCount++;
-                        }
-
-                        /*if (g && f && p && hide && na && comment){
-                            Log.d(TAG, "onListItemClick: Array:"+sub.toString());
-                            errorCount++;
-                        }*/
-                    }
-                }
-
-                Log.d(TAG, "onListItemClick: Error Count:"+errorCount);
                 break;
             case R.id.btnPhoto:
                 currentSelectedLinePositionForImage = position;
@@ -1112,6 +1118,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             if(updateLineAdapter){
                 lineAdapter.notifyDataSetChanged();
             }
+            errorCount();
         }
     }
 
