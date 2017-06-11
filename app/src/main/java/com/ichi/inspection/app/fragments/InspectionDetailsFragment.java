@@ -204,7 +204,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         int errorCount=0;
         Log.d(TAG, "onListItemClick: Size:"+alSubSections.size());
 
-        for (SubSectionsItem sub:alSubSections){
+        List<SubSectionsItem> tmp = selectSection.getSubSections(""+orderListItem.getSequence());
+        Log.d(TAG, "errorCount: Size temp:"+tmp.size());
+        for (SubSectionsItem sub:tmp){
             if (!Boolean.parseBoolean(sub.getIsHead())){
 
                         /*boolean g=false,f=false,p=false,na=false,hide=false,comment=false;
@@ -242,7 +244,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
 
         Log.d(TAG, "onListItemClick: Error Count:"+errorCount);
-            tvErrorCount.setText("You have "+tvErrorCount+" errors");
+            tvErrorCount.setText("You have "+errorCount+" errors");
     }
 
     private void initData() {
