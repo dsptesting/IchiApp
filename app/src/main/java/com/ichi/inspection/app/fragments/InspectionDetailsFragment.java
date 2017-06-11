@@ -1,6 +1,7 @@
 package com.ichi.inspection.app.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -175,6 +176,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private List<String> markAllLines;
     MarkAllAdapter markAllAdapter;
     private boolean uploadClicked;
+
+    private AddSectionSelectedAsyncTask addSectionSelectedAsyncTask;
+    private TemplateSelectedAsyncTask templateSelectedAsyncTask;
+    private SubSectionSelectedAsyncTask subSectionSelectedAsyncTask;
+    private MarkAllSelectedAsyncTask markAllSelectedAsyncTask;
+    private ChangeStatusAsyncTask changeStatusAsyncTask;
 
     @Nullable
     @Override
@@ -562,12 +569,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     }
 
     @Override
-    public void onDestroy() {
-        if (masterAsyncTask != null && !masterAsyncTask.isCancelled()) masterAsyncTask.cancel(true);
-        super.onDestroy();
-    }
-
-    @Override
     public void onListItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.rlContainer:
@@ -614,59 +615,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     selectedIndexNamedTemplates = position;
 
                     if (selectedIndexNamedTemplates > 0) {
-                        NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
-                        //Log.v(TAG, "SelectedTemplates namedTemplatesItem: " + namedTemplatesItem);
-                        if (namedTemplatesItem != null) {
-
-                            /*List<TemplateItemsItem> templateItemsItems = templates.getHeaderSections(namedTemplatesItem.getNamedTemplateId());
-                            SubSectionsItem subSectionsItem;
-                            for(TemplateItemsItem templateItemsItem : templateItemsItems){
-                                subSectionsItem = Utils.convertTemplateToSubSection(getActivity(),templateItemsItem, ""+orderListItem.getSequence());
-                                if(!Utils.hasSubSection(alSubSections,subSectionsItem)){
-                                    alSubSections.add(subSectionsItem);
-                                }
-                            }*/
-
-                            List<TemplateItemsItem> templateItemsItems = templates.getTemplateItems(namedTemplatesItem.getNamedTemplateId());
-
-                            SubSectionsItem subSectionsItem;
-
-                            //Log.v(TAG, "templateItemsItems size " + templateItemsItems.size());
-
-                            if(selectSection == null){
-                                selectSection = new SelectSection();
-                            }
-                            List<SubSectionsItem> storedSubSections = selectSection.getSubSections(/*orderListItem.getSequence()+""*/);
-
-                            //Log.v(TAG,"storedSubSections sze: "+ storedSubSections.size());
-                            for (TemplateItemsItem templateItemsItem : templateItemsItems) {
-
-                                subSectionsItem = Utils.convertTemplateToSubSection(getActivity(), templateItemsItem, "" + orderListItem.getSequence());
-
-                                if (Boolean.parseBoolean(subSectionsItem.getIsHead()) && !Utils.hasSubSection(alSubSectionsOnly, subSectionsItem)) {
-
-                                    alSubSectionsOnly.add(subSectionsItem);
-                                }
-
-                                if (!Utils.hasSubSection(alSubSections, subSectionsItem)) {
-
-                                    alSubSections.add(subSectionsItem);
-                                }
-
-                                if(!Utils.hasSubSection(storedSubSections, subSectionsItem)){
-
-                                    storedSubSections.add(subSectionsItem);
-                                }
-                            }
-                            //Log.v(TAG,"storedSubSections sze after: "+ storedSubSections.size());
-                            selectSection.setSubSections(storedSubSections);
-                            prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
-
-                            //Log.v(TAG, "after selected new temp, alSubSections size: " + alSubSections.size());
-                            //Log.v(TAG, "after selected new temp, alSubSectionsOnly size: " + alSubSectionsOnly.size());
-
-                            selectSectionAdapter.setData(alSubSectionsOnly);
-                        }
+                        templateSelectedAsyncTask = new TemplateSelectedAsyncTask(getActivity(),true);
+                        templateSelectedAsyncTask.execute();
                     }
 
                 }
@@ -687,52 +637,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                     //TODO -1 is magic
                     selectedIndexAddSection = position-1;
-                    AddSectionItem selectedAddSectionItem = addSection.getHeaderItems().get(selectedIndexAddSection);
-                    if(selectedAddSectionItem != null){
+                    addSectionSelectedAsyncTask = new AddSectionSelectedAsyncTask(getActivity(),true);
+                    addSectionSelectedAsyncTask.execute(templateId);
 
-                        //TODO Ask if duplicate add section is allowed or not to Amit
-                        if(Utils.hasSubSection(alSubSections,selectedAddSectionItem)){
-                            Utils.showSnackBar(coordinatorLayout,"This section is already selected!");
-                            sAddSection.setSelection(0);
-                            return;
-                        }
-
-                        String sectionId = selectedAddSectionItem.getSectionId();
-                        if(sectionId != null && !sectionId.toString().trim().isEmpty() && Utils.isNumeric(sectionId.toString().trim())){
-                            int sectionIdNumberStart = Integer.parseInt(sectionId);
-                            int sectionIdNumberEnd = Integer.parseInt(sectionId.replace("00","99"));
-
-                            List<AddSectionItem> allAddSections = addSection.getItems();
-                            List<AddSectionItem> selectedAddSectionsItems = new ArrayList<>();
-                            for(int i=0;i<allAddSections.size();i++){
-                                if(Integer.parseInt(allAddSections.get(i).getSectionId()) > sectionIdNumberStart &&
-                                        Integer.parseInt(allAddSections.get(i).getSectionId()) < sectionIdNumberEnd){
-                                    selectedAddSectionsItems.add(allAddSections.get(i));
-                                }
-                            }
-
-                            List<SubSectionsItem> orgList = selectSection.getSubSections();
-                            SubSectionsItem subSectionsItemSectionOnly = Utils.convertAddSectionToSubSection(getActivity(), selectedAddSectionItem,""+ orderListItem.getSequence(),templateId);
-                            alSubSections.add(subSectionsItemSectionOnly);
-                            alSubSectionsOnly.add(subSectionsItemSectionOnly);
-                            orgList.add(subSectionsItemSectionOnly);
-
-                            for(AddSectionItem addSectionItem : selectedAddSectionsItems){
-                                SubSectionsItem subSectionsItemTemp = Utils.convertAddSectionItemToSubSection(getActivity(),addSectionItem,""+ orderListItem.getSequence(),templateId);
-                                alSubSections.add(subSectionsItemTemp);
-                                orgList.add(subSectionsItemTemp);
-                            }
-
-                            selectSectionAdapter.setData(alSubSectionsOnly);
-                            sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
-
-                            selectSection.setSubSections(orgList);
-                            prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
-
-                        }
-
-                    }
-                    //Log.v(TAG, "SelectedAddSection " + addSection.getHeaderItems().get(selectedIndexAddSection));
                 }
                 break;
 
@@ -741,27 +648,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                 if (alSubSectionsOnly.get(position).getContentType() != Constants.HEADER && position != -1) {
                     selectedIndexSelectSection = position;
-                    String selectedNamedTemplate = "-1";
-                    /*if(selectedIndexNamedTemplates != -1){
-                        namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
-                    }
-                    List<TemplateItemsItem> templateItemsItems = templates.getHeaderSections(selectedNamedTemplate);
-                    if(templateItemsItems != null){
-                        Log.v(TAG,"SelectSection "+ templateItemsItems.get(selectedIndexSelectSection));
-                    }*/
 
                     selectedsubSectionsItem = alSubSectionsOnly.get(selectedIndexSelectSection);
-                    if (selectedsubSectionsItem != null) {
-                        String usedHead = selectedsubSectionsItem.getUsedHead();
-                        alSubSectionsLines.clear();
-                        for (SubSectionsItem sub : alSubSections) {
-                            if (sub.getUsedHead().equalsIgnoreCase(usedHead) && !Boolean.parseBoolean(sub.getIsHead())) {
-                                alSubSectionsLines.add(sub);
-                            }
-                        }
-                    }
-                    //Log.v(TAG, "alSubSectionsLines: " + alSubSectionsLines);
-                    lineAdapter.setData(alSubSectionsLines);
+                    subSectionSelectedAsyncTask = new SubSectionSelectedAsyncTask(getActivity(),true);
+                    subSectionSelectedAsyncTask.execute();
                 }
                 else{
                     selectedIndexSelectSection = -1;
@@ -770,6 +660,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     lineAdapter.setData(alSubSectionsLines);
                 }
                 break;
+
             case R.id.sMarkAll:
                 if (position > 0) {
 
@@ -779,52 +670,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         return;
                     }
 
-                    for (int i = 0; i < alSubSectionsLines.size(); i++) {
-                        SubSectionsItem subSectionsItem = alSubSectionsLines.get(i);
-                        if (position == 1) {
-                            subSectionsItem.setGood("t");
-                            subSectionsItem.setFair("f");
-                            subSectionsItem.setPoor("f");
-                        } else if (position == 2) {
-                            subSectionsItem.setGood("f");
-                            subSectionsItem.setFair("t");
-                            subSectionsItem.setPoor("f");
-                        } else if (position == 3) {
-                            subSectionsItem.setGood("f");
-                            subSectionsItem.setFair("f");
-                            subSectionsItem.setPoor("t");
-                        } else if (position == 4) {
-                            subSectionsItem.setNotInspected("f");
-                            subSectionsItem.setSuppressPrint("t");
-                        } else if (position == 5) {
-                            subSectionsItem.setNotInspected("t");
-                            subSectionsItem.setSuppressPrint("f");
-                        }
-
-                        Utils.updateThisSubSection(getActivity(), subSectionsItem);
-
-                        for (SubSectionsItem sub : alSubSections) {
-                            if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
-                                alSubSections.remove(sub);
-                                alSubSections.add(position, subSectionsItem);
-                                break;
-                            }
-                        }
-
-                        List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
-                        if (temp != null && !temp.isEmpty()) {
-                            for (int j = 0; j < temp.size(); j++) {
-                                if (temp.get(j).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
-                                    temp.set(j, subSectionsItem);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    lineAdapter.notifyDataSetChanged();
-                    prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
-
+                    markAllSelectedAsyncTask = new MarkAllSelectedAsyncTask(getActivity(),true);
+                    markAllSelectedAsyncTask.execute(position);
                 }
                 break;
         }
@@ -997,7 +844,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.btnU:
             case R.id.btnNA:
             case R.id.btnHide:
-                changeLineStatus(subSectionsItem, position);
+                changeStatusAsyncTask = new ChangeStatusAsyncTask(getActivity(),true,subSectionsItem, position,false);
+                changeStatusAsyncTask.execute();
                 break;
             case R.id.llAddComment:
                 showCommentBox(subSectionsItem, position);
@@ -1028,8 +876,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     subSectionsItem.setComments(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
 
                     Utils.updateThisSubSection(mContext, subSectionsItem);
-                    changeLineStatus(subSectionsItem, position);
-                    lineAdapter.notifyDataSetChanged();
+
+                    changeStatusAsyncTask = new ChangeStatusAsyncTask(getActivity(),true,subSectionsItem, position,true);
+                    changeStatusAsyncTask.execute();
                 }
             }
         });
@@ -1111,34 +960,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
-    private void changeLineStatus(SubSectionsItem subSectionsItem, int position) {
-
-        boolean hasChanged = false;
-        for (SubSectionsItem sub : alSubSections) {
-            if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
-                alSubSections.remove(sub);
-                alSubSections.add(position, subSectionsItem);
-
-                hasChanged = true;
-                break;
-            }
-        }
-
-        if (hasChanged) {
-            List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
-            if (temp != null && !temp.isEmpty()) {
-                for (int i = 0; i < temp.size(); i++) {
-                    if (temp.get(i).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
-                        temp.set(i, subSectionsItem);
-                        prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
-                        break;
-                    }
-                }
-            }
-        }
-
-    }
-
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void showCamera() {
         Log.v(TAG, "showCamera called");
@@ -1192,4 +1013,347 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         InspectionDetailsFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
+
+    private class ChangeStatusAsyncTask extends AsyncTask<Void,Void,Void> {
+
+        Activity activity;
+        boolean showLoader;
+        SubSectionsItem subSectionsItem;
+        int position;
+        boolean updateLineAdapter;
+
+        public ChangeStatusAsyncTask(Activity activity, boolean showLoader, SubSectionsItem subSectionsItem, int position,boolean updateLineAdapter) {
+            this.activity = activity;
+            this.showLoader = showLoader;
+            this.subSectionsItem = subSectionsItem;
+            this.position = position;
+            this.updateLineAdapter = updateLineAdapter;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if (showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            boolean hasChanged = false;
+            for (SubSectionsItem sub : alSubSections) {
+                if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                    alSubSections.remove(sub);
+                    alSubSections.add(position, subSectionsItem);
+
+                    hasChanged = true;
+                    break;
+                }
+            }
+
+            if (hasChanged) {
+                List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+                if (temp != null && !temp.isEmpty()) {
+                    for (int i = 0; i < temp.size(); i++) {
+                        if (temp.get(i).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                            temp.set(i, subSectionsItem);
+                            prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+                            break;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(showLoader) Utils.hideProgressBar(getActivity());
+            if(updateLineAdapter){
+                lineAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    private class TemplateSelectedAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        Activity activity;
+        boolean showLoader;
+
+        public TemplateSelectedAsyncTask(Activity activity, boolean showLoader) {
+            this.activity = activity;
+            this.showLoader = showLoader;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            NamedTemplatesItem namedTemplatesItem = namedTemplates.getNamedTemplatesItems().get(selectedIndexNamedTemplates);
+
+            if (namedTemplatesItem != null) {
+
+                List<TemplateItemsItem> templateItemsItems = templates.getTemplateItems(namedTemplatesItem.getNamedTemplateId());
+
+                SubSectionsItem subSectionsItem;
+
+                if(selectSection == null){
+                    selectSection = new SelectSection();
+                }
+                List<SubSectionsItem> storedSubSections = selectSection.getSubSections();
+
+                for (TemplateItemsItem templateItemsItem : templateItemsItems) {
+
+                    subSectionsItem = Utils.convertTemplateToSubSection(getActivity(), templateItemsItem, "" + orderListItem.getSequence());
+
+                    if (Boolean.parseBoolean(subSectionsItem.getIsHead()) && !Utils.hasSubSection(alSubSectionsOnly, subSectionsItem)) {
+
+                        alSubSectionsOnly.add(subSectionsItem);
+                    }
+
+                    if (!Utils.hasSubSection(alSubSections, subSectionsItem)) {
+
+                        alSubSections.add(subSectionsItem);
+                    }
+
+                    if(!Utils.hasSubSection(storedSubSections, subSectionsItem)){
+
+                        storedSubSections.add(subSectionsItem);
+                    }
+                }
+
+                selectSection.setSubSections(storedSubSections);
+                prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
+
+                if(activity != null){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            selectSectionAdapter.setData(alSubSectionsOnly);
+                        }
+                    });
+                }
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(showLoader) Utils.hideProgressBar(getActivity());
+        }
+    }
+
+    private class SubSectionSelectedAsyncTask extends AsyncTask<String,Void,Void>{
+
+        Activity activity;
+        boolean showLoader;
+
+        public SubSectionSelectedAsyncTask(Activity activity, boolean showLoader) {
+            this.activity = activity;
+            this.showLoader = showLoader;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            if (selectedsubSectionsItem != null) {
+                String usedHead = selectedsubSectionsItem.getUsedHead();
+                alSubSectionsLines.clear();
+                for (SubSectionsItem sub : alSubSections) {
+                    if (sub.getUsedHead().equalsIgnoreCase(usedHead) && !Boolean.parseBoolean(sub.getIsHead())) {
+                        alSubSectionsLines.add(sub);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            lineAdapter.setData(alSubSectionsLines);
+            if(showLoader) Utils.hideProgressBar(getActivity());
+        }
+    }
+
+    private class MarkAllSelectedAsyncTask extends AsyncTask<Integer,Void,Void>{
+
+        Activity activity;
+        boolean showLoader;
+
+        public MarkAllSelectedAsyncTask(Activity activity, boolean showLoader) {
+            this.activity = activity;
+            this.showLoader = showLoader;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+
+            int position = params[0];
+
+            for (int i = 0; i < alSubSectionsLines.size(); i++) {
+                SubSectionsItem subSectionsItem = alSubSectionsLines.get(i);
+                if (position == 1) {
+                    subSectionsItem.setGood("t");
+                    subSectionsItem.setFair("f");
+                    subSectionsItem.setPoor("f");
+                } else if (position == 2) {
+                    subSectionsItem.setGood("f");
+                    subSectionsItem.setFair("t");
+                    subSectionsItem.setPoor("f");
+                } else if (position == 3) {
+                    subSectionsItem.setGood("f");
+                    subSectionsItem.setFair("f");
+                    subSectionsItem.setPoor("t");
+                } else if (position == 4) {
+                    subSectionsItem.setNotInspected("f");
+                    subSectionsItem.setSuppressPrint("t");
+                } else if (position == 5) {
+                    subSectionsItem.setNotInspected("t");
+                    subSectionsItem.setSuppressPrint("f");
+                }
+
+                Utils.updateThisSubSection(getActivity(), subSectionsItem);
+
+                for (SubSectionsItem sub : alSubSections) {
+                    if (sub.getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                        alSubSections.remove(sub);
+                        alSubSections.add(position, subSectionsItem);
+                        break;
+                    }
+                }
+
+                List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+                if (temp != null && !temp.isEmpty()) {
+                    for (int j = 0; j < temp.size(); j++) {
+                        if (temp.get(j).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {
+                            temp.set(j, subSectionsItem);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            lineAdapter.notifyDataSetChanged();
+            if(showLoader) Utils.hideProgressBar(getActivity());
+        }
+
+    }
+
+    private class AddSectionSelectedAsyncTask extends AsyncTask<String,Void,Void>{
+
+        Activity activity;
+        boolean showLoader;
+
+        public AddSectionSelectedAsyncTask(Activity activity, boolean showLoader) {
+            this.activity = activity;
+            this.showLoader = showLoader;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            String templateId = params[0];
+
+            AddSectionItem selectedAddSectionItem = addSection.getHeaderItems().get(selectedIndexAddSection);
+            if(selectedAddSectionItem != null){
+
+                //TODO Ask if duplicate add section is allowed or not to Amit
+                if(Utils.hasSubSection(alSubSections,selectedAddSectionItem)){
+                    Utils.showSnackBar(coordinatorLayout,"This section is already selected!");
+                    if(activity != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                sAddSection.setSelection(0);
+                            }
+                        });
+                    }
+                    return null;
+                }
+
+                String sectionId = selectedAddSectionItem.getSectionId();
+                if(sectionId != null && !sectionId.toString().trim().isEmpty() && Utils.isNumeric(sectionId.toString().trim())){
+                    int sectionIdNumberStart = Integer.parseInt(sectionId);
+                    int sectionIdNumberEnd = Integer.parseInt(sectionId.replace("00","99"));
+
+                    List<AddSectionItem> allAddSections = addSection.getItems();
+                    List<AddSectionItem> selectedAddSectionsItems = new ArrayList<>();
+                    for(int i=0;i<allAddSections.size();i++){
+                        if(Integer.parseInt(allAddSections.get(i).getSectionId()) > sectionIdNumberStart &&
+                                Integer.parseInt(allAddSections.get(i).getSectionId()) < sectionIdNumberEnd){
+                            selectedAddSectionsItems.add(allAddSections.get(i));
+                        }
+                    }
+
+                    List<SubSectionsItem> orgList = selectSection.getSubSections();
+                    SubSectionsItem subSectionsItemSectionOnly = Utils.convertAddSectionToSubSection(getActivity(), selectedAddSectionItem,""+ orderListItem.getSequence(),templateId);
+                    alSubSections.add(subSectionsItemSectionOnly);
+                    alSubSectionsOnly.add(subSectionsItemSectionOnly);
+                    orgList.add(subSectionsItemSectionOnly);
+
+                    for(AddSectionItem addSectionItem : selectedAddSectionsItems){
+                        SubSectionsItem subSectionsItemTemp = Utils.convertAddSectionItemToSubSection(getActivity(),addSectionItem,""+ orderListItem.getSequence(),templateId);
+                        alSubSections.add(subSectionsItemTemp);
+                        orgList.add(subSectionsItemTemp);
+                    }
+
+                    if(activity != null){
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                selectSectionAdapter.setData(alSubSectionsOnly);
+                                sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
+                            }
+                        });
+                    }
+
+                    selectSection.setSubSections(orgList);
+                    prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(showLoader) Utils.hideProgressBar(getActivity());
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (masterAsyncTask != null && !masterAsyncTask.isCancelled()) masterAsyncTask.cancel(true);
+        if(addSectionSelectedAsyncTask != null && !addSectionSelectedAsyncTask.isCancelled()) addSectionSelectedAsyncTask.cancel(true);
+        if(templateSelectedAsyncTask != null && !templateSelectedAsyncTask.isCancelled()) templateSelectedAsyncTask.cancel(true);
+        if(subSectionSelectedAsyncTask != null && !subSectionSelectedAsyncTask.isCancelled()) subSectionSelectedAsyncTask.cancel(true);
+        if(markAllSelectedAsyncTask != null && !markAllSelectedAsyncTask.isCancelled()) markAllSelectedAsyncTask.cancel(true);
+
+        super.onDestroy();
+    }
+
 }

@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -13,6 +14,11 @@ import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.models.AddSection;
@@ -401,4 +407,59 @@ public class Utils {
         prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
         Log.v(TAG,"inspection updated");
     }
+
+    /**
+     * Display progressbar dialog
+     * @param activity
+     */
+    public static void showProgressBar(Activity activity) {
+        try {
+            if (activity != null) {
+                LayoutInflater inflater = LayoutInflater.from(activity);
+                View contentView = inflater.inflate(R.layout.loading_layout, null);
+                ProgressBar progressBar = (ProgressBar) contentView.findViewById(R.id.progressbar);
+                /*progressBar.setIndeterminateDrawable(new CircularProgressDrawable
+                        .Builder(activity)
+                        .colors(activity.getResources().getIntArray(R.array.progress_bar_colors))
+                        .sweepSpeed(2f)
+                        .strokeWidth(8f)
+                        .style(CircularProgressDrawable.Style.ROUNDED)
+                        .build());*/
+
+                popupDialog = new Dialog(activity);
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(popupDialog.getWindow().getAttributes());
+                popupDialog.getWindow().setAttributes(lp);
+                popupDialog.setCancelable(false);
+                popupDialog.setCanceledOnTouchOutside(false);
+                popupDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                popupDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.cancel();
+                    }
+                });
+                popupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                popupDialog.setContentView(contentView);
+
+                popupDialog.show();
+            }
+            //}
+        } catch (Exception e) {
+            if (Constants.showErrorMessages) Log.e(TAG, e.toString());
+            if (Constants.showStackTrace) e.printStackTrace();
+        }
+    }
+
+    /**
+     * Remove progressbar dialog
+     *
+     * @param activity
+     */
+    public static void hideProgressBar(Activity activity) {
+        if (activity != null && !activity.isFinishing() && popupDialog != null) {
+            popupDialog.cancel();
+        }
+    }
+
 }
