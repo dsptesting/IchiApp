@@ -625,7 +625,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.sAddSection:
                 if (position > 0) {
 
-                    String templateId = getTemplateIdFromSections(0);
+                    /*String templateId = getTemplateIdFromSections(0);
                     if (templateId == null || templateId.isEmpty()) {
 
                         Utils.showSnackBar(coordinatorLayout,"Select Template first!");
@@ -633,13 +633,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         return;
                     }
 
-                    Log.v(TAG,"template ID got : "+ templateId);
+                    Log.v(TAG,"template ID got : "+ templateId);*/
 
 
                     //TODO -1 is magic
                     selectedIndexAddSection = position-1;
                     addSectionSelectedAsyncTask = new AddSectionSelectedAsyncTask(getActivity(),true);
-                    addSectionSelectedAsyncTask.execute(templateId);
+                    addSectionSelectedAsyncTask.execute();
 
                 }
                 break;
@@ -1260,7 +1260,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
-    private class AddSectionSelectedAsyncTask extends AsyncTask<String,Void,Void>{
+    private class AddSectionSelectedAsyncTask extends AsyncTask<Void,Void,Boolean>{
 
         Activity activity;
         boolean showLoader;
@@ -1276,9 +1276,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Boolean doInBackground(Void... params) {
 
-            String templateId = params[0];
+            String templateId = "0";
 
             AddSectionItem selectedAddSectionItem = addSection.getHeaderItems().get(selectedIndexAddSection);
             if(selectedAddSectionItem != null){
@@ -1294,7 +1294,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                             }
                         });
                     }
-                    return null;
+                    return false;
                 }
 
                 String sectionId = selectedAddSectionItem.getSectionId();
@@ -1328,21 +1328,23 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                             @Override
                             public void run() {
                                 selectSectionAdapter.setData(alSubSectionsOnly);
-                                sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
+
                             }
                         });
                     }
 
                     selectSection.setSubSections(orgList);
                     prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
+                    return true;
                 }
             }
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Boolean aVoid) {
             if(showLoader) Utils.hideProgressBar(getActivity());
+            if(aVoid) sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
         }
     }
 

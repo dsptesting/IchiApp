@@ -417,14 +417,6 @@ public class Utils {
             if (activity != null) {
                 LayoutInflater inflater = LayoutInflater.from(activity);
                 View contentView = inflater.inflate(R.layout.loading_layout, null);
-                ProgressBar progressBar = (ProgressBar) contentView.findViewById(R.id.progressbar);
-                /*progressBar.setIndeterminateDrawable(new CircularProgressDrawable
-                        .Builder(activity)
-                        .colors(activity.getResources().getIntArray(R.array.progress_bar_colors))
-                        .sweepSpeed(2f)
-                        .strokeWidth(8f)
-                        .style(CircularProgressDrawable.Style.ROUNDED)
-                        .build());*/
 
                 popupDialog = new Dialog(activity);
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
