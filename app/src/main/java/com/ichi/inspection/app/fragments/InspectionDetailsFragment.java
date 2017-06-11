@@ -287,7 +287,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if (selectSection != null) {
             List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
             if (temp != null && !temp.isEmpty()) {
-                //alSubSections.clear();
+                alSubSections.clear();
                 //this will include sections, lines which are already selected... new selected template's lines and sections are going to be entered here too..
                 alSubSections.addAll(temp);
 
@@ -579,6 +579,47 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
                 //showGallary(position);
 
+                int errorCount=0;
+                Log.d(TAG, "onListItemClick: Size:"+alSubSections.size());
+
+                for (SubSectionsItem sub:alSubSections){
+                    if (!Boolean.parseBoolean(sub.getIsHead())){
+
+                        /*boolean g=false,f=false,p=false,na=false,hide=false,comment=false;
+                        if (sub.getGood().equalsIgnoreCase("f")){
+                            g=true;
+                        }
+                        if (sub.getFair().equalsIgnoreCase("f")){
+                            f=true;
+                        }
+                        if (sub.getPoor().equalsIgnoreCase("f")){
+                            p=true;
+                        }
+                        if (sub.getSuppressPrint().equalsIgnoreCase("F")){
+                            hide=true;
+                        }
+                        if (sub.getNotInspected()==null || sub.getNotInspected().equalsIgnoreCase("")||sub.getNotInspected().equalsIgnoreCase("f")){
+                            na=true;
+                        }
+                        if (sub.getComments()==null||sub.getComments().equals("")){
+                            comment=true;
+                        }*/
+
+                        if(((sub.getPoor().equalsIgnoreCase("t") || sub.getFair().equalsIgnoreCase("t"))
+                                && (sub.getComments() == null || sub.getComments().isEmpty()))
+                                || ((sub.getPoor().equalsIgnoreCase("f") && sub.getFair().equalsIgnoreCase("f") && sub.getGood().equalsIgnoreCase("f"))
+                            && (sub.getSuppressPrint().equalsIgnoreCase("f") && (sub.getNotInspected() == null || sub.getNotInspected().isEmpty() || sub.getNotInspected().equalsIgnoreCase("f"))))){
+                            errorCount++;
+                        }
+
+                        /*if (g && f && p && hide && na && comment){
+                            Log.d(TAG, "onListItemClick: Array:"+sub.toString());
+                            errorCount++;
+                        }*/
+                    }
+                }
+
+                Log.d(TAG, "onListItemClick: Error Count:"+errorCount);
                 break;
             case R.id.btnPhoto:
                 currentSelectedLinePositionForImage = position;
