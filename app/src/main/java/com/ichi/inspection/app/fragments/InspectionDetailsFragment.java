@@ -370,7 +370,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     //Create Image Name
                     String orderNum = String.valueOf(orderListItem.getIONum());
                     SubSectionsItem updatedSubSection = alSubSectionsLines.get(currentSelectedLinePositionForImage);
-                    String lineIONum = alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId();
+                    String lineIONum = updatedSubSection.getIOLineId();
                     String imageName = null;
                     String extension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
                     uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
@@ -378,13 +378,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     Log.d(TAG, "onImagePicked: array size:" + uris.size());
 
                     if (uris.size() == 0) {
-                        String noe = "0";
+                        String noe;
                         noe = alSubSectionsLines.get(currentSelectedLinePositionForImage).getNumberOfExposures();
                         if (noe == null || noe.equalsIgnoreCase("") || noe.isEmpty()) {
                             noe = "0";
                         }
-                        int numofEX = Integer.parseInt(noe);
-                        imageName = orderNum + "_" + lineIONum + "_" + numofEX + extension;
+                        imageName = orderNum + "_" + lineIONum + "_" + noe + extension;
                     } else {
                         File fileUri = new File(uris.get(uris.size() - 1));
                         String lastImageName = fileUri.getName();
@@ -419,6 +418,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         destination.close();
                     }
 
+                    Log.v(TAG,"copied");
                     if (currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null) {
 
                         uris.add(file.getAbsolutePath());
@@ -578,6 +578,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 uploadClicked = true;
                 InspectionDetailsFragmentPermissionsDispatcher.showCameraWithCheck(this);
                 //showGallary(position);
+
                 break;
             case R.id.btnPhoto:
                 currentSelectedLinePositionForImage = position;
@@ -960,7 +961,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     }
 
-    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA})
     void showCamera() {
         Log.v(TAG, "showCamera called");
         if (uploadClicked) {
@@ -979,7 +980,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    @OnShowRationale({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnShowRationale({Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA})
     void showRationaleForCamera(final PermissionRequest request) {
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.permission_camera_rationale)
@@ -998,12 +999,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 .show();
     }
 
-    @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA})
     void showDeniedForCamera() {
         Utils.showSnackBar(coordinatorLayout, getString(R.string.permission_camera_denied));
     }
 
-    @OnNeverAskAgain({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnNeverAskAgain({Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA})
     void showNeverAskForCamera() {
         Utils.showSnackBar(coordinatorLayout, getString(R.string.permission_camera_never_askagain));
     }
