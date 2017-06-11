@@ -1,23 +1,19 @@
 package com.ichi.inspection.app.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.interfaces.OnListItemLongClickListener;
-import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.utils.SquareImageView;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,10 +24,12 @@ import butterknife.ButterKnife;
 
 public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGridHolder>{
     ArrayList<String> images;
+    private Context mContext;
     private OnListItemClickListener onListItemClickListener;
     private OnListItemLongClickListener onListItemLongClickListener;
     public GridViewAdapter(Context mContext, ArrayList<String> images, OnListItemClickListener onListItemClickListener, OnListItemLongClickListener onListItemLongClickListener){
         this.images=images;
+        this.mContext = mContext;
         this.onListItemClickListener=onListItemClickListener;
         this.onListItemLongClickListener=onListItemLongClickListener;
     }
@@ -47,7 +45,10 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGrid
 
     @Override
     public void onBindViewHolder(MyGridHolder holder, int position) {
-        holder.imageView.setImageURI(Uri.parse(images.get(position)));
+        Glide.with(mContext)
+                .load(new File(images.get(position))) // Uri of the picture
+                .into(holder.imageView);
+        //holder.imageView.setImageURI(Uri.parse(images.get(position)));
     }
 
     @Override

@@ -138,5 +138,8 @@ public class PreferencesHelper {
         prefs.putObject(Constants.PREF_TOKEN_OBJECT , getTokenResponse);
     }
 
+    public void clearSavedToken(){
+        if(prefsEditor != null) prefsEditor.remove(Constants.PREF_TOKEN_OBJECT).commit();
+    }
 
 }

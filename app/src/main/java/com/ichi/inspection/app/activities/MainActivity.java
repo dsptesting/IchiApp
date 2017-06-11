@@ -166,7 +166,7 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(MainActivity.this, StartActivity.class);
                 startActivity(intent);
                 finish();
-                prefs.clear();
+                prefs.clearSavedToken();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
