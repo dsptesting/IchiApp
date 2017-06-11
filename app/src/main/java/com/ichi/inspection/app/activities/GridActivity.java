@@ -113,6 +113,7 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
                         mBottomSheetDialog.dismiss();
                         File file=new File(removeImageUri);
                         file.delete();
+
                     }
                 });
                 mBottomSheetDialog.show();

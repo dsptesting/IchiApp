@@ -1306,6 +1306,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         protected void onPostExecute(Void aVoid) {
             lineAdapter.notifyDataSetChanged();
             if(showLoader) Utils.hideProgressBar(getActivity());
+            errorCount();
         }
 
     }
