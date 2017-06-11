@@ -242,7 +242,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
 
         Log.d(TAG, "onListItemClick: Error Count:"+errorCount);
-            tvErrorCount.setText("You have "+tvErrorCount+" errors");
+        tvErrorCount.setText("You have "+errorCount+" errors");
     }
 
     private void initData() {
