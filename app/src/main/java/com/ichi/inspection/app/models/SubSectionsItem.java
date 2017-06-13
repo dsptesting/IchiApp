@@ -61,6 +61,7 @@ public class SubSectionsItem{
 
     private String templatedId;
 	private int contentType;
+	private int status;
 
     public SubSectionsItem() {
         this.imageURIs = new ArrayList<>();
@@ -103,7 +104,16 @@ public class SubSectionsItem{
 				", imageURIs=" + imageURIs +
 				", templatedId='" + templatedId + '\'' +
 				", contentType=" + contentType +
+				", status=" + status +
 				'}';
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public int getContentType() {

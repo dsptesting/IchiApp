@@ -268,6 +268,7 @@ public class Utils {
         subSectionsItem.setNumberOfExposures("");
         subSectionsItem.setVeryPoor("f");
         subSectionsItem.setTemplatedId(templateItemsItem.getNamedTemplateId());
+        subSectionsItem.setStatus(Constants.ADDED);
 
         return subSectionsItem;
     }
@@ -300,6 +301,7 @@ public class Utils {
         subSectionsItem.setNumberOfExposures("");
         subSectionsItem.setVeryPoor("f");
         subSectionsItem.setTemplatedId(templateId);
+        subSectionsItem.setStatus(Constants.ADDED);
 
         return subSectionsItem;
     }
@@ -332,6 +334,7 @@ public class Utils {
         subSectionsItem.setNumberOfExposures("");
         subSectionsItem.setVeryPoor("f");
         subSectionsItem.setTemplatedId(templateId);
+        subSectionsItem.setStatus(Constants.ADDED);
 
         return subSectionsItem;
     }
@@ -389,23 +392,33 @@ public class Utils {
     public static void updateThisSubSection(Context context, SubSectionsItem subSectionsItem) {
         if(subSectionsItem == null) return;
         PreferencesHelper prefs = PreferencesHelper.getInstance(context);
+        boolean found = false;
+        List<String> orderUpdates = null;
+        OrderUpdateContainer orderUpdateContainer = null;
 
         if(!prefs.contains(Constants.PREF_ORDER_UPDATE)){
-            OrderUpdateContainer orderUpdateContainer = new OrderUpdateContainer();
-            prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
+            orderUpdateContainer = new OrderUpdateContainer();
+            orderUpdates = orderUpdateContainer.getOrderUpdatesList();
         }
+        else{
+            orderUpdateContainer = (OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE, OrderUpdateContainer.class);
+            if(orderUpdateContainer != null && orderUpdateContainer.getOrderUpdatesList() != null && !orderUpdateContainer.getOrderUpdatesList().isEmpty()){
+                orderUpdates = orderUpdateContainer.getOrderUpdatesList();
 
-        OrderUpdateContainer orderUpdateContainer = (OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE, OrderUpdateContainer.class);
-        if(orderUpdateContainer != null && orderUpdateContainer.getOrderUpdatesList() != null && !orderUpdateContainer.getOrderUpdatesList().isEmpty()){
-            List<OrderUpdates> orderUpdates = orderUpdateContainer.getOrderUpdatesList();
-            for(OrderUpdates orderUpdate : orderUpdates){
-                if(subSectionsItem.getInspectionId().equalsIgnoreCase(orderUpdate.getInspectionId())){
-                    orderUpdate.setUpdated(true);
+                for(String inspectionId : orderUpdates){
+                    if(subSectionsItem.getInspectionId().equalsIgnoreCase(inspectionId)){
+                        found = true;
+                    }
                 }
             }
         }
-        prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
-        Log.v(TAG,"inspection updated");
+
+
+        if(!found){
+            orderUpdates.add(subSectionsItem.getInspectionId());
+            prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
+            Log.v(TAG,"inspection updated");
+        }
     }
 
     /**

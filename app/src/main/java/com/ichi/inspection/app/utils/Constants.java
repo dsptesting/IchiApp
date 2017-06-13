@@ -30,6 +30,8 @@ public class Constants {
     public static final String INTENT_FROM = "FROM";
     public static final String PREF_GLOBAL_NUMBER = "PREF_GLOBAL_NUMBER";
     public static final int HEADER = 1;
+    public static final int ADDED = 1;
+    public static final int DELETED = 2;
 
     public static boolean showDebugMessages = debugging;
     public static boolean showInfoMessages = debugging;

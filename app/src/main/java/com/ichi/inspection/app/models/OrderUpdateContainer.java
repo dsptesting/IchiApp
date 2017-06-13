@@ -9,7 +9,7 @@ import java.util.List;
 
 public class OrderUpdateContainer {
 
-    private List<OrderUpdates> orderUpdatesList;
+    private List<String> orderUpdatesList;
 
     public OrderUpdateContainer() {
         this.orderUpdatesList = new ArrayList<>();
@@ -22,11 +22,11 @@ public class OrderUpdateContainer {
                 '}';
     }
 
-    public List<OrderUpdates> getOrderUpdatesList() {
+    public List<String> getOrderUpdatesList() {
         return orderUpdatesList;
     }
 
-    public void setOrderUpdatesList(List<OrderUpdates> orderUpdatesList) {
+    public void setOrderUpdatesList(List<String> orderUpdatesList) {
         this.orderUpdatesList = orderUpdatesList;
     }
 }

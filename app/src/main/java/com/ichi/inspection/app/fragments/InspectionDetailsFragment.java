@@ -195,7 +195,11 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         mContext = getActivity();
         setHasOptionsMenu(true);
         initData();
-        EasyImage.configuration(mContext).saveInAppExternalFilesDir().saveInRootPicturesDirectory().setCopyExistingPicturesToPublicLocation(true);
+        /*EasyImage.configuration(mContext).saveInAppExternalFilesDir().
+                saveInRootPicturesDirectory().
+                setCopyExistingPicturesToPublicLocation(true);*/
+
+        EasyImage.configuration(getActivity()).setAllowMultiplePickInGallery(true);
         getMasterList();
 
         return view;
@@ -344,7 +348,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 alSubSectionsOnly.clear();
                 alSubSectionsOnly.add(new SubSectionsItem("Select option",Constants.HEADER));
                 for (SubSectionsItem sub : alSubSections) {
-                    if (Boolean.parseBoolean(sub.getIsHead())) {
+                    if (Boolean.parseBoolean(sub.getIsHead()) && sub.getStatus() != Constants.DELETED) {
                         alSubSectionsOnly.add(sub);
                     }
                 }
@@ -402,107 +406,109 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
 
             @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source1, int type) {
-                Log.v(TAG, "imageFile file : " + imageFile.getAbsolutePath());
-                Log.d(TAG, "onImagePicked: " + imageFile.getAbsolutePath());
-                Log.d(TAG, "onImagePicked: ");
-                File file = null;
-                String name ="";
-                ArrayList<String> uris = null;
-                //TODO copy file to our folder..
-                try {
-                    File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                    File createDir = new File(root + "/ICHI" + File.separator);
-                    if (!createDir.exists()) {
-                        createDir.mkdir();
-                    }
+            public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
 
-                    //Create Image Name
-                    String orderNum = String.valueOf(orderListItem.getIONum());
-                    SubSectionsItem updatedSubSection = alSubSectionsLines.get(currentSelectedLinePositionForImage);
-                    String lineIONum = updatedSubSection.getIOLineId();
-                    String imageName = null;
-                    String extension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
-                    uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
-                    name = alSubSectionsLines.get(currentSelectedLinePositionForImage).getName();
-                    Log.d(TAG, "onImagePicked: array size:" + uris.size());
-
-                    if (uris.size() == 0) {
-                        String noe;
-                        noe = alSubSectionsLines.get(currentSelectedLinePositionForImage).getNumberOfExposures();
-                        if (noe == null || noe.equalsIgnoreCase("") || noe.isEmpty()) {
-                            noe = "0";
+                for(int i= 0;i<imageFiles.size();i++){
+                    File imageFile = imageFiles.get(i);
+                    Log.v(TAG, "imageFile file : " + imageFile.getAbsolutePath());
+                    Log.d(TAG, "onImagePicked: " + imageFile.getAbsolutePath());
+                    Log.d(TAG, "onImagePicked: ");
+                    File file = null;
+                    String name ="";
+                    ArrayList<String> uris = null;
+                    //TODO copy file to our folder..
+                    try {
+                        File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                        File createDir = new File(root + "/ICHI" + File.separator);
+                        if (!createDir.exists()) {
+                            createDir.mkdir();
                         }
-                        imageName = orderNum + "_" + lineIONum + "_" + noe + extension;
-                    } else {
-                        File fileUri = new File(uris.get(uris.size() - 1));
-                        String lastImageName = fileUri.getName();
-                        Log.d(TAG, "onImagePicked: lastImage:" + lastImageName);
-                        String li = lastImageName.substring(0, lastImageName.lastIndexOf("."));
-                        Log.d(TAG, "onImagePicked: With Ext:" + li);
-                        int lastNum = Integer.parseInt(li.split("_")[2]);
-                        lastNum++;
-                        imageName = orderNum + "_" + lineIONum + "_" + lastNum + extension;
-                    }
 
-                    Log.d(TAG, "onImagePicked: array:" + uris.toString());
-                    Log.d(TAG, "onImagePicked: name:" + imageName);
+                        //Create Image Name
+                        String orderNum = String.valueOf(orderListItem.getIONum());
+                        SubSectionsItem updatedSubSection = alSubSectionsLines.get(currentSelectedLinePositionForImage);
+                        String lineIONum = updatedSubSection.getIOLineId();
+                        String imageName = null;
+                        String extension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
+                        uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
+                        name = alSubSectionsLines.get(currentSelectedLinePositionForImage).getName();
+                        Log.d(TAG, "onImagePicked: array size:" + uris.size());
 
-                    file = new File(root + "/ICHI" + File.separator + imageName);
-                    file.createNewFile();
-
-                    Log.d(TAG, "onImagePicked: FileName: " + file.getName());
-
-                    //Copy Image
-                    FileChannel source = null;
-                    FileChannel destination = null;
-                    source = new FileInputStream(imageFile).getChannel();
-                    destination = new FileOutputStream(file).getChannel();
-                    if (destination != null && source != null) {
-                        destination.transferFrom(source, 0, source.size());
-                    }
-                    if (source != null) {
-                        source.close();
-                    }
-                    if (destination != null) {
-                        destination.close();
-                    }
-
-                    Log.v(TAG,"copied");
-                    if (currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null) {
-
-                        uris.add(file.getAbsolutePath());
-                        //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
-
-                        for (SubSectionsItem subSectionsItem : alSubSections) {
-                            if (subSectionsItem.getIOLineId().equalsIgnoreCase(lineIONum)){
-                                subSectionsItem.setImageURIs(uris);
+                        if (uris.size() == 0) {
+                            String noe;
+                            noe = alSubSectionsLines.get(currentSelectedLinePositionForImage).getNumberOfExposures();
+                            if (noe == null || noe.equalsIgnoreCase("") || noe.isEmpty()) {
+                                noe = "0";
                             }
+                            imageName = orderNum + "_" + lineIONum + "_" + noe + extension;
+                        } else {
+                            File fileUri = new File(uris.get(uris.size() - 1));
+                            String lastImageName = fileUri.getName();
+                            Log.d(TAG, "onImagePicked: lastImage:" + lastImageName);
+                            String li = lastImageName.substring(0, lastImageName.lastIndexOf("."));
+                            Log.d(TAG, "onImagePicked: With Ext:" + li);
+                            int lastNum = Integer.parseInt(li.split("_")[2]);
+                            lastNum++;
+                            imageName = orderNum + "_" + lineIONum + "_" + lastNum + extension;
                         }
 
-                        List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
-                        if (temp != null && !temp.isEmpty()) {
-                            for (int j = 0; j < temp.size(); j++) {
-                                if (temp.get(j).getIOLineId().equalsIgnoreCase(lineIONum)) {
-                                    temp.set(j, updatedSubSection);
-                                    break;
+                        Log.d(TAG, "onImagePicked: array:" + uris.toString());
+                        Log.d(TAG, "onImagePicked: name:" + imageName);
+
+                        file = new File(root + "/ICHI" + File.separator + imageName);
+                        file.createNewFile();
+
+                        Log.d(TAG, "onImagePicked: FileName: " + file.getName());
+
+                        //Copy Image
+                        FileChannel source = null;
+                        FileChannel destination = null;
+                        source = new FileInputStream(imageFile).getChannel();
+                        destination = new FileOutputStream(file).getChannel();
+                        if (destination != null && source != null) {
+                            destination.transferFrom(source, 0, source.size());
+                        }
+                        if (source != null) {
+                            source.close();
+                        }
+                        if (destination != null) {
+                            destination.close();
+                        }
+
+                        Log.v(TAG,"copied");
+                        if (currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null) {
+
+                            uris.add(file.getAbsolutePath());
+                            //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
+
+                            for (SubSectionsItem subSectionsItem : alSubSections) {
+                                if (subSectionsItem.getIOLineId().equalsIgnoreCase(lineIONum)){
+                                    subSectionsItem.setImageURIs(uris);
                                 }
                             }
+
+                            List<SubSectionsItem> temp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
+                            if (temp != null && !temp.isEmpty()) {
+                                for (int j = 0; j < temp.size(); j++) {
+                                    if (temp.get(j).getIOLineId().equalsIgnoreCase(lineIONum)) {
+                                        temp.set(j, updatedSubSection);
+                                        break;
+                                    }
+                                }
+                            }
+                            prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+
+                            Intent intent = new Intent(mContext, GridActivity.class);
+                            intent.putExtra("name",name);
+                            intent.putStringArrayListExtra("URIs", uris);
+                            startActivity(intent);
                         }
-                        prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
-
-                        Intent intent = new Intent(mContext, GridActivity.class);
-                        intent.putExtra("name",name);
-                        intent.putStringArrayListExtra("URIs", uris);
-                        startActivity(intent);
+                    } catch (IOException e) {
+                        Log.d(TAG, "onImagePicked error: " + e.getMessage());
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    Log.d(TAG, "onImagePicked error: " + e.getMessage());
-                    e.printStackTrace();
                 }
-
             }
-
         });
     }
 
@@ -782,7 +788,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         }
                     }
 
-                    List<SubSectionsItem> selectTemp = selectSection.getSubSections("" + orderListItem.getSequence());
+                    List<SubSectionsItem> selectTemp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
                     for (int p = 0; p < selectTemp.size(); p++) {
                         if (selectTemp.get(p).getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
                                 selectTemp.get(p).getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
@@ -815,56 +821,40 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if (selectedsubSectionsItem == null) return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Do you wish to delete this page?");
+        builder.setTitle("Do you wish to delete this section?");
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 cancelThisDialog();
-                //Log.v(TAG, "Total alSubSectionsOnly : " + alSubSectionsOnly.size());
+
                 Iterator<SubSectionsItem> iter1 = alSubSectionsOnly.iterator();
                 while (iter1.hasNext()) {
                     SubSectionsItem subSectionsItem = iter1.next();
-                    if (subSectionsItem.getSectionId().equalsIgnoreCase("" + selectedsubSectionsItem.getSectionId()) &&
+                    if (subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER &&
+                            subSectionsItem.getSectionId().equalsIgnoreCase("" + selectedsubSectionsItem.getSectionId()) &&
                             subSectionsItem.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
-                        // Remove the current element from the iterator and the list.
                         //Log.v(TAG, "Total alSubSectionsOnly name : " + subSectionsItem);
                         iter1.remove();
                     }
                 }
-                //Log.v(TAG, "after Total alSubSectionsOnly : " + alSubSectionsOnly.size());
 
-
-               /* Log.v(TAG, "Total templates : " + templates.getTemplateItems().size());
-                Iterator<TemplateItemsItem> iter2 = templates.getTemplateItems().iterator();
-                while (iter2.hasNext()) {
-                    TemplateItemsItem tmp = iter2.next();
-                    if (tmp.getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
-                            tmp.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
-                        iter2.remove();
-                    }
-                }
-                Log.v(TAG, "after Total templates : " + templates.getTemplateItems().size());*/
-
-                //Log.v(TAG, "before Total selectSection : " + selectSection.getSubSections().size());
-                Iterator<SubSectionsItem> iter3 = selectSection.getSubSections().iterator();
-                while (iter3.hasNext()) {
-                    SubSectionsItem tmp = iter3.next();
-                    if (tmp.getInspectionId().equalsIgnoreCase("" + orderListItem.getSequence()) &&
-                            tmp.getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
-                            tmp.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
-                        //Log.v(TAG, "Total alSubSectionsOnly tmp.getSectionId() : " + tmp.getSectionId());
-                        iter3.remove();
+                List<SubSectionsItem> allsubs = selectSection.getSubSections();
+                for(SubSectionsItem subSectionsItem : allsubs){
+                    if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER
+                            && subSectionsItem.getInspectionId().equalsIgnoreCase("" + orderListItem.getSequence())
+                            && subSectionsItem.getSectionId().equalsIgnoreCase(""+selectedsubSectionsItem.getSectionId())
+                            && subSectionsItem.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())){
+                        subSectionsItem.setStatus(Constants.DELETED);
+                        Utils.updateThisSubSection(mContext, subSectionsItem);
                     }
                 }
 
-                //Log.v(TAG, "after Total selectSection : " + selectSection.getSubSections().size());
+
                 prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
-                //prefs.putObject(Constants.PREF_TEMPLATES, templates);
                 selectSectionAdapter.setData(alSubSectionsOnly);
-                //Log.v(TAG, "after Total getCount : " +selectSectionAdapter.getCount());
-
+                sSelectSection.setSelection(0);
             }
         });
 
@@ -983,6 +973,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     subSectionsItem.setNumberOfExposures("");
                     subSectionsItem.setNotInspected("f");
                     subSectionsItem.setVeryPoor("f");
+                    subSectionsItem.setStatus(Constants.ADDED);
 
                     Utils.updateThisSubSection(mContext, subSectionsItem);
                     selectSection.getSubSections().add(subSectionsItem);
@@ -1100,7 +1091,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
 
             if (hasChanged) {
-                List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
+                List<SubSectionsItem> temp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
                 if (temp != null && !temp.isEmpty()) {
                     for (int i = 0; i < temp.size(); i++) {
                         if (temp.get(i).getIOLineId().equalsIgnoreCase(subSectionsItem.getIOLineId())) {

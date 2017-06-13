@@ -93,8 +93,76 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
 
                 //Here we will condition selectSection.. order syncing..
                 SelectSection selectSection = masterResponse.getSelectSection();
+                List<SubSectionsItem> newSubSectionsItem = selectSection.getSubSections();
                 List<SubSectionsItem> updatedSubSectionsItemList = new ArrayList<>();
-                if(prefs.contains(Constants.PREF_SELECT_SECTION)){
+
+                if(prefs.contains(Constants.PREF_SELECT_SECTION) && ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class)).getSubSections() != null
+                        && !((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class)).getSubSections().isEmpty()
+                        && prefs.contains(Constants.PREF_ORDER_UPDATE) && ((OrderUpdateContainer)prefs.getObject(Constants.PREF_ORDER_UPDATE,OrderUpdateContainer.class)).getOrderUpdatesList() != null
+                        && !((OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE,OrderUpdateContainer.class)).getOrderUpdatesList().isEmpty()){
+
+
+                    List<SubSectionsItem> oldSubSectionsItems = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class)).getSubSections();
+                    List<String> orderUpdatesList = ((OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE,OrderUpdateContainer.class)).getOrderUpdatesList();
+
+                    for(SubSectionsItem newSub : newSubSectionsItem){
+
+                        SubSectionsItem oldSub = null;
+                        String inspectionId = newSub.getInspectionId();
+
+                        boolean avail = false;
+                        boolean changed = false;
+
+                        for(SubSectionsItem oldItem : oldSubSectionsItems){
+                            if(oldItem.getInspectionId().equalsIgnoreCase("274169")){
+                                Log.v(TAG,"iolineId "+ oldItem.getIOLineId());
+                            }
+                            if(oldItem.getIOLineId().equalsIgnoreCase(newSub.getIOLineId()) && oldItem.getInspectionId().equalsIgnoreCase(newSub.getInspectionId()) /* && oldItem.getSectionId().equalsIgnoreCase(newSub.getSectionId())*/){
+                                avail = true;
+                                oldSub = oldItem;
+                                break;
+                            }
+                        }
+
+                        if(avail){
+                            for(int j=0;j<orderUpdatesList.size();j++) {
+                                if (inspectionId.equalsIgnoreCase(orderUpdatesList.get(j))) {
+                                    changed = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(!avail){
+                            updatedSubSectionsItemList.add(newSub);
+                        }
+                        else if(avail && !changed){
+                            updatedSubSectionsItemList.add(newSub);
+                        }
+                        else if(avail && changed){
+                            updatedSubSectionsItemList.add(oldSub);
+                        }
+
+                    }
+
+                    for(SubSectionsItem oldItem : oldSubSectionsItems){
+                        if(oldItem != null && oldItem.getContentType() != Constants.HEADER && oldItem.getStatus() == Constants.ADDED){
+                            if (!Utils.hasSubSectionItem(updatedSubSectionsItemList, oldItem)) updatedSubSectionsItemList.add(oldItem);
+                        }
+                    }
+                }
+                else if(selectSection != null && selectSection.getSubSections() != null && !selectSection.getSubSections().isEmpty()){
+                        updatedSubSectionsItemList.addAll(newSubSectionsItem);
+                }
+
+                /*for(SubSectionsItem newItem : newSubSectionsItem){
+                    if(newItem != null && newItem.getContentType() != Constants.HEADER && newItem.getStatus() == Constants.ADDED){
+                        if (!Utils.hasSubSectionItem(updatedSubSectionsItemList, newItem)) updatedSubSectionsItemList.add(newItem);
+                    }
+                }*/
+
+
+                /*if(prefs.contains(Constants.PREF_SELECT_SECTION)){
                     SelectSection storedSubSections = (SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION,SelectSection.class);
                     updatedSubSectionsItemList.addAll(storedSubSections.getSubSections());
                 }
@@ -126,7 +194,7 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
                     else{
                         updatedSubSectionsItemList.addAll(newSubSectionsItem);
                     }
-                }
+                }*/
                 selectSection.setSubSections(updatedSubSectionsItemList);
                 prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
 
