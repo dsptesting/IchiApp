@@ -63,6 +63,7 @@ import com.ichi.inspection.app.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -408,14 +409,18 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             @Override
             public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
 
+                ArrayList<String> uris = null;
+                boolean changed = false;
+                String name ="";
+                SubSectionsItem updatedSubSection = null;
+                String lineIONum = null;
+
                 for(int i= 0;i<imageFiles.size();i++){
                     File imageFile = imageFiles.get(i);
                     Log.v(TAG, "imageFile file : " + imageFile.getAbsolutePath());
                     Log.d(TAG, "onImagePicked: " + imageFile.getAbsolutePath());
                     Log.d(TAG, "onImagePicked: ");
                     File file = null;
-                    String name ="";
-                    ArrayList<String> uris = null;
                     //TODO copy file to our folder..
                     try {
                         File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
@@ -426,8 +431,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                         //Create Image Name
                         String orderNum = String.valueOf(orderListItem.getIONum());
-                        SubSectionsItem updatedSubSection = alSubSectionsLines.get(currentSelectedLinePositionForImage);
-                        String lineIONum = updatedSubSection.getIOLineId();
+                        updatedSubSection = alSubSectionsLines.get(currentSelectedLinePositionForImage);
+                        lineIONum = updatedSubSection.getIOLineId();
                         String imageName = null;
                         String extension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
                         uris = alSubSectionsLines.get(currentSelectedLinePositionForImage).getImageURIs();
@@ -460,56 +465,65 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                         Log.d(TAG, "onImagePicked: FileName: " + file.getName());
 
-                        //Copy Image
-                        FileChannel source = null;
-                        FileChannel destination = null;
-                        source = new FileInputStream(imageFile).getChannel();
-                        destination = new FileOutputStream(file).getChannel();
-                        if (destination != null && source != null) {
-                            destination.transferFrom(source, 0, source.size());
-                        }
-                        if (source != null) {
-                            source.close();
-                        }
-                        if (destination != null) {
-                            destination.close();
-                        }
-
-                        Log.v(TAG,"copied");
+                        copy(imageFile,file);
                         if (currentSelectedLinePositionForImage != -1 && alSubSectionsLines.get(currentSelectedLinePositionForImage) != null) {
 
+                            changed = true;
                             uris.add(file.getAbsolutePath());
                             //alSubSectionsLines.get(currentSelectedLinePositionForImage).setImageURIs(uris);
-
-                            for (SubSectionsItem subSectionsItem : alSubSections) {
-                                if (subSectionsItem.getIOLineId().equalsIgnoreCase(lineIONum)){
-                                    subSectionsItem.setImageURIs(uris);
-                                }
-                            }
-
-                            List<SubSectionsItem> temp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
-                            if (temp != null && !temp.isEmpty()) {
-                                for (int j = 0; j < temp.size(); j++) {
-                                    if (temp.get(j).getIOLineId().equalsIgnoreCase(lineIONum)) {
-                                        temp.set(j, updatedSubSection);
-                                        break;
-                                    }
-                                }
-                            }
-                            prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
-
-                            Intent intent = new Intent(mContext, GridActivity.class);
-                            intent.putExtra("name",name);
-                            intent.putStringArrayListExtra("URIs", uris);
-                            startActivity(intent);
                         }
                     } catch (IOException e) {
                         Log.d(TAG, "onImagePicked error: " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
+
+                if(changed && updatedSubSection != null){
+                    for (SubSectionsItem subSectionsItem : alSubSections) {
+                        if (subSectionsItem.getIOLineId().equalsIgnoreCase(lineIONum)){
+                            subSectionsItem.setImageURIs(uris);
+                        }
+                    }
+
+                    List<SubSectionsItem> temp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
+                    if (temp != null && !temp.isEmpty()) {
+                        for (int j = 0; j < temp.size(); j++) {
+                            if (temp.get(j).getIOLineId().equalsIgnoreCase(lineIONum)) {
+                                temp.set(j, updatedSubSection);
+                                break;
+                            }
+                        }
+                    }
+                    prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+
+                    Intent intent = new Intent(mContext, GridActivity.class);
+                    intent.putExtra("name",name);
+                    intent.putStringArrayListExtra("URIs", uris);
+                    startActivity(intent);
+                }
+
+
             }
         });
+    }
+
+    private void copy(File imageFile, File file) throws IOException {
+        //Copy Image
+        FileChannel source = null;
+        FileChannel destination = null;
+        source = new FileInputStream(imageFile).getChannel();
+        destination = new FileOutputStream(file).getChannel();
+        if (destination != null && source != null) {
+            destination.transferFrom(source, 0, source.size());
+        }
+        if (source != null) {
+            source.close();
+        }
+        if (destination != null) {
+            destination.close();
+        }
+
+        Log.v(TAG,"copied");
     }
 
     private void getMasterList() {
