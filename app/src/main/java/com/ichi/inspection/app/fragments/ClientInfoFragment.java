@@ -100,8 +100,16 @@ public class ClientInfoFragment extends BaseFragment{
             txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
             etFirstName.setCustomText(orderListItem.getFirstName());
             etLastName.setCustomText(orderListItem.getLastName());
-            etPhone.setCustomText(orderListItem.getPhone());
-            etEmail.setCustomText(orderListItem.getEmail());
+            if (orderListItem.getPhone()!=null){
+            etPhone.setCustomText(orderListItem.getPhone().substring(0,orderListItem.getPhone().indexOf("<")));}
+            else{
+                etPhone.setCustomText("-");
+            }
+            if (orderListItem.getEmail()!=null){
+            etEmail.setCustomText(orderListItem.getEmail().substring(0,orderListItem.getEmail().indexOf("<")));}
+            else {
+                etEmail.setCustomText("-");
+            }
         }
 
     }

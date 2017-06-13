@@ -100,8 +100,17 @@ public class BuyersAgentFragment extends BaseFragment{
             txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
             etAgentName.setCustomText(orderListItem.getBuyerAgentName());
             etAgencyName.setCustomText(orderListItem.getBuyerAgentAgencyName());
-            etCellPhone.setCustomText(orderListItem.getBuyerAgentPhone());
-            etWorkEmail.setCustomText(orderListItem.getBuyerAgentEmail());
+            if (orderListItem.getBuyerAgentPhone()!=null) {
+                etCellPhone.setCustomText(orderListItem.getBuyerAgentPhone().substring(0, orderListItem.getBuyerAgentPhone().indexOf("<")));
+            }else{
+                etCellPhone.setCustomText("-");
+            }
+            if (orderListItem.getBuyerAgentEmail()!=null){
+                etWorkEmail.setCustomText(orderListItem.getBuyerAgentEmail().substring(0,orderListItem.getBuyerAgentEmail().indexOf("<")));}
+            else{
+                etWorkEmail.setCustomText("-");
+            }
+
         }
 
     }
