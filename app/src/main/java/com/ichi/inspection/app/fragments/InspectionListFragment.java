@@ -276,8 +276,14 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
                 tvNoData.setText(getString(R.string.str_no_data));
             }
             else{
-                tvNoData.setText(getString(R.string.internet_not_avail));
-                Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
+                if(isCurrentSelected){
+                    tvNoData.setText(getString(R.string.internet_not_avail));
+                    Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
+                }
+                else{
+                    tvNoData.setText(getString(R.string.str_no_data));
+                }
+
             }
             tvNoData.setVisibility(View.VISIBLE);
             rcvCurrent.setVisibility(View.GONE);
