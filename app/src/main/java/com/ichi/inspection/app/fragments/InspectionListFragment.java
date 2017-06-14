@@ -263,7 +263,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
                 }
                 else{
                     tvNoData.setVisibility(View.VISIBLE);
-                    tvNoData.setText(getString(R.string.internet_not_avail));
+                    tvNoData.setText(getString(R.string.str_no_data));
                     rcvPending.setVisibility(View.GONE);
                 }
 
