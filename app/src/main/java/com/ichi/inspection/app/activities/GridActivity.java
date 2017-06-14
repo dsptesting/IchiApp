@@ -120,4 +120,10 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
+    }
 }

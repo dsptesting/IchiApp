@@ -32,6 +32,18 @@
             android:layout_below="@+id/txtName"
             android:text="Ceiling" />
 
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvNo"
+            style="@style/txt_reg_14_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btnUpload"
+            android:layout_marginRight="@dimen/values_10"
+            android:layout_below="@+id/txtName"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:text="0" />
+
         <com.ichi.inspection.app.utils.CustomButton
             android:id="@+id/btnUpload"
             android:layout_width="@dimen/values_40"

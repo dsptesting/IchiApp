@@ -40,8 +40,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
     private String status = "";
     BottomSheetBehavior behavior;
 
-
-    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior
+                                                                                                                                                                            public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior
         , OnLineItemClickListener onLineItemClickListener) {
         this.mList = mList;
         mContext = context;
@@ -103,6 +102,16 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
             holder.btnHide.setSelected(false);
         }
 
+        int size = subSectionsItem.getImageURIs().size();
+        if(size > 0){
+            holder.tvNo.setText(size+"");
+            holder.tvNo.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.tvNo.setVisibility(View.GONE);
+        }
+
+
         try{
             if(subSectionsItem.getComments() != null && !subSectionsItem.getComments().toString().trim().isEmpty()){
                 holder.txtComment.setText(""+subSectionsItem.getComments().toString().trim());
@@ -157,6 +166,9 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
 
         @BindView(R.id.txtComment)
         CustomTextView txtComment;
+
+        @BindView(R.id.tvNo)
+        CustomTextView tvNo;
 
         public LineHolder(View view) {
             super(view);

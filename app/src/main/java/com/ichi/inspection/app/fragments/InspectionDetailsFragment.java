@@ -90,6 +90,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         , AdapterView.OnItemSelectedListener, OnLineItemClickListener {
 
     private static final String TAG = InspectionDetailsFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_GRID = 14;
     private Context mContext;
 
     @BindView(R.id.tbAppToolbarNormal)
@@ -399,6 +400,11 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == REQUEST_CODE_GRID && resultCode == getActivity().RESULT_OK){
+            if(lineAdapter != null && lineAdapter.getItemCount() > 0){
+                lineAdapter.notifyDataSetChanged();
+            }
+        }
         EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
@@ -499,7 +505,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     Intent intent = new Intent(mContext, GridActivity.class);
                     intent.putExtra("name",name);
                     intent.putStringArrayListExtra("URIs", uris);
-                    startActivity(intent);
+                    startActivityForResult(intent,REQUEST_CODE_GRID);
                 }
 
 
@@ -1041,7 +1047,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 Intent intent = new Intent(mContext, GridActivity.class);
                 intent.putExtra("name",alSubSectionsLines.get(currentSelectedLinePositionForImage).getName());
                 intent.putStringArrayListExtra("URIs", imageURIs);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_CODE_GRID);
             } else {
                 Utils.showSnackBar(coordinatorLayout, getString(R.string.no_image_avail));
             }
