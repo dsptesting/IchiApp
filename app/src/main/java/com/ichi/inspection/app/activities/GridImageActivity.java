@@ -2,6 +2,9 @@ package com.ichi.inspection.app.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -59,6 +62,12 @@ public class GridImageActivity extends BaseActivity {
         Intent intent=getIntent();
         Bundle bundle=intent.getExtras();
         String uri= bundle.getString("URI");
-        imageView.setImageURI(Uri.parse(uri));
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap d = BitmapFactory.decodeFile(uri, options);
+        int nh = (int) ( d.getHeight() * (512.0 / d.getWidth()) );
+        Bitmap scaled = Bitmap.createScaledBitmap(d, 512, nh, true);
+        imageView.setImageBitmap(scaled);
     }
 }
