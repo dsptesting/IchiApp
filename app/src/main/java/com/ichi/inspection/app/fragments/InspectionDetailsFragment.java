@@ -212,7 +212,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         List<SubSectionsItem> tmp = selectSection.getSubSections(""+orderListItem.getSequence());
         Log.d(TAG, "errorCount: Size temp:"+tmp.size());
         for (SubSectionsItem sub:tmp){
-            if (!Boolean.parseBoolean(sub.getIsHead())){
+            if (!Boolean.parseBoolean(sub.getIsHead()) && sub.getStatus() != Constants.DELETED){
 
                         /*boolean g=false,f=false,p=false,na=false,hide=false,comment=false;
                         if (sub.getGood().equalsIgnoreCase("f")){
@@ -855,13 +855,27 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 }
 
                 List<SubSectionsItem> allsubs = selectSection.getSubSections();
+                boolean deleted = false;
                 for(SubSectionsItem subSectionsItem : allsubs){
                     if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER
                             && subSectionsItem.getInspectionId().equalsIgnoreCase("" + orderListItem.getSequence())
                             && subSectionsItem.getSectionId().equalsIgnoreCase(""+selectedsubSectionsItem.getSectionId())
                             && subSectionsItem.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())){
                         subSectionsItem.setStatus(Constants.DELETED);
+                        deleted = true;
                         Utils.updateThisSubSection(mContext, subSectionsItem);
+                    }
+                }
+
+
+                if(deleted){
+                    if (selectedsubSectionsItem != null) {
+                        String usedHead = selectedsubSectionsItem.getUsedHead();
+                        for (SubSectionsItem sub : allsubs) {
+                            if (sub.getUsedHead().equalsIgnoreCase(usedHead) && !Boolean.parseBoolean(sub.getIsHead())) {
+                                sub.setStatus(Constants.DELETED);
+                            }
+                        }
                     }
                 }
 
@@ -869,6 +883,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
                 selectSectionAdapter.setData(alSubSectionsOnly);
                 sSelectSection.setSelection(0);
+                errorCount();
             }
         });
 
@@ -1401,6 +1416,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         protected void onPostExecute(Boolean aVoid) {
             if(showLoader) Utils.hideProgressBar(getActivity());
             if(aVoid) sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
+            errorCount();
         }
     }
 
