@@ -45,9 +45,16 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyGrid
 
     @Override
     public void onBindViewHolder(MyGridHolder holder, int position) {
-        Glide.with(mContext)
-                .load(new File(images.get(position))) // Uri of the picture
-                .into(holder.imageView);
+        File file = new File(images.get(position));
+        if(file != null && file.exists()){
+            Glide.with(mContext)
+                    .load(file) // Uri of the picture
+                    .into(holder.imageView);
+        }
+        else{
+            holder.imageView.setImageResource(R.color.blue);
+        }
+
         //holder.imageView.setImageURI(Uri.parse(images.get(position)));
     }
 

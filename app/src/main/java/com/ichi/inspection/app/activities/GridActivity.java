@@ -18,6 +18,8 @@ import com.ichi.inspection.app.fragments.InspectionDetailsFragment;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
 import com.ichi.inspection.app.interfaces.OnListItemLongClickListener;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -41,14 +43,19 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
     public TextView tvAppTitle;
     private ArrayList<String> imageURIs;
     private String name;
+    private int pos;
+    private String ioLineId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_gallery);
         ButterKnife.bind(this);
         mContext = this;
         name = getIntent().getStringExtra("name");
+        pos=getIntent().getExtras().getInt("pos",0);
+        ioLineId=getIntent().getExtras().getString("ioLineId");
         init();
     }
 
@@ -67,10 +74,8 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
             }
         });
 
-
         Intent intent=getIntent();
         imageURIs = intent.getStringArrayListExtra("URIs");
-
 
         // set up the RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvGalleryView);
@@ -78,9 +83,6 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         adapter=new GridViewAdapter(mContext,imageURIs,this,this);
         recyclerView.setAdapter(adapter);
-
-
-
     }
 
     @Override
@@ -109,10 +111,12 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
                     public void onClick(View v) {
                         String removeImageUri=imageURIs.get(position);
                         imageURIs.remove(position);
-                        adapter.setData(imageURIs);
+                        adapter.notifyDataSetChanged();
                         mBottomSheetDialog.dismiss();
                         File file=new File(removeImageUri);
                         file.delete();
+
+                        EventBus.getDefault().post(new com.ichi.inspection.app.models.EventBus(removeImageUri,pos,ioLineId));
 
                     }
                 });

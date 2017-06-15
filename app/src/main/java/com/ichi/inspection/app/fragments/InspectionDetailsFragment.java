@@ -62,6 +62,10 @@ import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -188,6 +192,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     @BindView(R.id.tvErrorCount)
     TextView tvErrorCount;
+    private RemoveImageAsyncTask removeImageAsyncTask;
 
     @Nullable
     @Override
@@ -195,6 +200,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.fragment_inspection_details, container, false);
         ButterKnife.bind(this, view);
+        EventBus.getDefault().register(this);
         mContext = getActivity();
         setHasOptionsMenu(true);
         initData();
@@ -501,11 +507,15 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                             }
                         }
                     }
+
+                    Utils.updateThisSubSection(getActivity(),updatedSubSection);
                     prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
 
                     Intent intent = new Intent(mContext, GridActivity.class);
                     intent.putExtra("name",name);
                     intent.putStringArrayListExtra("URIs", uris);
+                    intent.putExtra("ioLineId",alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId());
+                    intent.putExtra("pos",currentSelectedLinePositionForImage);
                     startActivityForResult(intent,REQUEST_CODE_GRID);
                 }
 
@@ -1055,6 +1065,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 Intent intent = new Intent(mContext, GridActivity.class);
                 intent.putExtra("name",alSubSectionsLines.get(currentSelectedLinePositionForImage).getName());
                 intent.putStringArrayListExtra("URIs", imageURIs);
+                intent.putExtra("ioLineId",alSubSectionsLines.get(currentSelectedLinePositionForImage).getIOLineId());
+                intent.putExtra("pos",currentSelectedLinePositionForImage);
                 startActivityForResult(intent,REQUEST_CODE_GRID);
             } else {
                 Utils.showSnackBar(coordinatorLayout, getString(R.string.no_image_avail));
@@ -1441,8 +1453,101 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if(templateSelectedAsyncTask != null && !templateSelectedAsyncTask.isCancelled()) templateSelectedAsyncTask.cancel(true);
         if(subSectionSelectedAsyncTask != null && !subSectionSelectedAsyncTask.isCancelled()) subSectionSelectedAsyncTask.cancel(true);
         if(markAllSelectedAsyncTask != null && !markAllSelectedAsyncTask.isCancelled()) markAllSelectedAsyncTask.cancel(true);
+        if(removeImageAsyncTask != null && !removeImageAsyncTask.isCancelled()) removeImageAsyncTask.cancel(true);
 
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(com.ichi.inspection.app.models.EventBus bus){
+
+        removeImageAsyncTask = new RemoveImageAsyncTask(getActivity(),bus, true);
+        removeImageAsyncTask.execute();
+    }
+
+    private class RemoveImageAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        com.ichi.inspection.app.models.EventBus bus;
+        Activity activity;
+        boolean showLoader;
+
+        public RemoveImageAsyncTask(Activity activity,com.ichi.inspection.app.models.EventBus bus, boolean showLoader) {
+            this.activity = activity;
+            this.bus = bus;
+            this.showLoader = showLoader;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            String uri=bus.getUri();
+            int position=bus.getPosition();
+            String ioLineId = bus.getIoLineId();
+            ArrayList<String> alTemps = new ArrayList<>();
+            boolean isRemoved = false;
+            SubSectionsItem subSectionsItem = null;
+
+            if(alSubSectionsLines.size() > position){
+                SubSectionsItem subSectionsItm = alSubSectionsLines.get(position);
+                if(subSectionsItm != null){
+                    alTemps = subSectionsItm.getImageURIs();
+                    if(alTemps != null && !alTemps.isEmpty()){
+                        Iterator<String> iter1 = alTemps.iterator();
+                        while (iter1.hasNext()) {
+                            String s = iter1.next();
+                            if (s.equalsIgnoreCase(uri)) {
+                                iter1.remove();
+                                isRemoved = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(activity != null){
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lineAdapter.setData(alSubSectionsLines);
+                    }
+                });
+            }
+
+            if(isRemoved){
+                for (SubSectionsItem sub: alSubSections) {
+                    if (sub.getIOLineId().equalsIgnoreCase(ioLineId)){
+                        sub.setImageURIs(alTemps);
+                        subSectionsItem = sub;
+                    }
+                }
+            }
+
+            if(subSectionsItem != null){
+                List<SubSectionsItem> temp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
+                if (temp != null && !temp.isEmpty()) {
+                    for (int j = 0; j < temp.size(); j++) {
+                        if (temp.get(j).getIOLineId().equalsIgnoreCase(ioLineId)) {
+                            temp.set(j, subSectionsItem);
+                            break;
+                        }
+                    }
+                }
+
+                prefs.putObject(Constants.PREF_SELECT_SECTION, selectSection);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(showLoader) Utils.hideProgressBar(getActivity());
+        }
     }
 
 }

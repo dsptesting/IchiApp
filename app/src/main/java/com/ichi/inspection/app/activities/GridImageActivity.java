@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 
+import java.io.File;
 import java.net.URI;
 
 import butterknife.BindView;
@@ -63,11 +64,16 @@ public class GridImageActivity extends BaseActivity {
         Bundle bundle=intent.getExtras();
         String uri= bundle.getString("URI");
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap d = BitmapFactory.decodeFile(uri, options);
-        int nh = (int) ( d.getHeight() * (512.0 / d.getWidth()) );
-        Bitmap scaled = Bitmap.createScaledBitmap(d, 512, nh, true);
-        imageView.setImageBitmap(scaled);
+        File file = new File(uri);
+        if(file != null && file.exists()){
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap d = BitmapFactory.decodeFile(uri, options);
+            if(d == null) return;
+            int nh = (int) ( d.getHeight() * (512.0 / d.getWidth()) );
+            Bitmap scaled = Bitmap.createScaledBitmap(d, 512, nh, true);
+            imageView.setImageBitmap(scaled);
+        }
+
     }
 }
