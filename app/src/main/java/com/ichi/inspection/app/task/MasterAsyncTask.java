@@ -237,7 +237,12 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
                     } else {
                         if (response.errorBody() != null) {
                             responseBody = response.errorBody();
-                            getTokenResponse = new Gson().fromJson(new String(responseBody.bytes()), GetTokenResponse.class);
+                            try{
+                                getTokenResponse = new Gson().fromJson(new String(responseBody.bytes()), GetTokenResponse.class);
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
                             masterResponse.setAction(Constants.ACTION_LOGIN_AGAIN);
                             return masterResponse;
                         }

@@ -114,7 +114,12 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
                     else{
                         if(response.errorBody() != null){
                             responseBody = response.errorBody();
-                            getTokenResponse = new Gson().fromJson(new String(responseBody.bytes()), GetTokenResponse.class);
+                            try{
+                                getTokenResponse = new Gson().fromJson(new String(responseBody.bytes()), GetTokenResponse.class);
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
                             orderResponse.setAction(Constants.ACTION_LOGIN_AGAIN);
                             return orderResponse;
                         }
