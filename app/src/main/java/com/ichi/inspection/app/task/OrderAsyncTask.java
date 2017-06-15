@@ -85,6 +85,7 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
                 orderResponse.setAction(Constants.ACTION_DO_NOTHING);
                 Log.v(TAG,"fillData printed : " + orderResponse.getOrderList());
                 prefs.putObject(Constants.PREF_ORDER,orderResponse.getOrderList());
+                return orderResponse;
             }
         }
         else{
@@ -107,7 +108,7 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
                             getTokenResponse = getTokenResp.body();
                             prefs.putGetTokenResponse(context,getTokenResponse);
                             orderResponse.setAction(Constants.ACTION_DO_NOTHING);
-                            callApi(apiService,orderResponse);
+                            return callApi(apiService,orderResponse);
                         }
                     }
                     else{
@@ -115,9 +116,11 @@ public class OrderAsyncTask extends AsyncTask<Void,Void,OrderResponse> {
                             responseBody = response.errorBody();
                             getTokenResponse = new Gson().fromJson(new String(responseBody.bytes()), GetTokenResponse.class);
                             orderResponse.setAction(Constants.ACTION_LOGIN_AGAIN);
+                            return orderResponse;
                         }
                     }
                 }
+                return orderResponse;
             }
         }
 

@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.activities.StartActivity;
 import com.ichi.inspection.app.adapters.InspectionAdapter;
 import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.interfaces.OnListItemClickListener;
@@ -306,10 +307,21 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         if(!Utils.showCallError(coordinatorLayout,baseResponse)){
 
             OrderResponse orderResponse = (OrderResponse) baseResponse;
-            if(orderResponse.getOrderList() != null && !orderResponse.getOrderList().isEmpty()){
+            if(orderResponse != null){
 
-                alInspections = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class)).getOrderList();
-                if(alInspections != null) fillData(alInspections);
+                if(orderResponse.getAction() == Constants.ACTION_LOGIN_AGAIN){
+                    Intent intent = new Intent(getActivity(), StartActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                    prefs.clearSavedToken();
+                }
+                else if(orderResponse.getAction() == Constants.ACTION_DO_NOTHING){
+                    if(orderResponse.getOrderList() != null && !orderResponse.getOrderList().isEmpty()){
+
+                        alInspections = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class)).getOrderList();
+                        if(alInspections != null) fillData(alInspections);
+                    }
+                }
             }
         }
     }

@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.GridActivity;
 import com.ichi.inspection.app.activities.MainActivity;
+import com.ichi.inspection.app.activities.StartActivity;
 import com.ichi.inspection.app.adapters.AddSectionAdapter;
 import com.ichi.inspection.app.adapters.LineAdapter;
 import com.ichi.inspection.app.adapters.MarkAllAdapter;
@@ -632,12 +633,19 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             MasterResponse masterResponseData = (MasterResponse) baseResponse;
             if (masterResponseData != null) {
 
-                masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
-                addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
-                selectSection = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
-                namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
-                templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
-
+                if(masterResponseData.getAction() == Constants.ACTION_LOGIN_AGAIN){
+                    Intent intent = new Intent(getActivity(), StartActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                    prefs.clearSavedToken();
+                }
+                else if(masterResponseData.getAction() == Constants.ACTION_DO_NOTHING) {
+                    masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
+                    addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
+                    selectSection = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+                    namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
+                    templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
+                }
                 initView();
                 setLayoutVisibility();
             }

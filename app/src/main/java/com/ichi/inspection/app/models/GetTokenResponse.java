@@ -33,6 +33,16 @@ public class GetTokenResponse extends BaseResponse implements Parcelable {
         this.loginData = loginData;
     }
 
+    @Override
+    public String getError() {
+        return error;
+    }
+
+    @Override
+    public void setError(String error) {
+        this.error = error;
+    }
+
     public void setAccessToken(String accessToken){
         this.accessToken = accessToken;
     }
@@ -84,6 +94,7 @@ public class GetTokenResponse extends BaseResponse implements Parcelable {
         accessToken = in.readString();
         refreshToken = in.readString();
         tokenType = in.readString();
+        error = in.readString();
         expiresIn = in.readInt();
         loginData = (SignInRequest) in.readValue(SignInRequest.class.getClassLoader());
     }
@@ -100,6 +111,7 @@ public class GetTokenResponse extends BaseResponse implements Parcelable {
         dest.writeString(tokenType);
         dest.writeInt(expiresIn);
         dest.writeValue(loginData);
+        dest.writeValue(error);
     }
 
     @SuppressWarnings("unused")
