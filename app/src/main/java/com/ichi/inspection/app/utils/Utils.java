@@ -267,6 +267,7 @@ public class Utils {
 
         subSectionsItem.setNumberOfExposures("");
         subSectionsItem.setVeryPoor("f");
+        //TODO TemplateId... check with Amit
         subSectionsItem.setTemplatedId(templateItemsItem.getNamedTemplateId());
         subSectionsItem.setStatus(Constants.ADDED);
 
@@ -380,6 +381,13 @@ public class Utils {
             //Log.v(TAG,"sub: " +sub.getSectionId() + " , " + sub.getIOLineId() +" , "+ sub.getName());
             if(sub.getContentType() == Constants.HEADER) continue;
             if(sub.getSectionId().equalsIgnoreCase(addSectionItem.getSectionId()) && sub.getName().equalsIgnoreCase(addSectionItem.getName())){
+
+                if(sub.getStatus() == Constants.DELETED){
+                    //find its lines, delete from list, and add fresh again
+                    sub.setStatus(Constants.ADDED);
+
+                    return false;
+                }
                 return true;
             }
         }

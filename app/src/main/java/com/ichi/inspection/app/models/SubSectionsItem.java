@@ -59,7 +59,8 @@ public class SubSectionsItem{
 
     private ArrayList<String> imageURIs;
 
-    private String templatedId;
+	@SerializedName("TemplateId")
+    private String templateId;
 	private int contentType;
 	private int status;
 
@@ -102,7 +103,7 @@ public class SubSectionsItem{
 				", numberOfExposures='" + numberOfExposures + '\'' +
 				", notInspected='" + notInspected + '\'' +
 				", imageURIs=" + imageURIs +
-				", templatedId='" + templatedId + '\'' +
+				", templateId='" + templateId + '\'' +
 				", contentType=" + contentType +
 				", status=" + status +
 				'}';
@@ -125,11 +126,11 @@ public class SubSectionsItem{
 	}
 
 	public String getTemplatedId() {
-        return templatedId;
+        return templateId;
     }
 
-    public void setTemplatedId(String templatedId) {
-        this.templatedId = templatedId;
+    public void setTemplatedId(String templateId) {
+        this.templateId = templateId;
     }
 
     public void setIsHead(String isHead){

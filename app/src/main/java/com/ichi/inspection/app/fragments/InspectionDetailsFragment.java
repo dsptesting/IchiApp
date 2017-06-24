@@ -302,10 +302,16 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 switch (event.getActionMasked()){
                     case MotionEvent.ACTION_DOWN:
 
-                        if(alSubSections != null && !alSubSections.isEmpty()){
+                        String tmpId = getTemplateIdFromSections(0);
+                        if(tmpId != null && !tmpId.isEmpty() && !tmpId.equalsIgnoreCase("0")){
                             Utils.showSnackBar(coordinatorLayout,"Template selected already!");
                             return true;
                         }
+
+                        /*if(alSubSections != null && !alSubSections.isEmpty()){
+                            Utils.showSnackBar(coordinatorLayout,"Template selected already!");
+                            return true;
+                        }*/
                 }
                 return false;
             }
@@ -780,7 +786,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         SubSectionsItem subSectionsItem = alSubSections.get(position);
         if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER){
-            if(subSectionsItem.getTemplatedId() != null && !subSectionsItem.getTemplatedId().trim().isEmpty()){
+            if(subSectionsItem.getTemplatedId() != null && !subSectionsItem.getTemplatedId().trim().isEmpty() && !subSectionsItem.getTemplatedId().equalsIgnoreCase("0")){
                 return subSectionsItem.getTemplatedId();
             }
         }
