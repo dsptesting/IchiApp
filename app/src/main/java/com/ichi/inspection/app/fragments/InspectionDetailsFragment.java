@@ -54,6 +54,8 @@ import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.NamedTemplates;
 import com.ichi.inspection.app.models.NamedTemplatesItem;
 import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.Payment;
+import com.ichi.inspection.app.models.Photo;
 import com.ichi.inspection.app.models.SelectSection;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
@@ -161,6 +163,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @Nullable
     @BindView(R.id.cvAddNewLine)
     CardView cvAddNewLine;
+
+    @Nullable
+    @BindView(R.id.cvGenerateReport)
+    CardView cvGenerateReport;
 
     @Nullable
     @BindView(R.id.cvRemoveSection)
@@ -346,6 +352,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         cvEditName.setOnClickListener(this);
         cvRemoveSection.setOnClickListener(this);
         cvAddNewLine.setOnClickListener(this);
+        cvGenerateReport.setOnClickListener(this);
 
     }
 
@@ -630,7 +637,37 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.cvAddNewLine:
                 showAddNewLineDialog();
                 break;
+            case R.id.cvGenerateReport:
+                break;
         }
+    }
+
+    private void generateReport(){
+        SelectSection selectSectionReport = new SelectSection();
+        selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+        List<SubSectionsItem> temp = selectSectionReport.getSubSections("" + orderListItem.getSequence());
+        List<SubSectionsItem> SubSectionsLines = new ArrayList<>();
+        for (SubSectionsItem sub : temp) {
+            if (!Boolean.parseBoolean(sub.getIsHead())) {
+                SubSectionsLines.add(sub);
+            }
+        }
+
+        Payment payment=orderListItem.getPayment();
+
+        List<Photo> photos=new ArrayList<>();
+        for (SubSectionsItem item:SubSectionsLines){
+            String InspectionId=item.getInspectionId();
+            String LineId=item.getIOLineId();
+            for (String image:item.getImageURIs()){
+                String imageName=image.substring(image.lastIndexOf("/"));
+                photos.add(new Photo(InspectionId,LineId,imageName));
+            }
+
+        }
+
+
+
     }
 
     @Override
@@ -1246,6 +1283,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         @Override
         protected void onPostExecute(Void aVoid) {
             if(showLoader) Utils.hideProgressBar(getActivity());
+            errorCount();
         }
     }
 

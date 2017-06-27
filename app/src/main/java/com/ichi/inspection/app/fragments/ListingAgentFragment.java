@@ -100,12 +100,12 @@ public class ListingAgentFragment extends BaseFragment{
             txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
             etAgentName.setCustomText(orderListItem.getListingAgentName());
             etAgencyName.setCustomText(orderListItem.getListingAgentAgencyName());
-            if (orderListItem.getListingAgentPhone()!=null){
+            if (!(orderListItem.getListingAgentPhone()==null||orderListItem.getListingAgentPhone().equals(""))){
             etPhone.setCustomText(orderListItem.getListingAgentPhone().substring(0,orderListItem.getListingAgentPhone().indexOf("<")));}
             else{
                 etPhone.setCustomText("-");
             }
-            if (orderListItem.getListingAgentEmail()!=null){
+            if (!(orderListItem.getListingAgentEmail()==null||orderListItem.getListingAgentEmail().equals(""))){
             etEmail.setCustomText(orderListItem.getListingAgentEmail().substring(0,orderListItem.getListingAgentEmail().indexOf("<")));}
             else{
                 etEmail.setCustomText("-");

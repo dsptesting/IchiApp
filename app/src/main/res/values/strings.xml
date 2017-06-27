@@ -108,6 +108,7 @@
     <string name="edit_name">EDIT NAME</string>
     <string name="rename_name">Rename Name</string>
     <string name="add_new_line">Add New Line</string>
+    <string name="generate_report">Generate Report</string>
 
     <string name="button_allow">Allow</string>
     <string name="button_deny">Deny</string>
