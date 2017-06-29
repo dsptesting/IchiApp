@@ -67,6 +67,8 @@ import com.ichi.inspection.app.utils.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -638,16 +640,22 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 showAddNewLineDialog();
                 break;
             case R.id.cvGenerateReport:
+                try {
+                    generateReport();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
 
-    private void generateReport(){
+    private void generateReport() throws JSONException {
         SelectSection selectSectionReport = new SelectSection();
         selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
-        List<SubSectionsItem> temp = selectSectionReport.getSubSections("" + orderListItem.getSequence());
+        List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSections("" + orderListItem.getSequence());
+
         List<SubSectionsItem> SubSectionsLines = new ArrayList<>();
-        for (SubSectionsItem sub : temp) {
+        for (SubSectionsItem sub : SectionAndlines) {
             if (!Boolean.parseBoolean(sub.getIsHead())) {
                 SubSectionsLines.add(sub);
             }
@@ -666,6 +674,24 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         }
 
+        JSONObject IOLine=new JSONObject();
+        IOLine.put("IOLine",SectionAndlines);
+
+        JSONObject Photo1=new JSONObject();
+        Photo1.put("Photo",photos);
+
+        JSONObject Photo=new JSONObject();
+        Photo.put("Photo",Photo);
+
+        JSONObject Payment=new JSONObject();
+        Payment.put("Payment",payment);
+
+        JSONObject parentObject=new JSONObject();
+        parentObject.put("IOLine",IOLine);
+        parentObject.put("Photos",Photo);
+        parentObject.put("Payment",payment);
+
+        Log.d(TAG, "generateReport: "+parentObject.toString());
 
 
     }
