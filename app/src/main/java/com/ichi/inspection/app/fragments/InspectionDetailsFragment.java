@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.GridActivity;
 import com.ichi.inspection.app.activities.MainActivity;
@@ -75,6 +76,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -644,12 +646,14 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     generateReport();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 break;
         }
     }
 
-    private void generateReport() throws JSONException {
+    private void generateReport() throws JSONException, IOException {
         SelectSection selectSectionReport = new SelectSection();
         selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
         List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSections("" + orderListItem.getSequence());
@@ -660,6 +664,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 SubSectionsLines.add(sub);
             }
         }
+
 
         Payment payment=orderListItem.getPayment();
 
@@ -673,26 +678,39 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
 
         }
-
+        Gson gson =new Gson();
         JSONObject IOLine=new JSONObject();
-        IOLine.put("IOLine",SectionAndlines);
+        IOLine.put("IOLine",gson.toJson(SectionAndlines));
 
         JSONObject Photo1=new JSONObject();
-        Photo1.put("Photo",photos);
+        Photo1.put("Photo",gson.toJson(photos));
 
         JSONObject Photo=new JSONObject();
-        Photo.put("Photo",Photo);
+        Photo.put("Photo",Photo1);
 
-        JSONObject Payment=new JSONObject();
+        /*JSONObject Payment=new JSONObject();
         Payment.put("Payment",payment);
+*/
+
 
         JSONObject parentObject=new JSONObject();
         parentObject.put("IOLine",IOLine);
         parentObject.put("Photos",Photo);
-        parentObject.put("Payment",payment);
+        parentObject.put("Payment",gson.toJson(payment,Payment.class));
 
-        Log.d(TAG, "generateReport: "+parentObject.toString());
 
+
+
+        String veryLongString=parentObject.toString();
+
+        FileOutputStream fos;
+        File myFile = new File("/sdcard/ICHI.txt");
+        myFile.createNewFile();
+        FileOutputStream fOut = new FileOutputStream(myFile);
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+        myOutWriter.append(veryLongString);
+        myOutWriter.close();
+        fOut.close();
 
     }
 
