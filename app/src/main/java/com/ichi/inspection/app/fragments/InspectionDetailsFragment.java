@@ -68,6 +68,7 @@ import com.ichi.inspection.app.utils.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -678,7 +679,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             }
 
         }
-        Gson gson =new Gson();
+      /*  Gson gson =new Gson();
         JSONObject IOLine=new JSONObject();
         IOLine.put("IOLine",gson.toJson(SectionAndlines));
 
@@ -686,17 +687,30 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         Photo1.put("Photo",gson.toJson(photos));
 
         JSONObject Photo=new JSONObject();
-        Photo.put("Photo",Photo1);
+        Photo.put("Photo",Photo1);*/
 
         /*JSONObject Payment=new JSONObject();
         Payment.put("Payment",payment);
 */
+        Gson gson =new Gson();
+        JSONObject IOLine=new JSONObject();
+        IOLine.put("IOLine",new JSONArray(gson.toJson(SectionAndlines)));
 
+        JSONObject Photo1=new JSONObject();
+        Photo1.put("Photo",new JSONArray(gson.toJson(photos)));
+
+        JSONObject Photo=new JSONObject();
+        Photo.put("Photo",Photo1);
 
         JSONObject parentObject=new JSONObject();
         parentObject.put("IOLine",IOLine);
         parentObject.put("Photos",Photo);
-        parentObject.put("Payment",gson.toJson(payment,Payment.class));
+        parentObject.put("Payment",new JSONObject(gson.toJson(payment)));
+
+      /*  JSONObject parentObject=new JSONObject();
+        parentObject.put("IOLine",IOLine);
+        parentObject.put("Photos",Photo);
+        parentObject.put("Payment",gson.toJson(payment,Payment.class));*/
 
 
 
