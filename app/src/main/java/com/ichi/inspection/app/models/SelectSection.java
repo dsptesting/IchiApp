@@ -1,6 +1,7 @@
 package com.ichi.inspection.app.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.ichi.inspection.app.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,18 @@ public class SelectSection{
         List<SubSectionsItem> subSectionsItemsWithInspectionId  = new ArrayList<>();
         for(SubSectionsItem subSectionsItem : subSections){
             if(subSectionsItem != null && subSectionsItem.getInspectionId().equalsIgnoreCase(inspectionId)){
+                subSectionsItemsWithInspectionId.add(subSectionsItem);
+            }
+        }
+        return subSectionsItemsWithInspectionId;
+    }
+
+    public List<SubSectionsItem> getSubSectionsToUpload(String inspectionId){
+
+        List<SubSectionsItem> subSectionsItemsWithInspectionId  = new ArrayList<>();
+        for(SubSectionsItem subSectionsItem : subSections){
+            if(subSectionsItem != null && subSectionsItem.getInspectionId().equalsIgnoreCase(inspectionId)
+                    && subSectionsItem.getStatus() != Constants.DELETED){
                 subSectionsItemsWithInspectionId.add(subSectionsItem);
             }
         }

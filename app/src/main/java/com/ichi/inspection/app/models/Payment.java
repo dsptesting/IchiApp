@@ -113,6 +113,11 @@ public class Payment implements Parcelable {
     @Expose
     private String tranStoreNo1;
 
+    @SerializedName("InspectionId")
+    @Expose
+    private String InspectionId;
+
+
     @Override
     public String toString() {
         return "Payment{" +
@@ -153,7 +158,16 @@ public class Payment implements Parcelable {
                 ", cCExprYear='" + cCExprYear + '\'' +
                 ", cCExprYearSynced=" + cCExprYearSynced +
                 ", tranStoreNo1='" + tranStoreNo1 + '\'' +
+                ", InspectionId='" + InspectionId + '\'' +
                 '}';
+    }
+
+    public String getInspectionId() {
+        return InspectionId;
+    }
+
+    public void setInspectionId(String inspectionId) {
+        InspectionId = inspectionId;
     }
 
     public boolean isPaymentTypeSynced() {

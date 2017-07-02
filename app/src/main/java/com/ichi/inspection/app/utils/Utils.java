@@ -26,6 +26,7 @@ import com.ichi.inspection.app.models.AddSectionItem;
 import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.OrderUpdateContainer;
 import com.ichi.inspection.app.models.OrderUpdates;
+import com.ichi.inspection.app.models.SelectSection;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
 
@@ -33,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class Utils {
@@ -372,27 +374,66 @@ public class Utils {
         return false;
     }
 
-    public static boolean hasSubSection(List<SubSectionsItem> alSubSections, AddSectionItem addSectionItem) {
+    public static boolean hasSubSection(Context context,  AddSectionItem addSectionItem, int inspectionId) {
 
         //dont let it to put in array, so return true, to bypass..
         if(addSectionItem == null) return true;
+        SelectSection selectSection = (SelectSection) PreferencesHelper.getInstance(context).getObject(Constants.PREF_SELECT_SECTION, SelectSection.class);
+        List<SubSectionsItem> alSubSections = selectSection.getSubSections();
 
-        for(SubSectionsItem sub : alSubSections){
+        boolean has = false;
+        boolean deleted = false;
+        int sectionIdNumberStart = Integer.parseInt(addSectionItem.getSectionId());
+        int sectionIdNumberEnd = Integer.parseInt(addSectionItem.getSectionId().replace("00","99"));
+
+
+        Iterator<SubSectionsItem> iter1 = alSubSections.iterator();
+
+        while (iter1.hasNext()) {
+            SubSectionsItem sub = iter1.next();
+
             //Log.v(TAG,"sub: " +sub.getSectionId() + " , " + sub.getIOLineId() +" , "+ sub.getName());
             if(sub.getContentType() == Constants.HEADER) continue;
-            if(sub.getSectionId().equalsIgnoreCase(addSectionItem.getSectionId()) && sub.getName().equalsIgnoreCase(addSectionItem.getName())){
 
+            if(sub.getInspectionId().equalsIgnoreCase(""+inspectionId) && sub.getSectionId().equalsIgnoreCase(addSectionItem.getSectionId()) &&
+                    sub.getName().equalsIgnoreCase(addSectionItem.getName())){
+
+                has = true;
+                Log.v(TAG,"matched  "+ has + ", " + sub);
                 if(sub.getStatus() == Constants.DELETED){
                     //find its lines, delete from list, and add fresh again
-                    sub.setStatus(Constants.ADDED);
-
-                    return false;
+                    deleted = true;
+                    Log.v(TAG,"matched in");
+                    iter1.remove();
+                    has = false;
                 }
-                return true;
+
             }
         }
 
-        return false;
+        if(deleted) {
+            Iterator<SubSectionsItem> iter2 = alSubSections.iterator();
+
+            while (iter2.hasNext()) {
+                SubSectionsItem sub = iter2.next();
+                if (sub.getInspectionId().equalsIgnoreCase(""+inspectionId) && Integer.parseInt(sub.getSectionId()) > sectionIdNumberStart &&
+                        Integer.parseInt(sub.getSectionId()) <= sectionIdNumberEnd && sub.getStatus() == Constants.DELETED) {
+                    iter2.remove();
+                }
+            }
+
+            for(SubSectionsItem subSectionsItem : alSubSections){
+                if(subSectionsItem.getInspectionId().equalsIgnoreCase(""+inspectionId) && subSectionsItem.getSectionId().equalsIgnoreCase(addSectionItem.getSectionId())
+                        && subSectionsItem.getName().equalsIgnoreCase(addSectionItem.getName())){
+
+                    Log.v(TAG,"matched in found " + subSectionsItem);
+                }
+            }
+            selectSection.setSubSections(alSubSections);
+            PreferencesHelper.getInstance(context).putObject(Constants.PREF_SELECT_SECTION,selectSection);
+        }
+
+        return has;
     }
 
 

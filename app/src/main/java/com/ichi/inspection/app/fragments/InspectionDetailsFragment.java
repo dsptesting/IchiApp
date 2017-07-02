@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.GridActivity;
 import com.ichi.inspection.app.activities.MainActivity;
@@ -68,6 +69,7 @@ import com.ichi.inspection.app.utils.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -214,15 +216,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         mContext = getActivity();
         setHasOptionsMenu(true);
         initData();
-        /*EasyImage.configuration(mContext).saveInAppExternalFilesDir().
-                saveInRootPicturesDirectory().
-                setCopyExistingPicturesToPublicLocation(true);*/
 
         EasyImage.configuration(getActivity()).setAllowMultiplePickInGallery(true);
         getMasterList();
 
         return view;
     }
+
     private void errorCount(){
         int errorCount=0;
         Log.d(TAG, "onListItemClick: Size:"+alSubSections.size());
@@ -362,6 +362,11 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
     private void initView() {
 
+        //This is to refresh data once we get from web call async.
+        List<NamedTemplatesItem> templateNameList = namedTemplates.getNamedTemplatesItems();
+        templateNameList.add(0,new NamedTemplatesItem("Select option"));
+        templateAdapter.setData(templateNameList);
+
         //if this satisfies, then we have data from web...
         if (selectSection != null) {
             List<SubSectionsItem> temp = selectSection.getSubSections("" + orderListItem.getSequence());
@@ -369,6 +374,19 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 alSubSections.clear();
                 //this will include sections, lines which are already selected... new selected template's lines and sections are going to be entered here too..
                 alSubSections.addAll(temp);
+
+                //load template spinner's prompt
+                String foundTemplateId = getTemplateIdFromSections(0);
+
+                if(foundTemplateId != null && !foundTemplateId.isEmpty() && !foundTemplateId.equalsIgnoreCase("0")){
+                    for(int i=0;i<templateNameList.size();i++){
+                        NamedTemplatesItem namedTemplatesItem = templateNameList.get(i);
+                        if(namedTemplatesItem != null && namedTemplatesItem.getNamedTemplateId() != null &&
+                                namedTemplatesItem.getNamedTemplateId().equalsIgnoreCase(foundTemplateId)){
+                            sAddTemplate.setSelection(i);
+                        }
+                    }
+                }
 
                 //Load sections only to show in select section spinner
                 alSubSectionsOnly.clear();
@@ -382,10 +400,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         }
 
         //This is to refresh data once we get from web call async.
-        List<NamedTemplatesItem> templateNameList = namedTemplates.getNamedTemplatesItems();
-        templateNameList.add(0,new NamedTemplatesItem("Select option"));
-        templateAdapter.setData(templateNameList);
-
         List<AddSectionItem> addSectionList = addSection.getHeaderItems();
         addSectionList.add(0,new AddSectionItem("Select option"));
         addSectionAdapter.setData(addSectionList);
@@ -654,9 +668,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     }
 
     private void generateReport() throws JSONException, IOException {
-        SelectSection selectSectionReport = new SelectSection();
-        selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
-        List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSections("" + orderListItem.getSequence());
+        SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+        List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSectionsToUpload("" + orderListItem.getSequence());
 
         List<SubSectionsItem> SubSectionsLines = new ArrayList<>();
         for (SubSectionsItem sub : SectionAndlines) {
@@ -667,41 +680,31 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
 
         Payment payment=orderListItem.getPayment();
+        payment.setInspectionId(""+orderListItem.getSequence());
 
         List<Photo> photos=new ArrayList<>();
         for (SubSectionsItem item:SubSectionsLines){
             String InspectionId=item.getInspectionId();
             String LineId=item.getIOLineId();
             for (String image:item.getImageURIs()){
-                String imageName=image.substring(image.lastIndexOf("/"));
+                String imageName=image.substring(image.lastIndexOf("/")+1);
                 photos.add(new Photo(InspectionId,LineId,imageName));
             }
 
         }
-        Gson gson =new Gson();
-        JSONObject IOLine=new JSONObject();
-        IOLine.put("IOLine",gson.toJson(SectionAndlines));
+
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         JSONObject Photo1=new JSONObject();
-        Photo1.put("Photo",gson.toJson(photos));
-
-        JSONObject Photo=new JSONObject();
-        Photo.put("Photo",Photo1);
-
-        /*JSONObject Payment=new JSONObject();
-        Payment.put("Payment",payment);
-*/
-
+        Photo1.put("Photo",new JSONArray(gson.toJson(photos)));
 
         JSONObject parentObject=new JSONObject();
-        parentObject.put("IOLine",IOLine);
-        parentObject.put("Photos",Photo);
-        parentObject.put("Payment",gson.toJson(payment,Payment.class));
-
-
-
+        parentObject.put("IOLine",new JSONArray(gson.toJson(SectionAndlines)));
+        parentObject.put("photos",Photo1);
+        parentObject.put("Payment",new JSONObject(gson.toJson(payment, Payment.class)));
 
         String veryLongString=parentObject.toString();
+        Log.v(TAG,"Save request: " + veryLongString);
 
         FileOutputStream fos;
         File myFile = new File("/sdcard/ICHI.txt");
@@ -867,7 +870,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         SubSectionsItem subSectionsItem = alSubSections.get(position);
         if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER){
-            if(subSectionsItem.getTemplatedId() != null && !subSectionsItem.getTemplatedId().trim().isEmpty() && !subSectionsItem.getTemplatedId().equalsIgnoreCase("0")){
+            if(subSectionsItem.getTemplatedId() != null && !subSectionsItem.getTemplatedId().trim().isEmpty() && !subSectionsItem.getTemplatedId().equalsIgnoreCase("0")
+                    && subSectionsItem.getStatus() != Constants.DELETED){
                 return subSectionsItem.getTemplatedId();
             }
         }
@@ -970,7 +974,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 for(SubSectionsItem subSectionsItem : allsubs){
                     if(subSectionsItem != null && subSectionsItem.getContentType() != Constants.HEADER
                             && subSectionsItem.getInspectionId().equalsIgnoreCase("" + orderListItem.getSequence())
-                            && subSectionsItem.getSectionId().equalsIgnoreCase(""+selectedsubSectionsItem.getSectionId())
+                            /*TODO commented out for now.. to include lines with their sections
+                            && subSectionsItem.getSectionId().equalsIgnoreCase(""+selectedsubSectionsItem.getSectionId())*/
                             && subSectionsItem.getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())){
                         subSectionsItem.setStatus(Constants.DELETED);
                         deleted = true;
@@ -1469,7 +1474,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             if(selectedAddSectionItem != null){
 
                 //TODO Ask if duplicate add section is allowed or not to Amit
-                if(Utils.hasSubSection(alSubSections,selectedAddSectionItem)){
+                if(Utils.hasSubSection(getActivity(),selectedAddSectionItem, orderListItem.getSequence())){
                     Utils.showSnackBar(coordinatorLayout,"This section is already selected!");
                     if(activity != null) {
                         activity.runOnUiThread(new Runnable() {
@@ -1531,6 +1536,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             if(showLoader) Utils.hideProgressBar(getActivity());
             if(aVoid) sSelectSection.setSelection(alSubSectionsOnly.size() - 1);
             errorCount();
+            sAddSection.setSelection(0);
         }
     }
 

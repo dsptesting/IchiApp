@@ -1,66 +1,68 @@
 package com.ichi.inspection.app.models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
 public class SubSectionsItem{
 
-    @SerializedName("IsHead")
+    @SerializedName("IsHead") @Expose
     private String isHead;
 
-    @SerializedName("Poor")
+    @SerializedName("Poor") @Expose
     private String poor;
 
-    @SerializedName("Fair")
+    @SerializedName("Fair") @Expose
     private String fair;
 
-    @SerializedName("Comments")
+    @SerializedName("Comments") @Expose
     private String comments;
 
-    @SerializedName("InspectionId")
+    @SerializedName("InspectionId") @Expose
     private String inspectionId;
 
-    @SerializedName("SuppressPrint")
+    @SerializedName("SuppressPrint") @Expose
     private String suppressPrint;
 
-    @SerializedName("VeryPoor")
+    @SerializedName("VeryPoor") @Expose
     private String veryPoor;
 
-    @SerializedName("LineNumber")
+    @SerializedName("LineNumber") @Expose
     private String lineNumber;
 
-    @SerializedName("Name")
+    @SerializedName("Name") @Expose
     private String name;
 
-    @SerializedName("UsedHead")
+    @SerializedName("UsedHead") @Expose
     private String usedHead;
 
-    @SerializedName("PageBreak")
+    @SerializedName("PageBreak") @Expose
     private String pageBreak;
 
-    @SerializedName("IOLineId")
+    @SerializedName("IOLineId") @Expose
     private String iOLineId;
 
-    @SerializedName("LineOrder")
+    @SerializedName("LineOrder") @Expose
     private String lineOrder;
 
-    @SerializedName("Good")
+    @SerializedName("Good") @Expose
     private String good;
 
-    @SerializedName("SectionId")
+    @SerializedName("SectionId") @Expose
     private String sectionId;
 
-    @SerializedName("NumberOfExposures")
+    @SerializedName("NumberOfExposures") @Expose
     private String numberOfExposures;
 
-    @SerializedName("NotInspected")
+    @SerializedName("NotInspected") @Expose
     private String notInspected;
 
     private ArrayList<String> imageURIs;
 
-	@SerializedName("TemplateId")
+	@SerializedName("TemplateId") @Expose
     private String templateId;
+
 	private int contentType;
 	private int status;
 

@@ -1,11 +1,15 @@
 package com.ichi.inspection.app.rest;
 
+import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.utils.Constants;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -30,6 +34,8 @@ public interface ApiService {
     Call<GetTokenResponse> executeRefreshToken(@Field("refresh_token") String refresh_token, @Field("grant_type") String grant_type,
                                                @Field("client_id") String client_id);
 
+    @GET(Constants.URL_SAVE_LIST)
+    Call<BaseResponse> executeSaveList(@Header("Authorization") String authorization, @Body JSONObject jsonObject);
 /*
     @FormUrlEncoded
     @POST(Constants.URL_CHECK_VCARD_ID)

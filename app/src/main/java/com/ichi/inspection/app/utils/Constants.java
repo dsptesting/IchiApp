@@ -51,6 +51,7 @@ public class Constants {
     public static final String URL_LOGIN = "http://uat.ichisoftware.com:8088/token";
     public static final String URL_ORDER_LIST = "http://uat.ichisoftware.com:8088/ichi/orders";
     public static final String URL_MASTER_LIST = "http://uat.ichisoftware.com:8088/ichi/master";
+    public static final String URL_SAVE_LIST = "http://uat.ichisoftware.com:8088/ichi/save";
 
     //TODO sample... remove if unused. later
     public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd'T'HH:mm:ss";
