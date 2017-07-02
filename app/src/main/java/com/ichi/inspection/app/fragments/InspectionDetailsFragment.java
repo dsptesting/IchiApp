@@ -56,6 +56,7 @@ import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.NamedTemplates;
 import com.ichi.inspection.app.models.NamedTemplatesItem;
 import com.ichi.inspection.app.models.OrderListItem;
+import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.models.Payment;
 import com.ichi.inspection.app.models.Photo;
 import com.ichi.inspection.app.models.SelectSection;
@@ -63,6 +64,7 @@ import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
 import com.ichi.inspection.app.models.Templates;
 import com.ichi.inspection.app.task.MasterAsyncTask;
+import com.ichi.inspection.app.task.SaveAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
@@ -152,6 +154,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     private LineAdapter lineAdapter;
 
     private MasterAsyncTask masterAsyncTask;
+    private SaveAsyncTask saveAsyncTask;
 
 
     @Nullable
@@ -656,6 +659,23 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 showAddNewLineDialog();
                 break;
             case R.id.cvGenerateReport:
+                if(!Utils.isNetworkAvailable(getActivity())){
+                    Utils.showSnackBar(coordinatorLayout,getString(R.string.internet_not_avail));
+                    return;
+                }else{
+                    showAlertDialog();
+                }
+
+                break;
+        }
+    }
+
+    private void showAlertDialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
+        builder.setMessage("Are you sure you want to generate report?\nOnce you generate,you won't be able to do inspection for this order.");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 try {
                     generateReport();
                 } catch (JSONException e) {
@@ -663,10 +683,17 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                break;
-        }
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
     }
-
     private void generateReport() throws JSONException, IOException {
         SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
         List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSectionsToUpload("" + orderListItem.getSequence());
@@ -703,6 +730,9 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         parentObject.put("photos",Photo1);
         parentObject.put("Payment",new JSONObject(gson.toJson(payment, Payment.class)));
 
+        saveAsyncTask=new SaveAsyncTask(mContext,this,parentObject);
+        saveAsyncTask.execute();
+
         String veryLongString=parentObject.toString();
         Log.v(TAG,"Save request: " + veryLongString);
 
@@ -722,34 +752,68 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         pbLoader.setVisibility(View.VISIBLE);
         tvNoData.setVisibility(View.GONE);
         mainLayout.setVisibility(View.GONE);
+        if (asyncTask instanceof SaveAsyncTask){
+
+        }
     }
 
     @Override
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
-
         pbLoader.setVisibility(View.GONE);
-        if (!Utils.showCallError(coordinatorLayout, baseResponse)) {
+        if (asyncTask instanceof SaveAsyncTask){
+            //Remove sections
+            SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+            List<SubSectionsItem> subSectionsItems=selectSectionReport.getSubSections();
 
-            MasterResponse masterResponseData = (MasterResponse) baseResponse;
-            if (masterResponseData != null) {
+            Iterator<SubSectionsItem> iterator=subSectionsItems.iterator();
+            while (iterator.hasNext()) {
+                SubSectionsItem item=  iterator.next();
+                if (item.getInspectionId().equals(orderListItem.getSequence()));
+                iterator.remove();
+            }
+            selectSectionReport.setSubSections(subSectionsItems);
+            prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
 
-                if(masterResponseData.getAction() == Constants.ACTION_LOGIN_AGAIN){
-                    Intent intent = new Intent(getActivity(), StartActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                    prefs.clearSavedToken();
+            //Remove order
+            List<OrderListItem> orders=((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class)).getOrderList();
+            for (OrderListItem order:orders){
+                if (order.getSequence()==orderListItem.getSequence()){
+                    orders.remove(order);
+                    break;
                 }
-                else if(masterResponseData.getAction() == Constants.ACTION_DO_NOTHING) {
-                    masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
-                    addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
-                    selectSection = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
-                    namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
-                    templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
+            }
+            prefs.putObject(Constants.PREF_ORDER,orders);
+
+            Intent intent = new Intent(getActivity() , MainActivity.class);
+            startActivity(intent);
+            getActivity().finishAffinity();
+
+        }
+        if (asyncTask instanceof MasterAsyncTask){
+            if (!Utils.showCallError(coordinatorLayout, baseResponse)) {
+
+                MasterResponse masterResponseData = (MasterResponse) baseResponse;
+                if (masterResponseData != null) {
+
+                    if(masterResponseData.getAction() == Constants.ACTION_LOGIN_AGAIN){
+                        Intent intent = new Intent(getActivity(), StartActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                        prefs.clearSavedToken();
+                    }
+                    else if(masterResponseData.getAction() == Constants.ACTION_DO_NOTHING) {
+                        masterResponse = ((MasterResponse) prefs.getObject(Constants.PREF_MASTER, MasterResponse.class));
+                        addSection = ((AddSection) prefs.getObject(Constants.PREF_ADD_SECTION, AddSection.class));
+                        selectSection = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+                        namedTemplates = ((NamedTemplates) prefs.getObject(Constants.PREF_NAMED_TEMPLATES, NamedTemplates.class));
+                        templates = ((Templates) prefs.getObject(Constants.PREF_TEMPLATES, Templates.class));
+                    }
+                    initView();
+                    setLayoutVisibility();
                 }
-                initView();
-                setLayoutVisibility();
             }
         }
+
     }
 
     @Override
@@ -1548,6 +1612,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if(subSectionSelectedAsyncTask != null && !subSectionSelectedAsyncTask.isCancelled()) subSectionSelectedAsyncTask.cancel(true);
         if(markAllSelectedAsyncTask != null && !markAllSelectedAsyncTask.isCancelled()) markAllSelectedAsyncTask.cancel(true);
         if(removeImageAsyncTask != null && !removeImageAsyncTask.isCancelled()) removeImageAsyncTask.cancel(true);
+        if (saveAsyncTask != null && !saveAsyncTask.isCancelled()) saveAsyncTask.cancel(true);
 
         EventBus.getDefault().unregister(this);
         super.onDestroy();

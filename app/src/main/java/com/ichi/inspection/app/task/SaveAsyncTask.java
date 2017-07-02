@@ -28,9 +28,34 @@ import retrofit2.Response;
  * Created by Palak on 05-03-2017.
  */
 
-public class SaveAsyncTask /*extends AsyncTask<Void,Void,BaseResponse> */{
+public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
+    private Context context;
+    private OnApiCallbackListener onApiCallbackListener;
+    private PreferencesHelper prefs;
+    private JSONObject jsonObject;
+    public SaveAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener, JSONObject jsonObject) {
+        this.context = context;
+        this.onApiCallbackListener = onApiCallbackListener;
+        prefs = PreferencesHelper.getInstance(this.context);
+        this.jsonObject = jsonObject;
 
-   /* private static final String TAG = SaveAsyncTask.class.getSimpleName();
+    }
+
+    @Override
+    protected void onPreExecute() {
+        onApiCallbackListener.onApiPreExecute(this);
+    }
+
+    @Override
+    protected BaseResponse doInBackground(Void... params) {
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(BaseResponse baseResponse) {
+        onApiCallbackListener.onApiPostExecute(baseResponse,this);
+    }
+    /* private static final String TAG = SaveAsyncTask.class.getSimpleName();
     private Context context;
     private OnApiCallbackListener onApiCallbackListener;
     private PreferencesHelper prefs;
