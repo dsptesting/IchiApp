@@ -11,6 +11,8 @@ import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.models.Payment;
+import com.ichi.inspection.app.models.SelectSection;
+import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.rest.ApiService;
 import com.ichi.inspection.app.rest.ServiceGenerator;
 import com.ichi.inspection.app.utils.Constants;
@@ -18,8 +20,11 @@ import com.ichi.inspection.app.utils.PreferencesHelper;
 
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -29,44 +34,20 @@ import retrofit2.Response;
  */
 
 public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
+
+    private static final String TAG = SaveAsyncTask.class.getSimpleName();
     private Context context;
     private OnApiCallbackListener onApiCallbackListener;
     private PreferencesHelper prefs;
     private JSONObject jsonObject;
-    public SaveAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener, JSONObject jsonObject) {
+    private OrderListItem orderListItem;
+
+    public SaveAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener, JSONObject jsonObject, OrderListItem orderListItem) {
         this.context = context;
+        this.orderListItem = orderListItem;
         this.onApiCallbackListener = onApiCallbackListener;
         prefs = PreferencesHelper.getInstance(this.context);
         this.jsonObject = jsonObject;
-
-    }
-
-    @Override
-    protected void onPreExecute() {
-        onApiCallbackListener.onApiPreExecute(this);
-    }
-
-    @Override
-    protected BaseResponse doInBackground(Void... params) {
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(BaseResponse baseResponse) {
-        onApiCallbackListener.onApiPostExecute(baseResponse,this);
-    }
-    /* private static final String TAG = SaveAsyncTask.class.getSimpleName();
-    private Context context;
-    private OnApiCallbackListener onApiCallbackListener;
-    private PreferencesHelper prefs;
-    private JSONObject jsonObject;
-
-    public SaveAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener, JSONObject jsonObject) {
-        this.context = context;
-        this.onApiCallbackListener = onApiCallbackListener;
-        prefs = PreferencesHelper.getInstance(this.context);
-        this.jsonObject = jsonObject;
-
     }
 
     @Override
@@ -84,33 +65,37 @@ public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
             response = callApi(apiService,response);
 
             //TODO check below line
-            if(response != null && !response.isEmpty() && response.equalsIgnoreCase("SUCCESS")){
-                prefs.putObject(Constants.PREF_ORDER,orderResponse);
+            if(response != null && response.getMessage() != null && response.getMessage().equalsIgnoreCase("SUCCESS")){
+                //TODO success, delete data from pref regarding this order
+                removeOrder();
             }
 
-            Log.v(TAG,"OrderResponse : " + orderResponse);
+            Log.v(TAG,"Response : " + response);
         }
         catch (Exception e){
             if(Constants.showStackTrace) e.printStackTrace();
         }
 
-        return orderResponse;
+        return response;
     }
 
-    private String callApi(ApiService apiService,BaseResponse res) throws Exception {
+    @Override
+    protected void onPostExecute(BaseResponse baseResponse) {
+        onApiCallbackListener.onApiPostExecute(baseResponse,this);
+    }
+
+    private BaseResponse callApi(ApiService apiService,BaseResponse orderResponse) throws Exception {
 
         Call<BaseResponse> orderResponseCall = null;
 
-        orderResponseCall = apiService.executeSaveList("bearer "+prefs.getSavedTokenResponse(context).getAccessToken(),jsonObject);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"),jsonObject.toString());
+        orderResponseCall = apiService.executeSaveList("bearer "+prefs.getSavedTokenResponse(context).getAccessToken(),body);
 
         Response<BaseResponse> response = orderResponseCall.execute();
         if(response.isSuccessful()){
             if(response.body() != null){
-                res = response.body();
-                //fillData(orderResponse.getOrderList());
-                res.setAction(Constants.ACTION_DO_NOTHING);
-                Log.v(TAG,"fillData printed : " + orderResponse.getOrderList());
-                //prefs.putObject(Constants.PREF_ORDER,orderResponse.getOrderList());
+                orderResponse = response.body();
+                orderResponse.setAction(Constants.ACTION_DO_NOTHING);
                 return orderResponse;
             }
         }
@@ -158,126 +143,33 @@ public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
         return orderResponse;
     }
 
-    @Override
-    protected void onPostExecute(OrderResponse orderResponse) {
+    private void removeOrder(){
 
-        onApiCallbackListener.onApiPostExecute(orderResponse,this);
-    }
+        //Remove sections
+        SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+        List<SubSectionsItem> subSectionsItems=selectSectionReport.getSubSections();
 
-    private void fillData(List<OrderListItem> newList){
-
-        if(!prefs.contains(Constants.PREF_ORDER)) return;
-
-        List<OrderListItem> tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
-
-        Log.v(TAG,"tempOrderListItems  : " + tempOrderListItems);
-        if(tempOrderListItems == null) return;
-        if(newList == null) return;
-
-        for(int i=0;i<newList.size();i++){
-            returnSavedData(tempOrderListItems,newList.get(i));
+        Iterator<SubSectionsItem> iterator=subSectionsItems.iterator();
+        while (iterator.hasNext()) {
+            SubSectionsItem item=  iterator.next();
+            if (item.getInspectionId().equals(orderListItem.getSequence()));
+            iterator.remove();
         }
+        selectSectionReport.setSubSections(subSectionsItems);
+        prefs.putObject(Constants.PREF_SELECT_SECTION,selectSectionReport);
 
-    }
-
-    private OrderListItem returnSavedData(List<OrderListItem> tempOrderListItems,OrderListItem orderListItem) {
-
-        if(orderListItem == null) return null;
-
-        if(orderListItem.getPayment() == null) return null;
-
-        OrderListItem savedOrder = null;
-
-        if(tempOrderListItems == null){
-            tempOrderListItems = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER,OrderResponse.class)).getOrderList();
-            if(tempOrderListItems == null) return orderListItem;
-        }
-
-        for(int i=0;i<tempOrderListItems.size();i++){
-            if(orderListItem.getIONum() != 0 && orderListItem.getIONum() == tempOrderListItems.get(i).getIONum()){
-                savedOrder = tempOrderListItems.get(i);
+        //Remove order
+        OrderResponse orderResponse = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class));
+        List<OrderListItem> orders = orderResponse.getOrderList();
+        for (OrderListItem order:orders){
+            if (order.getSequence()==orderListItem.getSequence()){
+                orders.remove(order);
+                break;
             }
         }
+        orderResponse.setOrderList(orders);
+        prefs.putObject(Constants.PREF_ORDER,orderResponse);
 
-        if(savedOrder == null) return orderListItem;
-
-        if(savedOrder.getPayment() == null) return orderListItem;
-
-        Payment savedPayment = savedOrder.getPayment();
-        Payment newPayment = orderListItem.getPayment();
-
-        if(savedPayment.isAuthorizatinCodeSynced()){
-            newPayment.setAuthorizationCode(savedPayment.getAuthorizationCode());
-            newPayment.setAuthorizatinCodeSynced(savedPayment.isAuthorizatinCodeSynced());
-        }
-
-        if(savedPayment.isCcNameOnCardSynced()){
-            newPayment.setcCNameOnCard(savedPayment.getcCNameOnCard());
-            newPayment.setCcNameOnCardSynced(savedPayment.isCcNameOnCardSynced());
-        }
-
-        if(savedPayment.isAmountSynced()){
-            newPayment.setAmount(savedPayment.getAmount());
-            newPayment.setAmountSynced(savedPayment.isAmountSynced());
-        }
-
-        if(savedPayment.isCcNumberSynced()){
-            newPayment.setcCNumber(savedPayment.getcCNumber());
-            newPayment.setCcNumberSynced(savedPayment.isCcNumberSynced());
-        }
-
-        if(savedPayment.isCcCodeSynced()){
-            newPayment.setcCCode(savedPayment.getcCCode());
-            newPayment.setCcCodeSynced(savedPayment.isCcCodeSynced());
-        }
-        if(savedPayment.isCheckNumberSynced()){
-            newPayment.setCheckNumber(savedPayment.getCheckNumber());
-            newPayment.setCheckNumberSynced(savedPayment.isCheckNumberSynced());
-        }
-        if(savedPayment.isCcExprMonthSynced()){
-            newPayment.setcCExprMonth(savedPayment.getcCExprMonth());
-            newPayment.setCcExprMonthSynced(savedPayment.isCcExprMonthSynced());
-        }
-        if(savedPayment.isCcZipSynced()){
-            newPayment.setcCZip(savedPayment.getcCZip());
-            newPayment.setCcZipSynced(savedPayment.isCcZipSynced());
-        }
-        if(savedPayment.isCcCitySynced()){
-            newPayment.setcCCity(savedPayment.getcCCity());
-            newPayment.setCcCitySynced(savedPayment.isCcCitySynced());
-        }
-
-        if(savedPayment.isCcStateSynced()){
-            newPayment.setcCState(savedPayment.getcCState());
-            newPayment.setCcStateSynced(savedPayment.isCcStateSynced());
-        }
-
-        if(savedPayment.isTranTypeSynced()){
-            newPayment.setTranType(savedPayment.getTranType());
-            newPayment.setTranTypeSynced(savedPayment.isTranTypeSynced());
-        }
-
-        if(savedPayment.isCcAddressSynced()){
-            newPayment.setcCAddress(savedPayment.getcCAddress());
-            newPayment.setCcAddressSynced(savedPayment.isCcAddressSynced());
-        }
-
-        if(savedPayment.iscCTypeSynced()){
-            newPayment.setcCType(savedPayment.getcCType());
-            newPayment.setcCTypeSynced(savedPayment.iscCTypeSynced());
-        }
-
-        if(savedPayment.isPaymentTypeSynced()){
-            newPayment.setPaymentType(savedPayment.getPaymentType());
-            newPayment.setPaymentTypeSynced(savedPayment.isPaymentTypeSynced());
-        }
-
-        if(savedPayment.iscCTypeSynced()){
-            newPayment.setcCType(savedPayment.getcCType());
-            newPayment.setcCTypeSynced(savedPayment.iscCTypeSynced());
-        }
-
-        return orderListItem;
     }
-*/
+
 }

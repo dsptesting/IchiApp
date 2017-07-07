@@ -695,6 +695,12 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         alertDialog.show();
     }
     private void generateReport() throws JSONException, IOException {
+
+        if(alSubSections != null && alSubSections.isEmpty()){
+            Utils.showSnackBar(coordinatorLayout,"Can't generate report, You must select first!");
+            return;
+        }
+
         SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
         List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSectionsToUpload("" + orderListItem.getSequence());
 
@@ -730,7 +736,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         parentObject.put("photos",Photo1);
         parentObject.put("Payment",new JSONObject(gson.toJson(payment, Payment.class)));
 
-        saveAsyncTask=new SaveAsyncTask(mContext,this,parentObject);
+        /*prefs.putObject("sub_"+ orderListItem.getSequence(), parentObject);
+        prefs.putObject("order_"+ orderListItem.getSequence(), orderListItem);*/
+
+        saveAsyncTask=new SaveAsyncTask(mContext,this,parentObject,orderListItem);
         saveAsyncTask.execute();
 
         String veryLongString=parentObject.toString();
@@ -761,28 +770,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
         pbLoader.setVisibility(View.GONE);
         if (asyncTask instanceof SaveAsyncTask){
-            //Remove sections
-            SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
-            List<SubSectionsItem> subSectionsItems=selectSectionReport.getSubSections();
-
-            Iterator<SubSectionsItem> iterator=subSectionsItems.iterator();
-            while (iterator.hasNext()) {
-                SubSectionsItem item=  iterator.next();
-                if (item.getInspectionId().equals(orderListItem.getSequence()));
-                iterator.remove();
-            }
-            selectSectionReport.setSubSections(subSectionsItems);
-            prefs.putObject(Constants.PREF_SELECT_SECTION,selectSection);
-
-            //Remove order
-            List<OrderListItem> orders=((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class)).getOrderList();
-            for (OrderListItem order:orders){
-                if (order.getSequence()==orderListItem.getSequence()){
-                    orders.remove(order);
-                    break;
-                }
-            }
-            prefs.putObject(Constants.PREF_ORDER,orders);
 
             Intent intent = new Intent(getActivity() , MainActivity.class);
             startActivity(intent);

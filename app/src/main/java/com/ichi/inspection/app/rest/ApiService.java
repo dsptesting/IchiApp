@@ -8,6 +8,7 @@ import com.ichi.inspection.app.utils.Constants;
 
 import org.json.JSONObject;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -34,8 +35,8 @@ public interface ApiService {
     Call<GetTokenResponse> executeRefreshToken(@Field("refresh_token") String refresh_token, @Field("grant_type") String grant_type,
                                                @Field("client_id") String client_id);
 
-    @GET(Constants.URL_SAVE_LIST)
-    Call<BaseResponse> executeSaveList(@Header("Authorization") String authorization, @Body JSONObject jsonObject);
+    @POST(Constants.URL_SAVE_LIST)
+    Call<BaseResponse> executeSaveList(@Header("Authorization") String authorization, @Body RequestBody jsonObject);
 /*
     @FormUrlEncoded
     @POST(Constants.URL_CHECK_VCARD_ID)

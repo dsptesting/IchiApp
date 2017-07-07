@@ -115,9 +115,7 @@ public class MasterAsyncTask extends AsyncTask<Void,Void,MasterResponse> {
                         boolean changed = false;
 
                         for(SubSectionsItem oldItem : oldSubSectionsItems){
-                            if(oldItem.getInspectionId().equalsIgnoreCase("274169")){
-                                Log.v(TAG,"iolineId "+ oldItem.getIOLineId());
-                            }
+
                             if(oldItem.getIOLineId().equalsIgnoreCase(newSub.getIOLineId()) && oldItem.getInspectionId().equalsIgnoreCase(newSub.getInspectionId()) /* && oldItem.getSectionId().equalsIgnoreCase(newSub.getSectionId())*/){
                                 avail = true;
                                 oldSub = oldItem;
