@@ -4,6 +4,7 @@ import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.OrderResponse;
+import com.ichi.inspection.app.models.UploadPhoto;
 import com.ichi.inspection.app.utils.Constants;
 
 import org.json.JSONObject;
@@ -15,7 +16,9 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface ApiService {
 
@@ -37,7 +40,14 @@ public interface ApiService {
 
     @POST(Constants.URL_SAVE_LIST)
     Call<BaseResponse> executeSaveList(@Header("Authorization") String authorization, @Body RequestBody jsonObject);
-/*
+
+
+
+
+    @Multipart
+    @POST(Constants.URL_UPLOAD_PHOTO)
+    Call<UploadPhoto> uploadVideoToServer(@Header("Authorization") String authorization,@Body RequestBody body);
+    /*
     @FormUrlEncoded
     @POST(Constants.URL_CHECK_VCARD_ID)
     Call<BaseResponse> executeCheckVCardId(@Field("vcard_id") String vcard_id);

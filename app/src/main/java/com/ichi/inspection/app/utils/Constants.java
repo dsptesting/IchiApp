@@ -52,6 +52,7 @@ public class Constants {
     public static final String URL_ORDER_LIST = "http://uat.ichisoftware.com:8088/ichi/orders";
     public static final String URL_MASTER_LIST = "http://uat.ichisoftware.com:8088/ichi/master";
     public static final String URL_SAVE_LIST = "http://uat.ichisoftware.com:8088/ichi/save";
+    public static final String URL_UPLOAD_PHOTO = "http://uat.ichisoftware.com:8088/ichi/upload/91";
 
     //TODO sample... remove if unused. later
     public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd'T'HH:mm:ss";
@@ -70,6 +71,7 @@ public class Constants {
     public static final String PREF_NAMED_TEMPLATES = "PREF_NAMED_TEMPLATES";
     public static final String PREF_TEMPLATES = "PREF_TEMPLATES";
     public static final String PREF_ORDER_UPDATE = "PREF_ORDER_UPDATE";
+    public static final String PREF_IMAGE_URL = "PREF_IMAGE_URL";
 
 
     // result codes

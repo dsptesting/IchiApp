@@ -18,11 +18,24 @@ public class Photo {
     @SerializedName("PhotoName") @Expose
     public String PhotoName;
 
+    @SerializedName("PhotoPath") @Expose
+    public String PhotoPath;
+
     public Photo(String InspectionId,String LineId,String PhotoName){
         this.InspectionId=InspectionId;
         this.LineId=LineId;
         this.PhotoName=PhotoName;
+        this.PhotoPath=PhotoPath;
     }
+
+    public String getPhotoPath() {
+        return PhotoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        PhotoPath = photoPath;
+    }
+
     public String getInspectionId() {
         return InspectionId;
     }

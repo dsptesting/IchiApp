@@ -738,7 +738,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
         /*prefs.putObject("sub_"+ orderListItem.getSequence(), parentObject);
         prefs.putObject("order_"+ orderListItem.getSequence(), orderListItem);*/
-
+        prefs.putString(Constants.PREF_IMAGE_URL,gson.toJson(photos));
         saveAsyncTask=new SaveAsyncTask(mContext,this,parentObject,orderListItem);
         saveAsyncTask.execute();
 
