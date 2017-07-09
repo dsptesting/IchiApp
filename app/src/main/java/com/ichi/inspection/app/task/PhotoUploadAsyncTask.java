@@ -10,7 +10,6 @@ import com.ichi.inspection.app.models.BaseResponse;
 import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderResponse;
-import com.ichi.inspection.app.models.Payment;
 import com.ichi.inspection.app.models.SelectSection;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.rest.ApiService;
@@ -20,30 +19,32 @@ import com.ichi.inspection.app.utils.PreferencesHelper;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Created by Palak on 05-03-2017.
  */
 
-public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
+public class PhotoUploadAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
 
-    private static final String TAG = SaveAsyncTask.class.getSimpleName();
+    private static final String TAG = PhotoUploadAsyncTask.class.getSimpleName();
     private Context context;
     private OnApiCallbackListener onApiCallbackListener;
     private PreferencesHelper prefs;
     private JSONObject jsonObject;
     private OrderListItem orderListItem;
 
-
-    public SaveAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener, JSONObject jsonObject, OrderListItem orderListItem) {
+    public PhotoUploadAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener, JSONObject jsonObject, OrderListItem orderListItem) {
         this.context = context;
         this.orderListItem = orderListItem;
         this.onApiCallbackListener = onApiCallbackListener;
@@ -53,30 +54,51 @@ public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
 
     @Override
     protected void onPreExecute() {
+        onApiCallbackListener.onApiPreExecute(this);
     }
 
     @Override
     protected BaseResponse doInBackground(Void... params) {
 
-        BaseResponse response = null;
+        // create upload service client
+       /* ApiService service = ServiceGenerator.getApiService(context);
 
-        try{
-            ApiService apiService = ServiceGenerator.getApiService(context);
-            response = callApi(apiService,response);
+        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+        // use the FileUtils to get the actual file by uri
+        File file = new File(fileUri);
 
-            //TODO check below line
-            if(response != null && response.getMessage() != null && response.getMessage().equalsIgnoreCase("SUCCESS")){
-                //TODO success, delete data from pref regarding this order
-                removeOrder();
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(
+                        MediaType.parse(context.getContentResolver().getType(fileUri)),
+                        file
+                );
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+
+        // add another part within the multipart request
+        String descriptionString = "hello, this is description speaking";
+        RequestBody description =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, descriptionString);
+
+        // finally, execute the request
+        Call<ResponseBody> call = service.upload(description, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                Log.v("Upload", "success");
             }
 
-            Log.v(TAG,"Response : " + response);
-        }
-        catch (Exception e){
-            if(Constants.showStackTrace) e.printStackTrace();
-        }
-
-        return response;
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });*/
+        return new BaseResponse();
     }
 
     @Override
@@ -142,8 +164,9 @@ public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
 
         return orderResponse;
     }
+/*
 
-    private void removeOrder(){
+    private void removePhoto(){
 
         //Remove sections
         SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
@@ -171,5 +194,6 @@ public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
         prefs.putObject(Constants.PREF_ORDER,orderResponse);
 
     }
+*/
 
 }

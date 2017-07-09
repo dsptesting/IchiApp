@@ -21,11 +21,21 @@ public class Photo {
     @SerializedName("PhotoPath") @Expose
     public String PhotoPath;
 
-    public Photo(String InspectionId,String LineId,String PhotoName){
+    public Photo(String InspectionId,String LineId,String PhotoName, String PhotoPath){
         this.InspectionId=InspectionId;
         this.LineId=LineId;
         this.PhotoName=PhotoName;
         this.PhotoPath=PhotoPath;
+    }
+
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "InspectionId='" + InspectionId + '\'' +
+                ", LineId='" + LineId + '\'' +
+                ", PhotoName='" + PhotoName + '\'' +
+                ", PhotoPath='" + PhotoPath + '\'' +
+                '}';
     }
 
     public String getPhotoPath() {
@@ -56,7 +66,9 @@ public class Photo {
         return PhotoName;
     }
 
+
     public void setPhotoName(String photoName) {
         PhotoName = photoName;
     }
 }
+

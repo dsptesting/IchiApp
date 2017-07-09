@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,8 +64,10 @@ import com.ichi.inspection.app.models.SelectSection;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
 import com.ichi.inspection.app.models.Templates;
+import com.ichi.inspection.app.service.UploadPhotoService;
 import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.task.SaveAsyncTask;
+import com.ichi.inspection.app.task.UploadPhotoAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
@@ -208,6 +211,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
     @BindView(R.id.tvErrorCount)
     TextView tvErrorCount;
     private RemoveImageAsyncTask removeImageAsyncTask;
+    private ArrayList<Photo> photos;
+    private boolean justForUpdate;
 
     @Nullable
     @Override
@@ -386,6 +391,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         NamedTemplatesItem namedTemplatesItem = templateNameList.get(i);
                         if(namedTemplatesItem != null && namedTemplatesItem.getNamedTemplateId() != null &&
                                 namedTemplatesItem.getNamedTemplateId().equalsIgnoreCase(foundTemplateId)){
+                            justForUpdate = true;
                             sAddTemplate.setSelection(i);
                         }
                     }
@@ -694,6 +700,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         AlertDialog alertDialog=builder.create();
         alertDialog.show();
     }
+
     private void generateReport() throws JSONException, IOException {
 
         if(alSubSections != null && alSubSections.isEmpty()){
@@ -701,48 +708,11 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             return;
         }
 
-        SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
-        List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSectionsToUpload("" + orderListItem.getSequence());
-
-        List<SubSectionsItem> SubSectionsLines = new ArrayList<>();
-        for (SubSectionsItem sub : SectionAndlines) {
-            if (!Boolean.parseBoolean(sub.getIsHead())) {
-                SubSectionsLines.add(sub);
-            }
-        }
+        GenerateReportAsyncTask generateReportAsyncTask = new GenerateReportAsyncTask(getActivity(),true);
+        generateReportAsyncTask.execute();
 
 
-        Payment payment=orderListItem.getPayment();
-        payment.setInspectionId(""+orderListItem.getSequence());
-
-        List<Photo> photos=new ArrayList<>();
-        for (SubSectionsItem item:SubSectionsLines){
-            String InspectionId=item.getInspectionId();
-            String LineId=item.getIOLineId();
-            for (String image:item.getImageURIs()){
-                String imageName=image.substring(image.lastIndexOf("/")+1);
-                photos.add(new Photo(InspectionId,LineId,imageName));
-            }
-
-        }
-
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-
-        JSONObject Photo1=new JSONObject();
-        Photo1.put("Photo",new JSONArray(gson.toJson(photos)));
-
-        JSONObject parentObject=new JSONObject();
-        parentObject.put("IOLine",new JSONArray(gson.toJson(SectionAndlines)));
-        parentObject.put("photos",Photo1);
-        parentObject.put("Payment",new JSONObject(gson.toJson(payment, Payment.class)));
-
-        /*prefs.putObject("sub_"+ orderListItem.getSequence(), parentObject);
-        prefs.putObject("order_"+ orderListItem.getSequence(), orderListItem);*/
-        prefs.putString(Constants.PREF_IMAGE_URL,gson.toJson(photos));
-        saveAsyncTask=new SaveAsyncTask(mContext,this,parentObject,orderListItem);
-        saveAsyncTask.execute();
-
-        String veryLongString=parentObject.toString();
+        /*String veryLongString=parentObject.toString();
         Log.v(TAG,"Save request: " + veryLongString);
 
         FileOutputStream fos;
@@ -752,7 +722,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
         myOutWriter.append(veryLongString);
         myOutWriter.close();
-        fOut.close();
+        fOut.close();*/
 
     }
 
@@ -761,9 +731,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         pbLoader.setVisibility(View.VISIBLE);
         tvNoData.setVisibility(View.GONE);
         mainLayout.setVisibility(View.GONE);
-        if (asyncTask instanceof SaveAsyncTask){
-
-        }
     }
 
     @Override
@@ -771,6 +738,14 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         pbLoader.setVisibility(View.GONE);
         if (asyncTask instanceof SaveAsyncTask){
 
+            Utils.hideProgressBar(getActivity());
+            /*Log.v(TAG,"photos : " + photos);
+            Log.v(TAG,"path: "+photos.get(0).getPhotoPath());
+            Log.v(TAG,"pathName: "+photos.get(0).getPhotoName());
+            UploadPhotoAsyncTask uploadPhotoService = new UploadPhotoAsyncTask(getActivity(),photos.get(0).getPhotoPath(),""+orderListItem.getSequence());
+            uploadPhotoService.execute();*/
+
+            Toast.makeText(getActivity(),"Order saved online!",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getActivity() , MainActivity.class);
             startActivity(intent);
             getActivity().finishAffinity();
@@ -849,7 +824,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                     selectedIndexNamedTemplates = position;
 
-                    if (selectedIndexNamedTemplates > 0) {
+                    if (selectedIndexNamedTemplates > 0 && !justForUpdate) {
                         templateSelectedAsyncTask = new TemplateSelectedAsyncTask(getActivity(),true);
                         templateSelectedAsyncTask.execute();
                     }
@@ -1499,6 +1474,77 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             errorCount();
         }
 
+    }
+
+    private class GenerateReportAsyncTask extends AsyncTask<Integer,Void,Void>{
+
+        Activity activity;
+        boolean showLoader;
+        JSONObject parentObject;
+
+        public GenerateReportAsyncTask(Activity activity, boolean showLoader) {
+            this.activity = activity;
+            this.showLoader = showLoader;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(showLoader) Utils.showProgressBar(getActivity());
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+
+            SelectSection selectSectionReport = ((SelectSection) prefs.getObject(Constants.PREF_SELECT_SECTION, SelectSection.class));
+            List<SubSectionsItem> SectionAndlines = selectSectionReport.getSubSectionsToUpload("" + orderListItem.getSequence());
+
+            List<SubSectionsItem> SubSectionsLines = new ArrayList<>();
+            for (SubSectionsItem sub : SectionAndlines) {
+                if (!Boolean.parseBoolean(sub.getIsHead())) {
+                    SubSectionsLines.add(sub);
+                }
+            }
+
+            Payment payment=orderListItem.getPayment();
+            payment.setInspectionId(""+orderListItem.getSequence());
+
+            photos=new ArrayList<>();
+            for (SubSectionsItem item:SubSectionsLines){
+                String InspectionId=item.getInspectionId();
+                String LineId=item.getIOLineId();
+                for (String image:item.getImageURIs()){
+                    String imageName=image.substring(image.lastIndexOf("/")+1);
+                    photos.add(new Photo(InspectionId,LineId,imageName, image));
+                }
+            }
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+            JSONObject Photo1=new JSONObject();
+
+            try {
+                Photo1.put("Photo",new JSONArray(gson.toJson(photos)));
+
+                parentObject=new JSONObject();
+                parentObject.put("IOLine",new JSONArray(gson.toJson(SectionAndlines)));
+                parentObject.put("photos",Photo1);
+                parentObject.put("Payment",new JSONObject(gson.toJson(payment, Payment.class)));
+
+                prefs.putString(Constants.PREF_IMAGE_URL,gson.toJson(photos));
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            saveAsyncTask=new SaveAsyncTask(mContext,InspectionDetailsFragment.this,parentObject,orderListItem);
+            saveAsyncTask.execute();
+        }
     }
 
     private class AddSectionSelectedAsyncTask extends AsyncTask<Void,Void,Boolean>{
