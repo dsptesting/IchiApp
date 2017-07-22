@@ -467,7 +467,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 String name ="";
                 SubSectionsItem updatedSubSection = null;
                 String lineIONum = null;
-
+                String numberOfExplosure="";
                 for(int i= 0;i<imageFiles.size();i++){
                     File imageFile = imageFiles.get(i);
                     Log.v(TAG, "imageFile file : " + imageFile.getAbsolutePath());
@@ -492,13 +492,16 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         name = alSubSectionsLines.get(currentSelectedLinePositionForImage).getName();
                         Log.d(TAG, "onImagePicked: array size:" + uris.size());
 
+
+
                         if (uris.size() == 0) {
                             String noe;
                             noe = alSubSectionsLines.get(currentSelectedLinePositionForImage).getNumberOfExposures();
                             if (noe == null || noe.equalsIgnoreCase("") || noe.isEmpty()) {
-                                noe = "0";
+                                noe = "1";
                             }
                             imageName = orderNum + "_" + lineIONum + "_" + noe + extension;
+                            numberOfExplosure=noe;
                         } else {
                             File fileUri = new File(uris.get(uris.size() - 1));
                             String lastImageName = fileUri.getName();
@@ -508,6 +511,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                             int lastNum = Integer.parseInt(li.split("_")[2]);
                             lastNum++;
                             imageName = orderNum + "_" + lineIONum + "_" + lastNum + extension;
+                            numberOfExplosure=lastNum+"";
                         }
 
                         Log.d(TAG, "onImagePicked: array:" + uris.toString());
@@ -535,6 +539,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     for (SubSectionsItem subSectionsItem : alSubSections) {
                         if (subSectionsItem.getIOLineId().equalsIgnoreCase(lineIONum)){
                             subSectionsItem.setImageURIs(uris);
+                            subSectionsItem.setNumberOfExposures(numberOfExplosure);
                         }
                     }
 
