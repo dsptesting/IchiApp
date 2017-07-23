@@ -40,8 +40,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder>{
     private String status = "";
     BottomSheetBehavior behavior;
 
-                                                                                                                                                                            public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior
-        , OnLineItemClickListener onLineItemClickListener) {
+    public LineAdapter(Context context, List<SubSectionsItem> mList, OnListItemClickListener onListItemClickListener, BottomSheetBehavior behavior, OnLineItemClickListener onLineItemClickListener) {
         this.mList = mList;
         mContext = context;
         this.onLineItemClickListener = onLineItemClickListener;

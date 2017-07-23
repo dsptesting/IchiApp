@@ -5,6 +5,7 @@ import com.ichi.inspection.app.models.GetTokenResponse;
 import com.ichi.inspection.app.models.MasterResponse;
 import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.models.UploadPhoto;
+import com.ichi.inspection.app.models.UploadPhotoResponse;
 import com.ichi.inspection.app.utils.Constants;
 
 import org.json.JSONObject;
@@ -46,5 +47,5 @@ public interface ApiService {
 
     @Multipart
     @POST
-    Call<UploadPhoto> uploadVideoToServer(@Url String url, @Header("Authorization") String authorization, @Part MultipartBody.Part file);
+    Call<UploadPhotoResponse> uploadVideoToServer(@Url String url, @Header("Authorization") String authorization, @Part MultipartBody.Part file);
 }

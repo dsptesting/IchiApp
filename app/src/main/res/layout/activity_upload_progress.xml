@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar_plain" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tbAppToolbarNormal"
+            android:paddingBottom="@dimen/values_10"
+            android:clipToPadding="false"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/pbLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible"/>
+
+        <com.ichi.inspection.app.utils.CustomTextView
+            android:id="@+id/tvNoData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/values_30"
+            android:layout_marginRight="@dimen/values_30"
+            android:gravity="center"
+            android:text="No photos to upload!"
+            android:textColor="@color/c_47505c"
+            android:textSize="@dimen/values_txt_18"
+            android:visibility="gone"
+            app:customFont="@string/reg"/>
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

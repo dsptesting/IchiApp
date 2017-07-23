@@ -22,7 +22,7 @@ public class PreferencesHelper {
 
     public static PreferencesHelper getInstance(Context context){
 
-        if(preferencesHelper == null){
+        if(preferencesHelper == null && context != null){
             preferencesHelper = new PreferencesHelper(context);
         }
         return preferencesHelper;
@@ -30,8 +30,10 @@ public class PreferencesHelper {
 
     public PreferencesHelper(Context context) {
 
-        this.sharedPreferences = context.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE);
-        this.prefsEditor = sharedPreferences.edit();
+        if(context != null){
+            this.sharedPreferences = context.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE);
+            this.prefsEditor = sharedPreferences.edit();
+        }
     }
 
     public boolean contains(String key){

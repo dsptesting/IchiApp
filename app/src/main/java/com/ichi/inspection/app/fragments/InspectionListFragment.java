@@ -123,6 +123,11 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
     private void initData() {
 
+        //Toolbar shit!
+        if (toolbar != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+
         alInspections = new ArrayList<>();
         alCurrent = new ArrayList<>();
         alPending = new ArrayList<>();
@@ -328,7 +333,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.inspection_logout, menu);
+        inflater.inflate(R.menu.inspection_order, menu);
     }
 
     @Override
@@ -336,6 +341,10 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
         int id = item.getItemId();
         if(id == R.id.logout){
             ((MainActivity) getActivity()).logout();
+            return true;
+        }
+        else if(id == R.id.pendingUploads){
+            ((MainActivity) getActivity()).openPendingUploads();
             return true;
         }
 

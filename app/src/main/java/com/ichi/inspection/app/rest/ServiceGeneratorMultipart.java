@@ -63,7 +63,7 @@ public class ServiceGeneratorMultipart {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(4*60 * 1000 , TimeUnit.MILLISECONDS)

@@ -32,6 +32,7 @@ public class Constants {
     public static final int HEADER = 1;
     public static final int ADDED = 1;
     public static final int DELETED = 2;
+    public static final String PREF_PHOTO_TO_BE_UPLOADED = "PREF_PHOTO_TO_BE_UPLOADED";
 
     public static boolean showDebugMessages = debugging;
     public static boolean showInfoMessages = debugging;
@@ -44,6 +45,10 @@ public class Constants {
     public static final int ACTION_LOGIN_AGAIN = 1;
 
     public static final String INTENT_SELECTED_ORDER = "INTENT_SELECTED_ORDER";
+
+    public enum UPLOAD_STATUS {
+        PENDING, UPLOADING
+    }
 
     // api
     public static final String CLIENT_ID = "98545254";
@@ -71,7 +76,6 @@ public class Constants {
     public static final String PREF_NAMED_TEMPLATES = "PREF_NAMED_TEMPLATES";
     public static final String PREF_TEMPLATES = "PREF_TEMPLATES";
     public static final String PREF_ORDER_UPDATE = "PREF_ORDER_UPDATE";
-    public static final String PREF_IMAGE_URL = "PREF_IMAGE_URL";
 
 
     // result codes

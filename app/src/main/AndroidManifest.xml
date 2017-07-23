@@ -43,7 +43,15 @@
         <service
             android:name=".service.UploadPhotoService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <receiver android:name=".service.ConnectivityChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".activities.UploadProgressActivity"></activity>
     </application>
 
 </manifest>

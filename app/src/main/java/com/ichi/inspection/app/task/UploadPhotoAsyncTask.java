@@ -13,13 +13,20 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ichi.inspection.app.interfaces.OnApiCallbackListener;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.models.OrderResponse;
 import com.ichi.inspection.app.models.Photo;
 import com.ichi.inspection.app.models.UploadPhoto;
+import com.ichi.inspection.app.models.UploadPhotoList;
+import com.ichi.inspection.app.models.UploadPhotoResponse;
 import com.ichi.inspection.app.rest.ApiService;
 import com.ichi.inspection.app.rest.ServiceGeneratorMultipart;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.Events;
 import com.ichi.inspection.app.utils.PreferencesHelper;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -41,17 +49,16 @@ import retrofit2.Response;
  * Created by Mayank on 08-07-2017.
  */
 
-public class UploadPhotoAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
+public class UploadPhotoAsyncTask extends AsyncTask<Photo,Void,UploadPhotoResponse> {
     private static final String TAG = UploadPhotoAsyncTask.class.getSimpleName();
     private final Context context;
     private final PreferencesHelper prefs;
-    private String uri;
-    private String inspectionId;
+    private Photo photo;
+    private OnApiCallbackListener onApiCallbackListener;
 
-    public UploadPhotoAsyncTask(Context context, String uri, String inspectionId) {
+    public UploadPhotoAsyncTask(Context context, OnApiCallbackListener onApiCallbackListener) {
         this.context=context;
-        this.uri = uri;
-        this.inspectionId = inspectionId;
+        this.onApiCallbackListener = onApiCallbackListener;
         prefs = PreferencesHelper.getInstance(this.context);
     }
 
@@ -60,88 +67,37 @@ public class UploadPhotoAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
         super.onPreExecute();
     }
 
-    public void extractBytes(File ImageName) throws IOException {
-        // open image
-        FileInputStream fis = null;
-        try{
-            fis = new FileInputStream(ImageName);
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-        }
-        Bitmap bm = BitmapFactory.decodeStream(fis);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-        encImage.replace("\n", "").replace("\r", "");
-
-        byte[] decodedString = Base64.decode(encImage, Base64.DEFAULT);
-        //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-        //write the bytes in file
-        FileOutputStream fos = new FileOutputStream(ImageName);
-        fos.write(decodedString);
-        fos.flush();
-        fos.close();
-    }
-
     @Override
-    protected BaseResponse doInBackground(Void... params) {
-        BaseResponse response = null;
+    protected UploadPhotoResponse doInBackground(Photo... params) {
+        UploadPhotoResponse response = null;
 
-        String json=prefs.getString(Constants.PREF_IMAGE_URL,"");
-        Type type = new TypeToken<List<Photo>>() {}.getType();
-        Gson gson=new Gson();
-        List<Photo> photos = gson.fromJson(json, type);
-
-
-        //File imageFile = new File(photos.get(1).getPhotoPath());
-
-        File imageFile = new File(uri);
-       /* try {
-            extractBytes(imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-        RequestBody requestFile = RequestBody.create(MediaType.parse(context.getContentResolver().getType(getImageContentUri(context,imageFile))), imageFile);
-
-        RequestBody inspectionIdRequest = RequestBody.create(okhttp3.MultipartBody.FORM, inspectionId);
+        photo = params[0];
+        EventBus.getDefault().post(new Events.UploadPhotoStartedUploading(photo));
+        File imageFile = new File(photo.getPhotoPath());
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
         MultipartBody.Part imageFileBody = MultipartBody.Part.createFormData("file", imageFile.getName().replace("\n", "").replace("\r", ""), requestBody);
 
-
         try{
             ApiService apiService = ServiceGeneratorMultipart.getGeneralApiService(context);
-            Call<UploadPhoto> uploadResponseCall = null;
-            uploadResponseCall=apiService.uploadVideoToServer(Constants.URL_UPLOAD_PHOTO.replace("inspectionId",inspectionId), "bearer "+prefs.getSavedTokenResponse(context).getAccessToken(), imageFileBody);
+            Call<UploadPhotoResponse> uploadResponseCall = null;
+            uploadResponseCall=apiService.uploadVideoToServer(Constants.URL_UPLOAD_PHOTO.replace("inspectionId",photo.getInspectionId()),
+                    "bearer "+prefs.getSavedTokenResponse(context).getAccessToken(), imageFileBody);
 
-            uploadResponseCall.enqueue(new Callback<UploadPhoto>() {
-                @Override
-                public void onResponse(Call<UploadPhoto> call, Response<UploadPhoto> response) {
+            Response<UploadPhotoResponse> res = uploadResponseCall.execute();
+            if(res.isSuccessful()){
+                response = res.body();
 
-                    Log.v(TAG,"resp upload photo: " + response.body());
-                    Log.v(TAG,"resp upload photo: " + response.errorBody());
-                    Log.v(TAG,"resp upload photo: " + response.message());
-                    Log.v(TAG,"resp upload photo: " + response.headers());
-                    Log.v(TAG,"resp upload photo: " + response.raw());
-
+                if(response.isCompleted()){
+                    Log.v(TAG,"1234 response :: "+ response + ", "+ response);
+                    removePhotoFromPendingList();
+                    EventBus.getDefault().post(new Events.UploadPhotoRemoved(photo));
                 }
-
-                @Override
-                public void onFailure(Call<UploadPhoto> call, Throwable t) {
-
-                    Log.v(TAG,"resp upload photo error: " + t.getMessage());
-                }
-            });
-           /* //TODO check below line
-            if(response != null && response.getMessage() != null && response.getMessage().equalsIgnoreCase("SUCCESS")){
-                //TODO success, delete data from pref regarding this order
-
             }
-*/
-            //Log.v(TAG,"Response : " + response);
+
+            /*if(response != null && response.getMessage() != null && response.getMessage().equalsIgnoreCase("SUCCESS")){
+            }*/
+
         }
         catch (Exception e){
             if(Constants.showStackTrace) e.printStackTrace();
@@ -150,18 +106,40 @@ public class UploadPhotoAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
         return response;
     }
 
-    @Override
-    protected void onPostExecute(BaseResponse baseResponse) {
-        super.onPostExecute(baseResponse);
+    private void removePhotoFromPendingList() {
 
-        /*String json=prefs.getString(Constants.PREF_IMAGE_URL,"");
-        Type type = new TypeToken<List<Photo>>() {}.getType();
-        Gson gson=new Gson();
-        List<Photo> photos = gson.fromJson(json, type);
-        photos.remove(1);
-        prefs.putString(Constants.PREF_IMAGE_URL,gson.toJson(photos));*/
+        UploadPhotoList uploadPhotoList = (UploadPhotoList) prefs.getObject(Constants.PREF_PHOTO_TO_BE_UPLOADED,UploadPhotoList.class);
+
+        if(uploadPhotoList != null && uploadPhotoList.getPhotos() != null && !uploadPhotoList.getPhotos().isEmpty()){
+
+            List<Photo> photos = uploadPhotoList.getPhotos();
+
+            Log.v(TAG,"1234 size before " + photos.size());
+
+            Iterator<Photo> photoIterator = photos.iterator();
+
+            while(photoIterator.hasNext()){
+                Photo ph = photoIterator.next();
+                if(ph!= null && ph.getLineId().equals(photo.getLineId()) && ph.getPhotoName().equals(photo.getPhotoName())){
+                    photoIterator.remove();
+                }
+            }
+
+            uploadPhotoList.setPhotos(photos);
+            Log.v(TAG,"1234 size after " + photos.size());
+            prefs.putObject(Constants.PREF_PHOTO_TO_BE_UPLOADED,uploadPhotoList);
+        }
     }
 
+    @Override
+    protected void onPostExecute(UploadPhotoResponse uploadPhotoResponse) {
+        super.onPostExecute(uploadPhotoResponse);
+
+        Log.v(TAG,"1234 onPostExecute");
+        onApiCallbackListener.onApiPostExecute(uploadPhotoResponse,this);
+
+    }
+/*
     public static Uri getImageContentUri(Context context, File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
@@ -183,5 +161,6 @@ public class UploadPhotoAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
                 return null;
             }
         }
-    }
+    }*/
+
 }

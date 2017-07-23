@@ -1,9 +1,11 @@
 package com.ichi.inspection.app.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.ichi.inspection.app.service.UploadPhotoService;
 import com.ichi.inspection.app.utils.PreferencesHelper;
 
 public class BaseActivity extends AppCompatActivity {
@@ -40,5 +42,11 @@ public class BaseActivity extends AppCompatActivity {
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.cancel();
         }
+    }
+
+    public void startUploadService() {
+
+        Intent intent = new Intent(this, UploadPhotoService.class);
+        startService(intent);
     }
 }

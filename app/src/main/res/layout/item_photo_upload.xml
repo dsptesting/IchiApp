@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.ichi.inspection.app.utils.CustomTextView
+        android:id="@+id/tvTitle"
+        style="@style/txt_reg_14_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/values_10"
+        android:layout_marginRight="@dimen/values_10"
+        android:layout_marginTop="@dimen/values_10"
+        android:text="title path" />
+
+    <com.ichi.inspection.app.utils.CustomTextView
+        android:id="@+id/tvProgress"
+        style="@style/txt_reg_12_gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/values_10"
+        android:layout_marginRight="@dimen/values_10"
+        android:textStyle="italic"
+        android:layout_marginTop="7dp"
+        android:text="@string/pending" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/values_10"
+        android:background="#aaa" />
+
+</LinearLayout>

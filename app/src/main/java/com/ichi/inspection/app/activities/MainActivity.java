@@ -31,6 +31,7 @@ import com.ichi.inspection.app.fragments.PropertyInfoFragment;
 import com.ichi.inspection.app.fragments.SchedulerFragment;
 import com.ichi.inspection.app.fragments.SpecialInstructionFragment;
 import com.ichi.inspection.app.fragments.SplashFragment;
+import com.ichi.inspection.app.service.UploadPhotoService;
 import com.ichi.inspection.app.utils.Constants;
 
 import butterknife.BindView;
@@ -48,6 +49,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         navigateToScreen(Constants.INSPECTIONLIST, null, false);
+
+        startUploadService();
     }
     /**
      * replace new fragment on current fragment
@@ -180,4 +183,11 @@ public class MainActivity extends BaseActivity {
 
 
     }
+
+    public void openPendingUploads(){
+        Intent intent = new Intent(MainActivity.this,UploadProgressActivity.class);
+        startActivity(intent);
+    }
+
+
 }

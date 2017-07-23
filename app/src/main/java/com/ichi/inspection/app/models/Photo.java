@@ -21,6 +21,8 @@ public class Photo {
     @SerializedName("PhotoPath") @Expose
     public String PhotoPath;
 
+    public int uploadStatus;
+
     public Photo(String InspectionId,String LineId,String PhotoName, String PhotoPath){
         this.InspectionId=InspectionId;
         this.LineId=LineId;
@@ -35,7 +37,16 @@ public class Photo {
                 ", LineId='" + LineId + '\'' +
                 ", PhotoName='" + PhotoName + '\'' +
                 ", PhotoPath='" + PhotoPath + '\'' +
+                ", uploadStatus=" + uploadStatus +
                 '}';
+    }
+
+    public int getUploadStatus() {
+        return uploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        this.uploadStatus = uploadStatus;
     }
 
     public String getPhotoPath() {

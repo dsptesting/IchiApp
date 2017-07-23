@@ -64,11 +64,13 @@ import com.ichi.inspection.app.models.SelectSection;
 import com.ichi.inspection.app.models.SubSectionsItem;
 import com.ichi.inspection.app.models.TemplateItemsItem;
 import com.ichi.inspection.app.models.Templates;
+import com.ichi.inspection.app.models.UploadPhotoList;
 import com.ichi.inspection.app.service.UploadPhotoService;
 import com.ichi.inspection.app.task.MasterAsyncTask;
 import com.ichi.inspection.app.task.SaveAsyncTask;
 import com.ichi.inspection.app.task.UploadPhotoAsyncTask;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.Events;
 import com.ichi.inspection.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -744,11 +746,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if (asyncTask instanceof SaveAsyncTask){
 
             Utils.hideProgressBar(getActivity());
-            /*Log.v(TAG,"photos : " + photos);
-            Log.v(TAG,"path: "+photos.get(0).getPhotoPath());
-            Log.v(TAG,"pathName: "+photos.get(0).getPhotoName());
-            UploadPhotoAsyncTask uploadPhotoService = new UploadPhotoAsyncTask(getActivity(),photos.get(0).getPhotoPath(),""+orderListItem.getSequence());
-            uploadPhotoService.execute();*/
+            if(Utils.isNetworkAvailable(getActivity())){
+                ((MainActivity)getActivity()).startUploadService();
+            }
+            EventBus.getDefault().post(new Events.UploadPhotoStarted());
 
             Toast.makeText(getActivity(),"Order saved online!",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getActivity() , MainActivity.class);
@@ -1523,6 +1524,10 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 }
             }
 
+            UploadPhotoList uploadPhotoList = new UploadPhotoList();
+            uploadPhotoList.setPhotos(photos);
+            prefs.putObject(Constants.PREF_PHOTO_TO_BE_UPLOADED,uploadPhotoList);
+
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
             JSONObject Photo1=new JSONObject();
@@ -1534,8 +1539,6 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                 parentObject.put("IOLine",new JSONArray(gson.toJson(SectionAndlines)));
                 parentObject.put("photos",Photo1);
                 parentObject.put("Payment",new JSONObject(gson.toJson(payment, Payment.class)));
-
-                prefs.putString(Constants.PREF_IMAGE_URL,gson.toJson(photos));
             }
             catch (JSONException e) {
                 e.printStackTrace();
