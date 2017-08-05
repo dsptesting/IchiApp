@@ -171,14 +171,14 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
 
             int sTypeSelection = 0;
             for (int i=0;i<types.length;i++){
-                if (types[i].equals(orderListItem.getPayment().getPaymentType()));{
+                if (types[i].equals(orderListItem.getPayment().getPaymentType())){
                     sTypeSelection=i;
                 }
             }
             sType.setSelection(sTypeSelection);
             int sCCTypeSelection = 0;
             for (int i=0;i<cctypes.length;i++){
-                if (cctypes[i].equals(orderListItem.getPayment().getcCType()));{
+                if (cctypes[i].equals(orderListItem.getPayment().getcCType())){
                     sCCTypeSelection=i;
                 }
             }
@@ -213,9 +213,10 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
         int sYearSelection = 0;
         for (int i=0;i<years.length;i++){
 
-            Log.d(TAG, "initData: "+orderListItem.getPayment().getcCExprYear()); /*if (years[i].equals(orderListItem.getPayment().getCCExprYear())){
+            Log.d(TAG, "initData: "+orderListItem.getPayment().getcCExprYear());
+            if (years[i].equals(orderListItem.getPayment().getcCExprYear())){
                 sYearSelection=i;
-            }*/
+            }
         }
         sYear.setSelection(sYearSelection);
 

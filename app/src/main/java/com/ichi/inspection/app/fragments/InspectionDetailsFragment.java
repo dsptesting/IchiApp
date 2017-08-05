@@ -1134,7 +1134,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
 
                     SubSectionsItem subSectionsItem = new SubSectionsItem();
                     subSectionsItem.setName(((EditText) view.findViewById(R.id.et)).getText().toString().trim());
-                    subSectionsItem.setIOLineId(Utils.getGlobalUniqueNumber(getActivity(), true) + "");
+                    //subSectionsItem.setIOLineId(Utils.getGlobalUniqueNumber(getActivity(), true) + "");
+                    subSectionsItem.setIOLineId("n_"+System.nanoTime());
                     subSectionsItem.setSectionId(selectedsubSectionsItem.getSectionId());
                     subSectionsItem.setInspectionId(selectedsubSectionsItem.getInspectionId());
                     subSectionsItem.setGood("f");

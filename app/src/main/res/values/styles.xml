@@ -29,6 +29,12 @@
         <item name="android:textSize">@dimen/values_txt_14</item>
     </style>
 
+    <style name="txt_reg_12_white">
+        <item name="android:textColor">@color/white</item>
+        <item name="customFont">@string/reg</item>
+        <item name="android:textSize">@dimen/values_txt_12</item>
+    </style>
+
     <style name="txt_reg_18_white">
         <item name="android:textColor">@color/white</item>
         <item name="customFont">@string/reg</item>

@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/coordinatorLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/logobg">
+    android:background="@mipmap/logobg"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/toolbar_plain"/>
+        <include layout="@layout/toolbar_plain" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/mainLayout"
             android:layout_width="match_parent"
-            android:paddingBottom="@dimen/values_20"
-            android:visibility="visible"
-            android:clipToPadding="false"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tbAppToolbarNormal">
+            android:layout_below="@+id/tbAppToolbarNormal"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/values_20"
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -37,7 +36,7 @@
                     android:layout_marginTop="@dimen/values_h38"
                     android:clickable="true"
                     android:focusable="false"
-                    android:text="@string/add_template"/>
+                    android:text="@string/add_template" />
 
                 <RelativeLayout
                     android:id="@+id/rlAddTemplate"
@@ -50,14 +49,14 @@
                         android:id="@+id/sAddTemplate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sAddTemplate"
-                        android:background="@color/colorPrimary"/>
+                        android:layout_marginLeft="@dimen/values_16"
+                        android:background="@color/colorPrimary" />
 
                 </RelativeLayout>
 
@@ -72,7 +71,7 @@
                     android:layout_marginTop="@dimen/values_w17"
                     android:clickable="true"
                     android:focusable="false"
-                    android:text="@string/add_a_section"/>
+                    android:text="@string/add_a_section" />
 
                 <RelativeLayout
                     android:id="@+id/rlAddSection"
@@ -85,14 +84,14 @@
                         android:id="@+id/sAddSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sAddSection"
-                        android:background="@color/colorPrimary"/>
+                        android:layout_marginLeft="@dimen/values_16"
+                        android:background="@color/colorPrimary" />
 
                 </RelativeLayout>
 
@@ -106,7 +105,7 @@
                     android:layout_marginTop="@dimen/values_w17"
                     android:clickable="true"
                     android:focusable="false"
-                    android:text="@string/select_section"/>
+                    android:text="@string/select_section" />
 
                 <RelativeLayout
                     android:id="@+id/rlSelectSection"
@@ -119,16 +118,17 @@
                         android:id="@+id/sSelectSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sSelectSection"
-                        android:background="@color/colorPrimary"/>
+                        android:layout_marginLeft="@dimen/values_16"
+                        android:background="@color/colorPrimary" />
 
                 </RelativeLayout>
+
                 <com.ichi.inspection.app.utils.CustomTextView
                     android:id="@+id/txtMarkAll"
                     style="@style/txt_reg_12_gray"
@@ -139,7 +139,7 @@
                     android:layout_marginTop="@dimen/values_w17"
                     android:clickable="true"
                     android:focusable="false"
-                    android:text="@string/mark_all_lines"/>
+                    android:text="@string/mark_all_lines" />
 
                 <RelativeLayout
                     android:id="@+id/rlMarkAll"
@@ -152,26 +152,27 @@
                         android:id="@+id/sMarkAll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="@dimen/values_16"
                         android:layout_below="@+id/sMarkAll"
-                        android:background="@color/colorPrimary"/>
+                        android:layout_marginLeft="@dimen/values_16"
+                        android:background="@color/colorPrimary" />
 
                 </RelativeLayout>
 
                 <com.ichi.inspection.app.utils.CustomTextView
                     android:id="@+id/tvErrorCount"
-                    android:layout_marginLeft="@dimen/values_16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Error Count:"
+                    android:layout_below="@+id/rlMarkAll"
+                    android:layout_marginLeft="@dimen/values_16"
                     android:layout_marginTop="@dimen/values_20"
-                    android:textColor="#ff0000"
-                    android:layout_below="@+id/rlMarkAll"/>
+                    android:text="Error Count:"
+                    android:textColor="#ff0000" />
+
                 <LinearLayout
                     android:id="@+id/llControls"
                     android:layout_width="match_parent"
@@ -195,14 +196,17 @@
 
                         <com.ichi.inspection.app.utils.CustomTextView
                             android:id="@+id/btnEditName"
-                            style="@style/txt_reg_14_white"
+                            style="@style/txt_reg_12_white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_trans_blue"
                             android:gravity="center"
-                            android:padding="@dimen/values_12"
+                            android:paddingLeft="@dimen/values_10"
+                            android:paddingRight="@dimen/values_10"
+                            android:paddingTop="@dimen/values_12"
+                            android:paddingBottom="@dimen/values_12"
                             android:text="@string/edit_name"
-                            android:textAllCaps="true"/>
+                            android:textAllCaps="true" />
 
                     </android.support.v7.widget.CardView>
 
@@ -211,20 +215,23 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:elevation="2dp"
                         android:clickable="true"
+                        android:elevation="2dp"
                         android:visibility="visible">
 
                         <com.ichi.inspection.app.utils.CustomTextView
                             android:id="@+id/btnRemoveSection"
-                            style="@style/txt_reg_14_white"
+                            style="@style/txt_reg_12_white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_trans_blue"
                             android:gravity="center"
-                            android:padding="@dimen/values_12"
+                            android:paddingLeft="@dimen/values_10"
+                            android:paddingRight="@dimen/values_10"
+                            android:paddingTop="@dimen/values_12"
+                            android:paddingBottom="@dimen/values_12"
                             android:text="@string/remove_section"
-                            android:textAllCaps="true"/>
+                            android:textAllCaps="true" />
 
                     </android.support.v7.widget.CardView>
                 </LinearLayout>
@@ -233,56 +240,74 @@
                     android:id="@+id/rcvItems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/llControls"
+                    android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:paddingBottom="@dimen/values_w5"
-                    android:clipToPadding="false"
-                    android:layout_below="@+id/llControls"/>
+                    android:visibility="visible" />
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cvAddNewLine"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/llBelowControls"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rcvItems"
+                    android:layout_marginBottom="@dimen/values_28"
                     android:layout_marginLeft="@dimen/values_16"
-                    android:layout_marginBottom="@dimen/values_10"
-                    android:layout_marginTop="@dimen/values_16"
-                    android:elevation="2dp">
+                    android:layout_marginRight="@dimen/values_16"
+                    android:layout_marginTop="@dimen/values_20"
+                    android:weightSum="2">
 
-                    <com.ichi.inspection.app.utils.CustomTextView
-                        android:id="@+id/customTextView"
-                        style="@style/txt_reg_14_white"
-                        android:layout_width="match_parent"
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cvAddNewLine"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_trans_blue"
-                        android:gravity="center"
-                        android:padding="@dimen/values_12"
-                        android:text="@string/add_new_line" />
+                        android:layout_below="@+id/rcvItems"
+                        android:layout_marginRight="@dimen/values_16"
+                        android:layout_weight="1"
+                        android:elevation="2dp">
 
-                </android.support.v7.widget.CardView>
+                        <com.ichi.inspection.app.utils.CustomTextView
+                            android:id="@+id/customTextView"
+                            style="@style/txt_reg_12_white"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_trans_blue"
+                            android:gravity="center"
+                            android:textAllCaps="true"
+                            android:paddingLeft="@dimen/values_10"
+                            android:paddingRight="@dimen/values_10"
+                            android:paddingTop="@dimen/values_12"
+                            android:paddingBottom="@dimen/values_12"
+                            android:text="@string/add_new_line" />
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cvGenerateReport"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rcvItems"
-                    android:layout_toRightOf="@id/cvAddNewLine"
-                    android:layout_marginLeft="@dimen/values_16"
-                    android:layout_marginBottom="@dimen/values_10"
-                    android:layout_marginTop="@dimen/values_16"
-                    android:elevation="2dp">
+                    </android.support.v7.widget.CardView>
 
-                    <com.ichi.inspection.app.utils.CustomTextView
-                        android:id="@+id/customTextView1"
-                        style="@style/txt_reg_14_white"
-                        android:layout_width="match_parent"
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cvGenerateReport"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_trans_blue"
-                        android:gravity="center"
-                        android:padding="@dimen/values_12"
-                        android:text="@string/generate_report" />
+                        android:layout_below="@+id/rcvItems"
+                        android:layout_toRightOf="@id/cvAddNewLine"
+                        android:layout_weight="1"
+                        android:elevation="2dp">
 
-                </android.support.v7.widget.CardView>
+                        <com.ichi.inspection.app.utils.CustomTextView
+                            android:id="@+id/customTextView1"
+                            style="@style/txt_reg_12_white"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_trans_blue"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/values_10"
+                            android:paddingRight="@dimen/values_10"
+                            android:paddingTop="@dimen/values_12"
+                            android:paddingBottom="@dimen/values_12"
+                            android:textAllCaps="true"
+                            android:text="@string/generate_report" />
 
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
 
@@ -291,7 +316,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/tvNoData"
@@ -305,7 +330,7 @@
             android:textColor="@color/c_47505c"
             android:textSize="@dimen/values_txt_18"
             android:visibility="gone"
-            app:customFont="@string/reg"/>
+            app:customFont="@string/reg" />
 
     </RelativeLayout>
 

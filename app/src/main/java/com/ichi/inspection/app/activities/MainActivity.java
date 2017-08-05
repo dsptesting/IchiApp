@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity {
 
         startUploadService();
     }
+
     /**
      * replace new fragment on current fragment
      *

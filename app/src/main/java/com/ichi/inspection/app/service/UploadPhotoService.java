@@ -47,7 +47,7 @@ public class UploadPhotoService extends Service implements OnApiCallbackListener
 
         if(this != null) prefs = PreferencesHelper.getInstance(this);
 
-        Log.v(TAG,"onStartCommand called");
+        //Log.v(TAG,"onStartCommand called");
         if(intent != null){
             Bundle extras = intent.getExtras();
             if(extras != null){
@@ -58,7 +58,7 @@ public class UploadPhotoService extends Service implements OnApiCallbackListener
         isNetworkConnected = Utils.isNetworkAvailable(this);
         if(isNetworkConnected){
 
-            Log.v(TAG,"1234 Pfirst time");
+            //Log.v(TAG,"1234 Pfirst time");
             fireNextCall();
         }
 
@@ -71,7 +71,7 @@ public class UploadPhotoService extends Service implements OnApiCallbackListener
         if(photo != null){
             if(!isRunning){
                 isRunning = true;
-                Log.v(TAG,"1234 Photo uploading start: " + photo.getPhotoName());
+                //Log.v(TAG,"1234 Photo uploading start: " + photo.getPhotoName());
                 UploadPhotoAsyncTask uploadPhotoService = new UploadPhotoAsyncTask(this, this);
                 uploadPhotoService.execute(photo);
             }
@@ -99,7 +99,6 @@ public class UploadPhotoService extends Service implements OnApiCallbackListener
     @Override
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
         if(asyncTask instanceof UploadPhotoAsyncTask){
-            Log.v(TAG,"1234 response ");
             isRunning = false;
             //if(baseResponse.getError() != null && !baseResponse.getError().isEmpty()){
 
