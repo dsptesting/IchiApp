@@ -128,6 +128,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
 
+        tvAppTitle.setText(R.string.inspections_title);
         alInspections = new ArrayList<>();
         alCurrent = new ArrayList<>();
         alPending = new ArrayList<>();

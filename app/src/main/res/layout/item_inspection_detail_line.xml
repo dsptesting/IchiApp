@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rlContainer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/values_16"
     android:layout_marginRight="@dimen/values_16"
-    android:clickable="true"
     android:layout_marginTop="@dimen/values_16"
+    android:clickable="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -15,49 +14,60 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/values_12">
 
-        <com.ichi.inspection.app.utils.CustomTextView
-            android:id="@+id/txtName"
-            style="@style/txt_reg_12_gray"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="Name" />
+        <RelativeLayout
+            android:id="@+id/rlUpper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.ichi.inspection.app.utils.CustomTextView
-            android:id="@+id/tvName"
-            style="@style/txt_reg_14_black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/txtName"
-            android:text="Ceiling" />
+            <com.ichi.inspection.app.utils.CustomTextView
+                android:id="@+id/txtName"
+                style="@style/txt_reg_12_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Name" />
 
-        <com.ichi.inspection.app.utils.CustomTextView
-            android:id="@+id/tvNo"
-            style="@style/txt_reg_14_black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/btnUpload"
-            android:layout_marginRight="@dimen/values_10"
-            android:layout_below="@+id/txtName"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:text="0" />
+            <com.ichi.inspection.app.utils.CustomTextView
+                android:id="@+id/tvName"
+                style="@style/txt_reg_14_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/txtName"
+                android:text="Ceiling" />
 
-        <com.ichi.inspection.app.utils.CustomButton
-            android:id="@+id/btnUpload"
-            android:layout_width="@dimen/values_40"
-            android:layout_height="@dimen/values_40"
-            android:layout_alignLeft="@+id/txtInspectionNote"
-            android:layout_alignBaseline="@+id/tvName"
-            android:text="+"/>
-        <com.ichi.inspection.app.utils.CustomButton
-            android:id="@+id/btnPhoto"
-            android:layout_width="@dimen/values_40"
-            android:layout_height="@dimen/values_40"
-            android:layout_toRightOf="@+id/btnUpload"
-            android:layout_alignBaseline="@+id/tvName"
-            android:text="i"/>
+            <com.ichi.inspection.app.utils.CustomTextView
+                android:id="@+id/tvNo"
+                style="@style/txt_reg_14_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtName"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/values_10"
+                android:layout_toLeftOf="@+id/btnUpload"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="0" />
+
+            <ImageView
+                android:id="@+id/btnUpload"
+                android:layout_width="@dimen/values_40"
+                android:layout_centerVertical="true"
+                android:layout_height="@dimen/values_40"
+                android:clickable="true"
+                android:layout_toLeftOf="@+id/btnPhoto"
+                android:padding="5dp"
+                android:src="@drawable/ic_photo_camera_black_24dp" />
+
+            <com.ichi.inspection.app.utils.CustomButton
+                android:id="@+id/btnPhoto"
+                android:layout_width="@dimen/values_40"
+                android:layout_centerVertical="true"
+                android:layout_height="@dimen/values_40"
+                android:layout_alignBaseline="@+id/tvName"
+                android:layout_alignParentRight="true"
+                android:text="i" />
+        </RelativeLayout>
 
         <com.ichi.inspection.app.utils.CustomTextView
             android:id="@+id/txtRating"
@@ -65,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tvName"
+            android:layout_below="@+id/rlUpper"
             android:layout_marginTop="@dimen/values_12"
             android:text="Rating" />
 
@@ -111,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/tvName"
+            android:layout_below="@+id/rlUpper"
             android:layout_marginTop="@dimen/values_12"
             android:text="@string/inspection_note" />
 
@@ -140,12 +150,12 @@
 
         <LinearLayout
             android:id="@+id/llAddComment"
-            android:clickable="true"
-            android:layout_below="@+id/btnNA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_below="@+id/btnNA"
             android:layout_marginTop="@dimen/values_20"
+            android:clickable="true"
+            android:orientation="horizontal"
             android:visibility="visible">
 
             <ImageView
@@ -166,12 +176,12 @@
 
         <LinearLayout
             android:id="@+id/llSaveComment"
-            android:layout_below="@+id/llAddComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layoutDirection="rtl"
+            android:layout_below="@+id/llAddComment"
             android:layout_marginTop="@dimen/values_20"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal"
             android:visibility="gone">
 
             <ImageView

@@ -140,7 +140,7 @@ public class PropertyInfoFragment extends BaseFragment{
             etBuildingType.setCustomText(orderListItem.getBuildingType());
             etSquareFootage.setCustomText(orderListItem.getSqFoot()+"");
             etYearBuilt.setCustomText(orderListItem.getYearBuilt()+"");
-            etOccupied.setCustomText(orderListItem.getYearBuilt()+"");
+            etOccupied.setCustomText(orderListItem.getOccupied()+"");
             etBedRooms.setCustomText(orderListItem.getBedRooms()+"");
             etBathRooms.setCustomText(orderListItem.getBathRooms()+"");
             if (orderListItem.isUtilPower())
