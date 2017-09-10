@@ -75,31 +75,33 @@ public class UploadPhotoAsyncTask extends AsyncTask<Photo,Void,UploadPhotoRespon
         EventBus.getDefault().post(new Events.UploadPhotoStartedUploading(photo));
         File imageFile = new File(photo.getPhotoPath());
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
-        MultipartBody.Part imageFileBody = MultipartBody.Part.createFormData("file", imageFile.getName().replace("\n", "").replace("\r", ""), requestBody);
-
         try{
-            ApiService apiService = ServiceGeneratorMultipart.getGeneralApiService(context);
-            Call<UploadPhotoResponse> uploadResponseCall = null;
-            uploadResponseCall=apiService.uploadVideoToServer(Constants.URL_UPLOAD_PHOTO.replace("inspectionId",photo.getInspectionId()),
-                    "bearer "+prefs.getSavedTokenResponse(context).getAccessToken(), imageFileBody);
+            if(imageFile.exists()){
+                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+                MultipartBody.Part imageFileBody = MultipartBody.Part.createFormData("file", photo.getPhotoName().replace("\n", "").replace("\r", ""), requestBody);
 
-            Response<UploadPhotoResponse> res = uploadResponseCall.execute();
-            if(res.isSuccessful()){
-                response = res.body();
+                    ApiService apiService = ServiceGeneratorMultipart.getGeneralApiService(context);
+                    Call<UploadPhotoResponse> uploadResponseCall = null;
+                    uploadResponseCall=apiService.uploadVideoToServer(Constants.URL_UPLOAD_PHOTO.replace("inspectionId",photo.getInspectionId()),
+                            "bearer "+prefs.getSavedTokenResponse(context).getAccessToken(), imageFileBody);
 
-                if(response.isCompleted()){
-                    Log.v(TAG,"1234 response :: "+ response + ", "+ response);
-                    removePhotoFromPendingList();
-                    EventBus.getDefault().post(new Events.UploadPhotoRemoved(photo));
-                }
+                    Response<UploadPhotoResponse> res = uploadResponseCall.execute();
+                    if(res.isSuccessful()){
+                        response = res.body();
+
+                        if(response.isCompleted()){
+                            Log.v(TAG,"1234 response :: "+ response + ", "+ response);
+                            removePhotoFromPendingList();
+                            EventBus.getDefault().post(new Events.UploadPhotoRemoved(photo));
+                        }
+                    }
             }
-
-            /*if(response != null && response.getMessage() != null && response.getMessage().equalsIgnoreCase("SUCCESS")){
-            }*/
-
+            else{
+                removePhotoFromPendingList();
+                EventBus.getDefault().post(new Events.UploadPhotoRemoved(photo));
+            }
         }
-        catch (Exception e){
+            catch (Exception e){
             if(Constants.showStackTrace) e.printStackTrace();
         }
 
@@ -139,28 +141,4 @@ public class UploadPhotoAsyncTask extends AsyncTask<Photo,Void,UploadPhotoRespon
         onApiCallbackListener.onApiPostExecute(uploadPhotoResponse,this);
 
     }
-/*
-    public static Uri getImageContentUri(Context context, File imageFile) {
-        String filePath = imageFile.getAbsolutePath();
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Images.Media._ID },
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[] { filePath }, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
-            cursor.close();
-            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id);
-        } else {
-            if (imageFile.exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, filePath);
-                return context.getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            } else {
-                return null;
-            }
-        }
-    }*/
-
 }

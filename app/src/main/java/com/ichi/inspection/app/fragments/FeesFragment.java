@@ -50,59 +50,11 @@ public class FeesFragment extends BaseFragment {
     @BindView(R.id.etTotal)
     EditText etTotal;
 
-    /*@BindView(R.id.etSavedTotal)
-    EditText etSavedTotal;*/
-
     @BindView(R.id.etPaymentsMade)
     EditText etPaymentsMade;
 
     @BindView(R.id.ll)
     LinearLayout ll;
-
-    /*@BindView(R.id.cbHome)
-    CheckBox cbHome;
-
-    @BindView(R.id.cbTownHouse)
-    CheckBox cbTownHouse;
-
-    @BindView(R.id.cbCondo)
-    CheckBox cbCondo;
-
-    @BindView(R.id.cbPoolOrSpa)
-    CheckBox cbPoolOrSpa;
-
-    @BindView(R.id.cbTermite)
-    CheckBox cbTermite;
-
-    @BindView(R.id.cbPoolAndSpa)
-    CheckBox cbPoolAndSpa;
-
-    @BindView(R.id.cbAgeFee)
-    CheckBox cbAgeFee;
-
-    @BindView(R.id.cbTripCharge)
-    CheckBox cbTripCharge;
-
-    @BindView(R.id.cbGuestHouse)
-    CheckBox cbGuestHouse;
-
-    @BindView(R.id.cbOther)
-    CheckBox cbOther;
-
-    @BindView(R.id.cbReInspection)
-    CheckBox cbReInspection;
-
-    @BindView(R.id.cbDuplex)
-    CheckBox cbDuplex;
-
-    @BindView(R.id.cbTriplex)
-    CheckBox cbTriplex;
-
-    @BindView(R.id.cb4Plex)
-    CheckBox cb4Plex;
-
-    @BindView(R.id.cbDiscount)
-    CheckBox cbDiscount;*/
 
     @Nullable
     @BindView(R.id.coordinatorLayout)
@@ -130,9 +82,6 @@ public class FeesFragment extends BaseFragment {
         if (toolbar != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
-        /*final Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_ATOP);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);*/
 
         tvAppTitle.setText(R.string.fees);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -147,7 +96,13 @@ public class FeesFragment extends BaseFragment {
         if(orderListItem != null){
             txtOrderNo.setText(txtOrderNo.getText().toString()+orderListItem.getIONum());
             etTotal.setText(orderListItem.getFeeCharged()+"");
-            etPaymentsMade.setText(orderListItem.getPayment().getAmount());
+            if(orderListItem.getPayment().getAmount() != null && orderListItem.getPayment().getAmount().length() > 0){
+                etPaymentsMade.setText(orderListItem.getPayment().getAmount());
+            }
+            else{
+                etPaymentsMade.setText("-");
+            }
+
             String fee=orderListItem.getFees();//"Fees":"299<inspect:Home>;325<inspect:Condo>",
 
             String[] fees=fee.split(";");

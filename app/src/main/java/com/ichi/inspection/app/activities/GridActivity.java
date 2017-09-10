@@ -3,6 +3,7 @@ package com.ichi.inspection.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.adapters.GridViewAdapter;
@@ -89,10 +91,19 @@ public class GridActivity extends BaseActivity implements OnListItemClickListene
     public void onListItemClick(View view, int position) {
         switch (view.getId()){
             case R.id.imageView:
-                Intent intent=new Intent(GridActivity.this,GridImageActivity.class);
-                intent.putExtra("name",name);
-                intent.putExtra("URI",imageURIs.get(position));
-                startActivity(intent);
+                String path = imageURIs.get(position);
+                File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                File file = new File(path);
+                if(file.exists()){
+                    Intent intent=new Intent(GridActivity.this,GridImageActivity.class);
+                    intent.putExtra("name",name);
+                    intent.putExtra("URI",imageURIs.get(position));
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(this,"Image is either deleted or not available", Toast.LENGTH_LONG).show();
+                }
+
                 break;
         }
     }

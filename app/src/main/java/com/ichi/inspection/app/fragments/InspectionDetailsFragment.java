@@ -518,7 +518,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                         Log.d(TAG, "onImagePicked: array:" + uris.toString());
                         Log.d(TAG, "onImagePicked: name:" + imageName);
 
-                        file = new File(root + "/ICHI" + File.separator + imageName);
+                        file = new File(root + "/ICHI" + File.separator + "."+imageName);
                         file.createNewFile();
 
                         Log.d(TAG, "onImagePicked: FileName: " + file.getName());
@@ -574,6 +574,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         //Copy Image
         FileChannel source = null;
         FileChannel destination = null;
+
         source = new FileInputStream(imageFile).getChannel();
         destination = new FileOutputStream(file).getChannel();
         if (destination != null && source != null) {
@@ -745,16 +746,26 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
         if (asyncTask instanceof SaveAsyncTask){
 
             Utils.hideProgressBar(getActivity());
-            if(Utils.isNetworkAvailable(getActivity())){
-                ((MainActivity)getActivity()).startUploadService();
+            if(baseResponse.error != null && baseResponse.error.length() > 0){
+
+                Toast.makeText(getActivity(),"Something went wrong! Try again later.",Toast.LENGTH_LONG).show();
             }
-            EventBus.getDefault().post(new Events.UploadPhotoStarted());
+            else{
 
-            Toast.makeText(getActivity(),"Order saved online!",Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getActivity() , MainActivity.class);
-            startActivity(intent);
-            getActivity().finishAffinity();
+                UploadPhotoList uploadPhotoList = new UploadPhotoList();
+                uploadPhotoList.setPhotos(photos);
+                prefs.putObject(Constants.PREF_PHOTO_TO_BE_UPLOADED,uploadPhotoList);
 
+                if(Utils.isNetworkAvailable(getActivity())){
+                    ((MainActivity)getActivity()).startUploadService();
+                }
+                EventBus.getDefault().post(new Events.UploadPhotoStarted());
+
+                Toast.makeText(getActivity(),"Order saved online!",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity() , MainActivity.class);
+                startActivity(intent);
+                getActivity().finishAffinity();
+            }
         }
         if (asyncTask instanceof MasterAsyncTask){
             if (!Utils.showCallError(coordinatorLayout, baseResponse)) {
@@ -1515,18 +1526,23 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             payment.setInspectionId(""+orderListItem.getSequence());
 
             photos=new ArrayList<>();
+
+            File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
             for (SubSectionsItem item:SubSectionsLines){
                 String InspectionId=item.getInspectionId();
                 String LineId=item.getIOLineId();
                 for (String image:item.getImageURIs()){
                     String imageName=image.substring(image.lastIndexOf("/")+1);
-                    photos.add(new Photo(InspectionId,LineId,imageName, image));
+                    File file = new File(root + "/ICHI", imageName);
+                    if(file.exists()){
+                        if(imageName.startsWith(".")){
+                            imageName = imageName.replaceFirst(".","");
+                        }
+                        photos.add(new Photo(InspectionId,LineId,imageName, image));
+                    }
                 }
             }
-
-            UploadPhotoList uploadPhotoList = new UploadPhotoList();
-            uploadPhotoList.setPhotos(photos);
-            prefs.putObject(Constants.PREF_PHOTO_TO_BE_UPLOADED,uploadPhotoList);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -1543,7 +1559,7 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             catch (JSONException e) {
                 e.printStackTrace();
             }
-
+            Log.d(TAG,"parnet obj : "+ parentObject.toString());
             return null;
         }
 

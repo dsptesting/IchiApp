@@ -28,7 +28,11 @@ import com.ichi.inspection.app.models.Payment;
 import com.ichi.inspection.app.utils.Constants;
 import com.ichi.inspection.app.utils.Utils;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -159,9 +163,15 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
         if(payItems!=null){
             String type=payItems.get(0).getData();
             String[] types=type.split("#\n");
+            List<String> typeList = new ArrayList<>(Arrays.asList(types));
+            typeList.add(0,"Select");
+            types = typeList.toArray(new String[typeList.size()]);
 
             String cctype=payItems.get(1).getData();
             String[] cctypes=cctype.split("#\n");
+            List<String> cctypeList = new ArrayList<>(Arrays.asList(cctypes));
+            cctypeList.add(0,"Select");
+            cctypes = cctypeList.toArray(new String[cctypeList.size()]);
 
             ArrayAdapter<String> typeAdapter=new ArrayAdapter<String>(mContext, R.layout.support_simple_spinner_dropdown_item,types);
             sType.setAdapter(typeAdapter);
@@ -171,7 +181,7 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
 
             int sTypeSelection = 0;
             for (int i=0;i<types.length;i++){
-                if (types[i].equals(orderListItem.getPayment().getPaymentType())){
+                if (types[i].trim().equals(orderListItem.getPayment().getPaymentType())){
                     sTypeSelection=i;
                 }
             }
@@ -193,10 +203,18 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
             years[i]=year+"";
             year++;
         }
+        List<String> yearsList = new ArrayList<>(Arrays.asList(years));
+        yearsList.add(0,"Select");
+        years = yearsList.toArray(new String[yearsList.size()]);
+
         String[] months=new String[12];
         for (int j=1;j<=12;j++){
             months[j-1]=j+"";
         }
+        List<String> monthsList = new ArrayList<>(Arrays.asList(months));
+        monthsList.add(0,"Select");
+        months = monthsList.toArray(new String[monthsList.size()]);
+
         ArrayAdapter<String> yearAdapter=new ArrayAdapter<String>(mContext, R.layout.support_simple_spinner_dropdown_item,years);
         sYear.setAdapter(yearAdapter);
 
@@ -245,9 +263,33 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.cvSave:
-                savePaymentData();
+              //  if(validate()){
+                    savePaymentData();
+                //}
                 break;
         }
+    }
+
+    private boolean validate() {
+
+        if(sCardType.getSelectedItemPosition() == 0){
+            Utils.showSnackBar(coordinatorLayout,"Select card");
+            return false;
+        }
+        if(sType.getSelectedItemPosition() == 0){
+            Utils.showSnackBar(coordinatorLayout,"Select type");
+            return false;
+        }
+        if(sMonth.getSelectedItemPosition() == 0){
+            Utils.showSnackBar(coordinatorLayout,"Select month");
+            return false;
+        }
+        if(sYear.getSelectedItemPosition() == 0){
+            Utils.showSnackBar(coordinatorLayout,"Select year");
+            return false;
+        }
+
+        return true;
     }
 
     private void savePaymentData(){
@@ -294,20 +336,44 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
             payment.setCcZipSynced(true);
         }
         if(!payment.getPaymentType().equalsIgnoreCase(sType.getSelectedItem().toString().trim())){
-            payment.setPaymentType(sType.getSelectedItem().toString().trim());
-            payment.setPaymentTypeSynced(true);
+            if(sType.getSelectedItemPosition() == 0){
+                payment.setPaymentType("");
+                payment.setPaymentTypeSynced(true);
+            }
+            else{
+                payment.setPaymentType(sType.getSelectedItem().toString().trim());
+                payment.setPaymentTypeSynced(true);
+            }
         }
         if(!payment.getcCType().equalsIgnoreCase(sCardType.getSelectedItem().toString().trim())){
-            payment.setcCType(sCardType.getSelectedItem().toString().trim());
-            payment.setcCTypeSynced(true);
+            if(sCardType.getSelectedItemPosition() == 0){
+                payment.setcCType("");
+                payment.setcCTypeSynced(true);
+            }
+            else{
+                payment.setcCType(sCardType.getSelectedItem().toString().trim());
+                payment.setcCTypeSynced(true);
+            }
         }
         if(!payment.getcCExprMonth().equalsIgnoreCase(sMonth.getSelectedItem().toString().trim())){
-            payment.setcCExprMonth(sMonth.getSelectedItem().toString().trim());
-            payment.setCcExprMonthSynced(true);
+            if(sMonth.getSelectedItemPosition() == 0){
+                payment.setcCExprMonth("");
+                payment.setCcExprMonthSynced(true);
+            }
+            else{
+                payment.setcCExprMonth(sMonth.getSelectedItem().toString().trim());
+                payment.setCcExprMonthSynced(true);
+            }
         }
         if(!payment.getcCExprYear().equalsIgnoreCase(sYear.getSelectedItem().toString().trim())){
-            payment.setcCExprYear(sYear.getSelectedItem().toString().trim());
-            payment.setcCExprYearSynced(true);
+            if(sYear.getSelectedItemPosition() == 0){
+                payment.setcCExprYear("");
+                payment.setcCExprYearSynced(true);
+            }
+            else{
+                payment.setcCExprYear(sYear.getSelectedItem().toString().trim());
+                payment.setcCExprYearSynced(true);
+            }
         }
 
         OrderResponse orderResponse = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class));
