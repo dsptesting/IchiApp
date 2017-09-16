@@ -95,8 +95,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         btnLogin.setOnClickListener(this);
         txtForgetPassword.setOnClickListener(this);
 
-        etEmail.setText("alsilva.allpro@gmail.com");
-        etPassword.setText("Admin@123");
+        /*etEmail.setText("alsilva.allpro@gmail.com");
+        etPassword.setText("Admin@123");*/
     }
 
     @Override
@@ -126,12 +126,16 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     private boolean validate() {
 
-        if(!ValidateHelper.validateEmail(etEmail)){
-            Utils.showSnackBar(coordinatorLayout,getString(R.string.str_email_is_not_valid));
+       /* if(!ValidateHelper.validateEmail(etEmail)){
+            Utils.showSnackBar(coordinatorLayout,"Please enter Username");
+            return false;
+        }*/
+        if(!ValidateHelper.validateEditText(etEmail)){
+            Utils.showSnackBar(coordinatorLayout,"Please enter Username");
             return false;
         }
         if(!ValidateHelper.validateEditText(etPassword)){
-            Utils.showSnackBar(coordinatorLayout,getString(R.string.str_pass_is_not_valid));
+            Utils.showSnackBar(coordinatorLayout,"Please enter Password");
             return false;
         }
 
@@ -147,7 +151,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onApiPostExecute(BaseResponse baseResponse, AsyncTask asyncTask) {
 
-        Utils.showCallError(coordinatorLayout,baseResponse);
+        //Utils.showCallError(coordinatorLayout,baseResponse);
         pbLoader.setVisibility(View.GONE);
         cvLogin.setVisibility(View.VISIBLE);
         /*if(Utils.hasCallErrorInBackground(baseResponse)){
@@ -157,9 +161,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         if(baseResponse != null){
             if(asyncTask instanceof LoginAsyncTask){
                 GetTokenResponse getTokenResponse = (GetTokenResponse) baseResponse;
-                if(getTokenResponse.getAccessToken() != null && !getTokenResponse.getAccessToken().trim().isEmpty()){
-                    prefs.putGetTokenResponse(getActivity(),getTokenResponse);
-                    goToHomeActivity();
+                if(getTokenResponse.getError() != null && !getTokenResponse.getError().isEmpty()){
+                    Utils.showSnackBar(coordinatorLayout,"Invalid Username or Password.");
+                }
+                else{
+                    if(getTokenResponse.getAccessToken() != null && !getTokenResponse.getAccessToken().trim().isEmpty()){
+                        prefs.putGetTokenResponse(getActivity(),getTokenResponse);
+                        goToHomeActivity();
+                    }
                 }
             }
         }
