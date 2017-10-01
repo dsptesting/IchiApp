@@ -8,8 +8,8 @@
     <string name="password">Password</string>
     <string name="forgetpassword">Forget password?</string>
     <string name="what_you_want">What do you want to do?</string>
-    <string name="inspection_details">Inspection Details</string>
-    <string name="inspection_order">Inspection Order</string>
+    <string name="inspection_details">Inspection Report</string>
+    <string name="inspection_order">Inspection Details</string>
     <string name="current">Current</string>
     <string name="pending">Pending</string>
 
@@ -108,7 +108,7 @@
     <string name="edit_name">EDIT NAME</string>
     <string name="rename_name">Rename Name</string>
     <string name="add_new_line">Add New Line</string>
-    <string name="generate_report">Generate Report</string>
+    <string name="generate_report">Upload Orders</string>
 
     <string name="button_allow">Allow</string>
     <string name="button_deny">Deny</string>

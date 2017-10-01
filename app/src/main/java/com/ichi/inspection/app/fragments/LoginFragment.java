@@ -95,7 +95,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         btnLogin.setOnClickListener(this);
         txtForgetPassword.setOnClickListener(this);
 
-        /*etEmail.setText("alsilva.allpro@gmail.com");
+        /*etEmail.setText("john.allen.427@gmail.com");
         etPassword.setText("Admin@123");*/
     }
 
@@ -131,11 +131,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             return false;
         }*/
         if(!ValidateHelper.validateEditText(etEmail)){
-            Utils.showSnackBar(coordinatorLayout,"Please enter Username");
+            Utils.showSnackBar(coordinatorLayout,"Please enter Username or Password");
             return false;
         }
         if(!ValidateHelper.validateEditText(etPassword)){
-            Utils.showSnackBar(coordinatorLayout,"Please enter Password");
+            Utils.showSnackBar(coordinatorLayout,"Please enter Username or Password");
             return false;
         }
 
