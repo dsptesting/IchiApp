@@ -152,8 +152,9 @@ public class SaveAsyncTask extends AsyncTask<Void,Void,BaseResponse> {
         Iterator<SubSectionsItem> iterator=subSectionsItems.iterator();
         while (iterator.hasNext()) {
             SubSectionsItem item=  iterator.next();
-            if (item.getInspectionId().equals(orderListItem.getSequence()));
-            iterator.remove();
+            if (item.getInspectionId().equals(orderListItem.getSequence())){
+                iterator.remove();
+            }
         }
         selectSectionReport.setSubSections(subSectionsItems);
         prefs.putObject(Constants.PREF_SELECT_SECTION,selectSectionReport);

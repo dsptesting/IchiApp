@@ -661,13 +661,13 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
             case R.id.cvEditName:
                 showEditNameDialog();
                 break;
-            case R.id.btnEditName:
+            /*case R.id.btnEditName:
                 if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else {
                     behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
-                break;
+                break;*/
             case R.id.cvAddNewLine:
                 showAddNewLineDialog();
                 break;
@@ -962,7 +962,8 @@ public class InspectionDetailsFragment extends BaseFragment implements View.OnCl
                     List<SubSectionsItem> selectTemp = selectSection.getSubSections(/*"" + orderListItem.getSequence()*/);
                     for (int p = 0; p < selectTemp.size(); p++) {
                         if (selectTemp.get(p).getSectionId().equalsIgnoreCase(selectedsubSectionsItem.getSectionId()) &&
-                                selectTemp.get(p).getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead())) {
+                                selectTemp.get(p).getUsedHead().equalsIgnoreCase("" + selectedsubSectionsItem.getUsedHead()) &&
+                                selectTemp.get(p).getInspectionId().equalsIgnoreCase("" + orderListItem.getSequence())) {
                             selectTemp.get(p).setName(selectedsubSectionsItem.getName());
                         }
                     }
