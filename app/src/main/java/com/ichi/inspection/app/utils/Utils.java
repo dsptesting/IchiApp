@@ -24,6 +24,7 @@ import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.models.AddSection;
 import com.ichi.inspection.app.models.AddSectionItem;
 import com.ichi.inspection.app.models.BaseResponse;
+import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderUpdateContainer;
 import com.ichi.inspection.app.models.OrderUpdates;
 import com.ichi.inspection.app.models.SelectSection;
@@ -191,7 +192,7 @@ public class Utils {
         return false;
     }
 
-    public static boolean isOlderThanThreeDay(long dateTime){
+    public static boolean isOlderThanThreeDay(Context context,long dateTime, OrderListItem orderListItem){
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -200,7 +201,19 @@ public class Utils {
         calendar.set(Calendar.SECOND,0);
         calendar.set(Calendar.HOUR_OF_DAY,0);
 
-        if(dateTime >= calendar.getTimeInMillis()) return false;
+        if(dateTime >= calendar.getTimeInMillis()){
+
+            OrderUpdateContainer orderUpdateContainer = (OrderUpdateContainer) PreferencesHelper.getInstance(context).getObject(Constants.PREF_ORDER_UPDATE, OrderUpdateContainer.class);
+            if(orderUpdateContainer != null && orderUpdateContainer.getOrderUpdatesList() != null && !orderUpdateContainer.getOrderUpdatesList().isEmpty()){
+                for(int i=0;i<orderUpdateContainer.getOrderUpdatesList().size();i++){
+                    if((""+orderListItem.getSequence()).equalsIgnoreCase(orderUpdateContainer.getOrderUpdatesList().get(i))){
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
 
         return true;
     }

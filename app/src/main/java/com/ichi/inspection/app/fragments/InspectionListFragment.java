@@ -178,7 +178,7 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
                 if(Utils.isCurrentDay(time)) {
                     alCurrent.add(orderListItem);
                 }
-                else if(!Utils.isOlderThanThreeDay(time)){
+                else if(!Utils.isOlderThanThreeDay(getActivity(),time,orderListItem)){
                     alPending.add(orderListItem);
                 }
             }
@@ -326,6 +326,10 @@ public class InspectionListFragment extends BaseFragment implements View.OnClick
 
                         alInspections = ((OrderResponse) prefs.getObject(Constants.PREF_ORDER, OrderResponse.class)).getOrderList();
                         if(alInspections != null) fillData(alInspections);
+                    }
+                    else{
+
+                        setLayoutVisibility();
                     }
                 }
             }

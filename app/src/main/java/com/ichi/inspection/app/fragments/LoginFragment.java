@@ -94,8 +94,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
         btnLogin.setOnClickListener(this);
         txtForgetPassword.setOnClickListener(this);
-        /*etEmail.setText("alsilva.allpro@gmail.com");
-        etPassword.setText("Admin@123");*/
+        etEmail.setText("alsilva.allpro@gmail.com");
+        etPassword.setText("Admin@123");
 
         /*etEmail.setText("john.allen.427@gmail.com");
         etPassword.setText("Admin@123");*/

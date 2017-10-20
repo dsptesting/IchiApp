@@ -23,9 +23,11 @@ import com.ichi.inspection.app.R;
 import com.ichi.inspection.app.activities.MainActivity;
 import com.ichi.inspection.app.models.OrderListItem;
 import com.ichi.inspection.app.models.OrderResponse;
+import com.ichi.inspection.app.models.OrderUpdateContainer;
 import com.ichi.inspection.app.models.PayItem;
 import com.ichi.inspection.app.models.Payment;
 import com.ichi.inspection.app.utils.Constants;
+import com.ichi.inspection.app.utils.PreferencesHelper;
 import com.ichi.inspection.app.utils.Utils;
 
 import java.sql.Array;
@@ -384,6 +386,34 @@ public class PaymentFragment extends BaseFragment implements View.OnClickListene
             }
         }
         prefs.putObject(Constants.PREF_ORDER,orderResponse);
+
+        PreferencesHelper prefs = PreferencesHelper.getInstance(getActivity());
+        boolean found = false;
+        List<String> orderUpdates = null;
+        OrderUpdateContainer orderUpdateContainer = null;
+
+        if(!prefs.contains(Constants.PREF_ORDER_UPDATE)){
+            orderUpdateContainer = new OrderUpdateContainer();
+            orderUpdates = orderUpdateContainer.getOrderUpdatesList();
+        }
+        else{
+            orderUpdateContainer = (OrderUpdateContainer) prefs.getObject(Constants.PREF_ORDER_UPDATE, OrderUpdateContainer.class);
+            if(orderUpdateContainer != null && orderUpdateContainer.getOrderUpdatesList() != null && !orderUpdateContainer.getOrderUpdatesList().isEmpty()){
+                orderUpdates = orderUpdateContainer.getOrderUpdatesList();
+
+                for(String inspectionId : orderUpdates){
+                    if((""+orderListItem.getSequence()).equalsIgnoreCase(inspectionId)){
+                        found = true;
+                    }
+                }
+            }
+        }
+
+        if(!found){
+            orderUpdates.add(""+orderListItem.getSequence());
+            prefs.putObject(Constants.PREF_ORDER_UPDATE,orderUpdateContainer);
+            Log.v(TAG,"order saved in order update pref");
+        }
 
 /*
         OrderResponse orderResponse=new OrderResponse();

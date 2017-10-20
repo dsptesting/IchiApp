@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ICHI</string>
+    <string name="app_name">ICHI Software</string>
     <string name="reg">Roboto-Regular.ttf</string>
     <string name="str_something_went_wrong">Something went wrong</string>
     <string name="signin">Login</string>
