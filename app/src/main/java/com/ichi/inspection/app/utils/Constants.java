@@ -53,11 +53,11 @@ public class Constants {
     // api
     public static final String CLIENT_ID = "98545254";
     public static final String BASE_URL = "http://www.samplegoogle.com";
-    public static final String URL_LOGIN = "http://uat.ichisoftware.com:8088/token";
-    public static final String URL_ORDER_LIST = "http://uat.ichisoftware.com:8088/ichi/orders";
-    public static final String URL_MASTER_LIST = "http://uat.ichisoftware.com:8088/ichi/master";
-    public static final String URL_SAVE_LIST = "http://uat.ichisoftware.com:8088/ichi/save";
-    public static final String URL_UPLOAD_PHOTO = "http://uat.ichisoftware.com:8088/ichi/upload/inspectionId";
+    public static final String URL_LOGIN = "http://ichisoftware.com:8089/token";
+    public static final String URL_ORDER_LIST = "http://ichisoftware.com:8089/ichi/orders";
+    public static final String URL_MASTER_LIST = "http://ichisoftware.com:8089/ichi/master";
+    public static final String URL_SAVE_LIST = "http://ichisoftware.com:8089/ichi/save";
+    public static final String URL_UPLOAD_PHOTO = "http://ichisoftware.com:8089/ichi/upload/inspectionId";
 
     //TODO sample... remove if unused. later
     public static final String DATE_FORMAT_LOCALTIME = "yyyy-MM-dd'T'HH:mm:ss";
